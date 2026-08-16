@@ -126,6 +126,7 @@ export const es = {
   'item.goddess_tear': 'Lágrima de la Diosa',
   'item.old_locket': 'Relicario antiguo',
   'item.moonlit_mushroom': 'Seta lunar',
+  'item.sharpening_stone': 'Piedra de afilar de la abuela de Joren',
 
   'region.aldea_brumal': 'Aldea Brumal',
   'region.bosque_susurros': 'Bosque de los Susurros',
@@ -143,6 +144,14 @@ export const es = {
   'quest.status.failed': 'Fallida',
   'quest.status.available': 'Disponible',
 
+  'npc.marta.bio': 'Posadera de "El Farol Dorado". Enviudó joven y convirtió la posada en el corazón de la aldea. Recuerda los nombres de todos los viajeros que la niebla ha traído en treinta años. Acoge a Pip en su granero y guarda las historias de todos... aunque solo cuenta las que hacen bien.',
+  'npc.joren.bio': 'Herrero, quinta generación de su familia frente al mismo fuego. Su abuela forjaba espadas para la guerra; él prefiere herraduras y azadas. No tiene hijos y regala las reliquias de su familia a quien le parece digno. Sabe distinguir el acero de aldea del acero de ciudad con solo mirarlo.',
+  'npc.pip.bio': 'Once años, huérfano de la fiebre gris desde hace dos inviernos. Duerme en el granero de Marta y da de comer a los perros de la guardia. Conoce el bosque mejor que muchos cazadores y silba como un mirlo. Su tesoro más preciado: la honda de su padre. Su mayor deseo: que alguien le crea.',
+  'npc.capitan_bren.bio': 'Capitán de la guardia. Veterano de la Guerra de las Dos Coronas: sostuvo el puente de Vharen él solo hasta que cruzaron los últimos refugiados — entre ellos su hija Nara, pero no su mujer. Nara estudia ahora en el Templo del Alba y le escribe cada luna nueva. Protege Aldea Brumal como si fuera aquel puente.',
+  'npc.vendedora_lu.bio': 'Vendedora de especias del mercado de Petra. Llegó de los puertos del sur hace una década con un carro, tres monedas y un oído infalible. Sabe todo lo que se murmura en la ciudad porque nadie sospecha de quien vende azafrán. Cobra por la verdad, pero nunca vende mentiras.',
+
+  'rel.remembers_one': 'Recuerda algo que hiciste.',
+  'rel.remembers': 'Recuerda {count} cosas que hiciste.',
   'rel.trust': 'Confianza',
   'rel.friendship': 'Amistad',
   'rel.respect': 'Respeto',

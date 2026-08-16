@@ -7,6 +7,7 @@ import type { CharacterTemplate } from '@/domain/types';
 export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   {
     id: 'liria',
+    gender: 'f',
     defaultName: 'Liria',
     baseStats: { strength: 3, intelligence: 7, agility: 5, vitality: 4, luck: 5, willpower: 6, charisma: 5 },
     talents: ['fast_learner', 'night_reader'],
@@ -14,6 +15,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'kael',
+    gender: 'm',
     defaultName: 'Kael',
     baseStats: { strength: 7, intelligence: 3, agility: 5, vitality: 6, luck: 3, willpower: 5, charisma: 4 },
     talents: ['iron_grip', 'unbreakable'],
@@ -21,6 +23,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'sera',
+    gender: 'f',
     defaultName: 'Sera',
     baseStats: { strength: 3, intelligence: 5, agility: 4, vitality: 4, luck: 4, willpower: 5, charisma: 8 },
     talents: ['silver_tongue', 'empath'],
@@ -28,6 +31,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'dorn',
+    gender: 'm',
     defaultName: 'Dorn',
     baseStats: { strength: 5, intelligence: 4, agility: 3, vitality: 8, luck: 3, willpower: 6, charisma: 3 },
     talents: ['survivor', 'stone_skin'],
@@ -35,6 +39,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'mika',
+    gender: 'f',
     defaultName: 'Mika',
     baseStats: { strength: 3, intelligence: 4, agility: 8, vitality: 4, luck: 6, willpower: 4, charisma: 4 },
     talents: ['light_feet', 'sixth_sense'],
@@ -42,6 +47,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'elara',
+    gender: 'f',
     defaultName: 'Elara',
     baseStats: { strength: 2, intelligence: 6, agility: 4, vitality: 4, luck: 4, willpower: 8, charisma: 5 },
     talents: ['inner_light', 'calm_mind'],
@@ -49,6 +55,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'ryn',
+    gender: 'm',
     defaultName: 'Ryn',
     baseStats: { strength: 4, intelligence: 5, agility: 5, vitality: 4, luck: 8, willpower: 3, charisma: 4 },
     talents: ['gambler', 'lucky_star'],
@@ -56,6 +63,7 @@ export const CHARACTER_TEMPLATES: CharacterTemplate[] = [
   },
   {
     id: 'thessa',
+    gender: 'f',
     defaultName: 'Thessa',
     baseStats: { strength: 5, intelligence: 5, agility: 5, vitality: 5, luck: 4, willpower: 5, charisma: 5 },
     talents: ['balanced_soul', 'quick_study'],

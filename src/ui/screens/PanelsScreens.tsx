@@ -2,7 +2,7 @@ import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { skillById } from '@/data/skills';
 import { itemById } from '@/data/items';
-import { REGIONS } from '@/data/world';
+import { NPCS, REGIONS } from '@/data/world';
 import { RELATIONSHIP_AXES } from '@/domain/types';
 
 /** Habilidades (§16): cada una lista sus usos narrativos. */
@@ -103,7 +103,7 @@ export function WorldScreen() {
   );
 }
 
-/** Vínculos (§19-20): relaciones y memoria de NPC. */
+/** Vínculos (§19-20): relaciones, biografía y memoria de NPC conocidos. */
 export function RelationsScreen() {
   const save = useGameStore((s) => s.save);
   if (!save) return null;
@@ -115,19 +115,34 @@ export function RelationsScreen() {
     <div className="panel">
       <h2 className="section-title">{t('nav.relations')}</h2>
       {known.length === 0 && <p className="hint-text">{t('ui.empty')}</p>}
-      {known.map(([npcId, rel]) => (
-        <div className="card" key={npcId}>
-          <h3>{t(`speaker.${npcId}`)}</h3>
-          <div className="stat-grid">
-            {RELATIONSHIP_AXES.filter((a) => rel[a] !== 0).map((a) => (
-              <div className="stat-row" key={a}>
-                <span>{t(`rel.${a}`)}</span>
-                <b>{rel[a] > 0 ? `+${rel[a]}` : rel[a]}</b>
-              </div>
-            ))}
+      {known.map(([npcId, rel]) => {
+        const npc = NPCS.find((n) => n.id === npcId);
+        const memories = save.world.npcMemory[npcId] ?? [];
+        return (
+          <div className="card" key={npcId}>
+            <h3>{t(`speaker.${npcId}`)}</h3>
+            {npc && (
+              <p className="hint-text" style={{ marginBottom: 8 }}>
+                {t(`region.${npc.regionId}`)} · {npc.age} ⌛
+              </p>
+            )}
+            <p style={{ marginBottom: 10 }}>{t(`npc.${npcId}.bio`)}</p>
+            <div className="stat-grid">
+              {RELATIONSHIP_AXES.filter((a) => rel[a] !== 0).map((a) => (
+                <div className="stat-row" key={a}>
+                  <span>{t(`rel.${a}`)}</span>
+                  <b>{rel[a] > 0 ? `+${rel[a]}` : rel[a]}</b>
+                </div>
+              ))}
+            </div>
+            {memories.length > 0 && (
+              <p className="hint-text" style={{ marginTop: 8, fontStyle: 'italic' }}>
+                ✦ {memories.length === 1 ? t('rel.remembers_one') : t('rel.remembers', { count: memories.length })}
+              </p>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

@@ -128,6 +128,7 @@ export const en: typeof es = {
   'item.goddess_tear': "Goddess's Tear",
   'item.old_locket': 'Old Locket',
   'item.moonlit_mushroom': 'Moonlit Mushroom',
+  'item.sharpening_stone': "Joren's Grandmother's Sharpening Stone",
 
   'region.aldea_brumal': 'Brumal Village',
   'region.bosque_susurros': 'Whispering Forest',
@@ -145,6 +146,14 @@ export const en: typeof es = {
   'quest.status.failed': 'Failed',
   'quest.status.available': 'Available',
 
+  'npc.marta.bio': 'Innkeeper of "The Golden Lantern". Widowed young, she turned the inn into the heart of the village. She remembers the names of every traveler the mist has brought in thirty years. She shelters Pip in her barn and keeps everyone\'s stories... though she only tells the ones that do good.',
+  'npc.joren.bio': 'Blacksmith, fifth generation of his family at the same fire. His grandmother forged swords for war; he prefers horseshoes and hoes. He has no children and gifts his family heirlooms to those he deems worthy. He can tell village steel from city steel at a glance.',
+  'npc.pip.bio': 'Eleven years old, orphaned by the grey fever two winters ago. He sleeps in Marta\'s barn and feeds the guard dogs. He knows the forest better than many hunters and whistles like a blackbird. His most precious treasure: his father\'s sling. His greatest wish: for someone to believe him.',
+  'npc.capitan_bren.bio': 'Captain of the guard. Veteran of the War of the Two Crowns: he held Vharen bridge alone until the last refugees crossed — among them his daughter Nara, but not his wife. Nara now studies at the Temple of Dawn and writes to him every new moon. He guards Brumal Village as if it were that bridge.',
+  'npc.vendedora_lu.bio': 'Spice seller in Petra\'s market. She arrived from the southern ports a decade ago with a cart, three coins and an infallible ear. She knows everything whispered in the city because nobody suspects the woman selling saffron. She charges for truth, but never sells lies.',
+
+  'rel.remembers_one': 'Remembers something you did.',
+  'rel.remembers': 'Remembers {count} things you did.',
   'rel.trust': 'Trust',
   'rel.friendship': 'Friendship',
   'rel.respect': 'Respect',

@@ -10,6 +10,7 @@ function makeCharacter(overrides: Partial<CharacterState> = {}): CharacterState 
     id: 'test-char',
     templateId: 'liria',
     name: 'Test',
+    gender: 'f',
     classId: 'mage',
     goddessId: 'aurelia',
     level: 1,

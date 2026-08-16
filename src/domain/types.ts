@@ -87,6 +87,8 @@ export interface GoddessDef {
 export interface CharacterTemplate {
   id: string;
   defaultName: string;
+  /** Género gramatical del personaje: afecta a los textos narrativos. */
+  gender: 'f' | 'm';
   baseStats: StatBlock;
   talents: string[];
   narrativeTags: string[];
@@ -131,6 +133,7 @@ export interface CharacterState {
   id: string;
   templateId: string;
   name: string;
+  gender: 'f' | 'm';
   classId: string;
   goddessId: string;
   level: number;

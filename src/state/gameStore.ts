@@ -80,6 +80,7 @@ function buildCharacter(opts: {
     id: crypto.randomUUID(),
     templateId: opts.templateId,
     name: opts.name.trim() || template.defaultName,
+    gender: template.gender,
     classId: opts.classId,
     goddessId: opts.goddessId,
     level: 1,

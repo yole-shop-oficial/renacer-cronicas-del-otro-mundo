@@ -7,6 +7,7 @@ import {
   watchPartnerDecision,
   type PartnerDecision
 } from '@/services/coopDecisions';
+import { renderStoryText } from '@/engine/text';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -50,6 +51,8 @@ export function StoryScreen() {
 
   if (!save || !node) return <div className="center-screen">{t('ui.loading')}</div>;
 
+  const textCtx = { name: save.character.name, gender: save.character.gender ?? 'f' };
+
   const { available, locked } = choicesFor();
 
   async function handleChoice(choiceId: string) {
@@ -67,7 +70,7 @@ export function StoryScreen() {
         <div className="parchment">
           {node.speaker && <span className="speaker-tag">{t(`speaker.${node.speaker}`)}</span>}
           {node.speaker && <br />}
-          {lt(node.text)}
+          {renderStoryText(lt(node.text), textCtx)}
         </div>
         {narrationLog.length > 0 && (
           <div className="effect-log" aria-live="polite">
@@ -101,12 +104,12 @@ export function StoryScreen() {
       <div className="choices">
         {available.map((choice) => (
           <button key={choice.id} className="choice-btn" onClick={() => void handleChoice(choice.id)}>
-            {lt(choice.text)}
+            {renderStoryText(lt(choice.text), textCtx)}
           </button>
         ))}
         {locked.map((choice) => (
           <button key={choice.id} className="choice-btn locked" disabled aria-disabled="true">
-            {lt(choice.text)}
+            {renderStoryText(lt(choice.text), textCtx)}
             <span className="lock-hint">
               🔒 {choice.lockedHint ? lt(choice.lockedHint) : t('ui.locked')}
             </span>

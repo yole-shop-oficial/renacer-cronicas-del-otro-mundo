@@ -14,7 +14,8 @@ export const ITEMS: ItemDef[] = [
   { id: 'mana_flower', type: 'consumable', rarity: 'uncommon', effects: { restoreMp: 20 }, value: 12 },
   { id: 'goddess_tear', type: 'unique', rarity: 'unique', effects: { grantFlag: 'goddess_tear_owned' }, value: 0 },
   { id: 'old_locket', type: 'quest', rarity: 'rare', value: 0 },
-  { id: 'moonlit_mushroom', type: 'material', rarity: 'uncommon', value: 15 }
+  { id: 'moonlit_mushroom', type: 'material', rarity: 'uncommon', value: 15 },
+  { id: 'sharpening_stone', type: 'material', rarity: 'uncommon', effects: { grantFlag: 'joren_heirloom' }, value: 0 }
 ];
 
 export const itemById = (id: string) => {

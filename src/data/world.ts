@@ -10,7 +10,11 @@ export const REGIONS: RegionDef[] = [
   { id: 'tierras_ignotas', kind: 'unknown', connectedTo: [], discoveredByDefault: false }
 ];
 
-/** NPC iniciales con relaciones persistentes (§19-20). */
+/**
+ * NPC iniciales con relaciones persistentes (§19-20).
+ * Cada NPC tiene biografía completa (claves npc.<id>.bio en i18n):
+ * historia, dónde vive, qué quiere, qué teme. El mundo está habitado.
+ */
 export const NPCS: NpcDef[] = [
   { id: 'marta', regionId: 'aldea_brumal', profession: 'innkeeper', age: 54, initialRelationships: { trust: 10 } },
   { id: 'joren', regionId: 'aldea_brumal', profession: 'blacksmith', age: 41, initialRelationships: {} },

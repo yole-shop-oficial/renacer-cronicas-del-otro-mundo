@@ -6,7 +6,8 @@ import type { CharacterState, WorldState } from '@/domain/types';
 
 function makeCharacter(overrides: Partial<CharacterState> = {}): CharacterState {
   return {
-    id: 'c', templateId: 'mika', name: 'Test', classId: 'rogue', goddessId: 'sylvane',
+    id: 'c', templateId: 'mika', name: 'Test',
+    gender: 'f', classId: 'rogue', goddessId: 'sylvane',
     level: 2, xp: 0,
     stats: { strength: 3, intelligence: 4, agility: 8, vitality: 4, luck: 6, willpower: 4, charisma: 4 },
     currentHp: 100, currentMp: 40,
