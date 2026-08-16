@@ -589,6 +589,12 @@ export const es = {
 
   'title.fate_defiant': 'Desafiante del Destino',
 
+  'reunion.title': 'Reencuentro',
+  'reunion.nearby': '{name} está cerca... El destino os ha puesto en el mismo camino.',
+  'reunion.accept': 'Ir a su encuentro',
+  'reunion.walkAway': 'Pasar de largo',
+  'reunion.hint': 'Reencontrarse cierra la separación y borra la deuda del grupo. Pasar de largo... también quedará escrito.',
+
   'lifetree.fabLabel': 'Árbol de la Vida — ver tu historia',
   'lifetree.title': 'El Árbol de la Vida',
   'lifetree.subtitle': 'El libro de la historia de {name}',

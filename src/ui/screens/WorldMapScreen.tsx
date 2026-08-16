@@ -5,7 +5,14 @@ import { REGIONS, NPCS } from '@/data/world';
 import { poisForRegion, type PoiDef, type PoiAction } from '@/data/pois';
 import { combatPower } from '@/domain/power';
 import { loadPartnerSoul, type SoulProfile } from '@/services/souls';
-import { GameIcon, IconPoi, IconLock, IconSoul, type IconName } from '@/ui/icons';
+import { GameIcon, IconPoi, IconLock, IconSoul, IconBond, type IconName } from '@/ui/icons';
+import { useCoopStore } from '@/state/coopStore';
+import { reunionForRegion } from '@/coop/reunions';
+import { renderStoryText } from '@/engine/text';
+import { lt } from '@/i18n';
+import { applyEffects } from '@/engine/effects';
+import { saveGameLocally } from '@/state/persistence';
+import { useGameStore as gameStoreHook } from '@/state/gameStore';
 
 /**
  * MAPA MEJORADO: regiones como tarjetas ilustradas; al tocar una región
@@ -29,6 +36,9 @@ export function WorldMapScreen() {
   const [openRegion, setOpenRegion] = useState<string | null>(null);
   const [openPoi, setOpenPoi] = useState<PoiDef | null>(null);
   const [partner, setPartner] = useState<SoulProfile | null>(null);
+  const livePartner = useCoopStore((s) => s.partner);
+  const separated = useCoopStore((s) => s.separated);
+  const coopReunite = useCoopStore((s) => s.reunite);
 
   useEffect(() => {
     void loadPartnerSoul().then(setPartner);
@@ -36,6 +46,9 @@ export function WorldMapScreen() {
 
   if (!save) return null;
   const { discoveredRegions, currentRegionId } = save.world;
+  // Preferir la posición EN VIVO del alma conectada sobre la del código estático.
+  const partnerRegion = livePartner?.regionId ?? partner?.regionId;
+  const partnerName = livePartner?.name ?? partner?.name;
   const power = combatPower(save.character, NPCS, save.world);
 
   // ── Vista de plano de región con puntos de recorrido ──
@@ -102,6 +115,54 @@ export function WorldMapScreen() {
           </div>
         )}
 
+        {/* REENCUENTRO: almas separadas que se cruzan en esta región */}
+        {separated && partnerRegion === openRegion && currentRegionId === openRegion && (() => {
+          const scene = reunionForRegion(openRegion);
+          if (!scene || save.world.flags[`_reunion_${scene.id}`]) return null;
+          const iDefied = save.world.flags['marca_del_destino'] === true &&
+            save.world.flags['marca_del_destino_redimida'] !== true;
+          const text = iDefied ? scene.textDefiant : scene.textWinner;
+          const ctx = {
+            name: save.character.name,
+            gender: save.character.gender ?? 'f',
+            partner: partnerName ?? ''
+          };
+          async function acceptReunion() {
+            const current = gameStoreHook.getState().save;
+            if (!current || !scene) return;
+            const result = applyEffects(scene.onReunite, current.character, current.world);
+            result.world.flags[`_reunion_${scene.id}`] = true;
+            delete result.world.flags['grupo_separado'];
+            result.world.flags['grupo_reunido'] = true;
+            const updated = { ...current, character: result.character, world: result.world, updatedAt: Date.now() };
+            await saveGameLocally(updated);
+            gameStoreHook.setState({ save: updated, narrationLog: result.log });
+            coopReunite();
+          }
+          return (
+            <div className="card reunion-card" role="region" aria-label={t('reunion.title')}>
+              <h3 className="with-icon">
+                <IconBond size={18} className="ico-pink" /> {t('reunion.title')}
+              </h3>
+              <div className="parchment reunion-text">
+                {renderStoryText(lt(text), ctx)}
+              </div>
+              <div className="reunion-actions">
+                <button className="btn-primary" onClick={() => void acceptReunion()}>
+                  {t('reunion.accept')}
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={() => setOpenRegion(null)}
+                >
+                  {t('reunion.walkAway')}
+                </button>
+              </div>
+              <p className="hint-text" style={{ marginTop: 8 }}>{t('reunion.hint')}</p>
+            </div>
+          );
+        })()}
+
         {!openPoi && (
           <p className="hint-text" style={{ textAlign: 'center' }}>{t('map.tapPoi')}</p>
         )}
@@ -114,6 +175,12 @@ export function WorldMapScreen() {
     <div className="panel">
       <h2 className="section-title">{t('nav.world')}</h2>
       <p className="hint-text">{t('map.hint')}</p>
+      {separated && partnerRegion && partnerRegion === currentRegionId && (
+        <button className="card reunion-banner" onClick={() => setOpenRegion(currentRegionId)}>
+          <IconBond size={18} className="ico-pink" />
+          <span>{t('reunion.nearby', { name: partnerName ?? '' })}</span>
+        </button>
+      )}
       <div className="region-grid2">
         {REGIONS.map((r) => {
           const discovered = discoveredRegions.includes(r.id);

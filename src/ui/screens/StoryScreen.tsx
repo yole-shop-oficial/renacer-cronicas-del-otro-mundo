@@ -11,6 +11,7 @@ import { renderStoryText } from '@/engine/text';
 import { IconLock, IconBond } from '@/ui/icons';
 import { useCoopStore } from '@/state/coopStore';
 import { DiceOfFate } from '@/ui/DiceOfFate';
+import { findSpecialDiscord } from '@/coop/specialDiscords';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -136,6 +137,16 @@ export function StoryScreen() {
             {negotiation.phase === 'discord' && (
               <>
                 <p className="nego-discord">{t('nego.discord', { name: coopPartner?.name ?? '' })}</p>
+                {(() => {
+                  const special = negotiation.myPick && negotiation.partnerPick
+                    ? findSpecialDiscord(node.id, negotiation.myPick, negotiation.partnerPick)
+                    : null;
+                  return special ? (
+                    <div className="nego-special parchment">
+                      {renderStoryText(lt(special.text), textCtx)}
+                    </div>
+                  ) : null;
+                })()}
                 <div className="nego-picks">
                   <div className="nego-pick mine">
                     <span>{save.character.name}</span>

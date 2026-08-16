@@ -591,6 +591,12 @@ export const en: typeof es = {
 
   'title.fate_defiant': 'Fate Defiant',
 
+  'reunion.title': 'Reunion',
+  'reunion.nearby': '{name} is near... Fate has set you on the same road.',
+  'reunion.accept': 'Go meet them',
+  'reunion.walkAway': 'Walk on by',
+  'reunion.hint': 'Reuniting ends the separation and clears the party debt. Walking on by... will also be written.',
+
   'lifetree.fabLabel': 'Tree of Life — view your story',
   'lifetree.title': 'The Tree of Life',
   'lifetree.subtitle': "The book of {name}'s story",
