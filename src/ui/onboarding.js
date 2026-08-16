@@ -29,10 +29,10 @@ export function renderWelcomeScreen(onAction) {
       </p>
 
       <div class="space-y-2.5 pt-4">
-        <button id="btn-goto-signin" class="w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 hover:brightness-110 text-white font-black text-xs uppercase tracking-wider transition-all active:scale-[0.98]">
+        <button id="btn-goto-signin" class="magic-button w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white font-black text-xs uppercase tracking-wider transition-all active:scale-[0.98]">
           Iniciar Sesión
         </button>
-        <button id="btn-goto-signup" class="w-full py-3.5 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-800 text-stone-300 font-black text-xs uppercase tracking-wider transition-all active:scale-[0.98]">
+        <button id="btn-goto-signup" class="magic-button w-full py-3.5 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 font-black text-xs uppercase tracking-wider transition-all active:scale-[0.98]">
           Crear Cuenta Nueva
         </button>
       </div>
@@ -72,7 +72,7 @@ export function renderSignUpScreen(onSubmit, onBack) {
           ✓ Se requiere conexión a Internet para el registro inicial. Tus partidas se cifrarán localmente usando tu contraseña.
         </p>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-transform">
+        <button type="submit" class="magic-button w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-transform">
           Crear Cuenta & Renacer
         </button>
       </form>
@@ -113,7 +113,7 @@ export function renderSignInScreen(onSubmit, onBack) {
           <input type="password" id="password" required class="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-900 text-xs font-bold text-white focus:outline-none" />
         </div>
 
-        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white font-black text-xs uppercase tracking-widest">
+        <button type="submit" class="magic-button w-full py-3.5 rounded-xl bg-gradient-to-br from-purple-600 to-purple-800 text-white font-black text-xs uppercase tracking-widest">
           Iniciar Inferencia
         </button>
       </form>
