@@ -1,0 +1,36 @@
+{
+  "name": "renacer-cronicas-otro-mundo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "RPG narrativo de fantasía persistente, Offline First, PWA y cooperativo.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "db:migrate": "echo 'Aplica supabase/migrations/*.sql en orden con supabase db push o el SQL editor' && ls supabase/migrations",
+    "db:seed": "echo 'El seed vive en supabase/migrations/0002_seed.sql'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dexie": "^4.0.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "fake-indexeddb": "^6.0.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vite-plugin-pwa": "^0.20.1",
+    "vitest": "^2.0.5"
+  }
+}

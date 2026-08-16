@@ -1,112 +1,26 @@
-<!DOCTYPE html>
-<html lang="es" class="h-full">
-<head>
-  <meta charset="UTF-8">
-  <title>RENACER: Crónicas del Otro Mundo</title>
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
-  <link rel="icon" href="./public_assets/icons/icon-192x192.png">
-  <link rel="apple-touch-icon" href="./public_assets/icons/icon-512x512.png">
-  <link rel="manifest" href="./manifest.json">
-  
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="./styles/main.css">
-  
-  <!-- Supabase CDN Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body class="h-full bg-[#110e14]">
-
-  <div class="book-container shadow-2xl h-full flex flex-col justify-between overflow-hidden">
-    
-    <!-- ═══════════════════════════════════════════════
-         PANEL A: ONBOARDING / LOGIN / REGISTER / CREATOR
-         ═══════════════════════════════════════════════ -->
-    <div id="onboarding-root" class="flex-1 w-full h-full flex flex-col justify-center items-center overflow-hidden z-20">
-      <!-- Onboarding screens get dynamically injected here -->
-    </div>
-
-    <!-- ═══════════════════════════════════════════════
-         PANEL B: MAIN NARRATIVE RPG INTERFACE
-         ═══════════════════════════════════════════════ -->
-    <div id="app-root" class="flex-1 w-full h-full flex flex-col justify-between overflow-hidden hidden z-10">
-      
-      <!-- Top header bar (Global inside Book) -->
-      <div class="w-full px-4 pt-4 pb-2 border-b border-stone-900 bg-stone-950 flex justify-between items-center text-xs shrink-0">
-        <span class="font-mono text-[#06b6d4] font-black tracking-widest uppercase">Renacer: Crónicas</span>
-        <span id="header-god-badge" class="px-2 py-0.5 rounded bg-amber-950/40 text-amber-500 border border-amber-900/30 font-bold uppercase font-mono tracking-wider">Patrona</span>
-      </div>
-
-      <!-- Page Content Area -->
-      <div id="page-content" class="flex-1 w-full h-full flex flex-col justify-between overflow-hidden relative p-4">
-        
-        <!-- NARRATIVE NODO SCREEN (CHAPTER WRAPPER) -->
-        <div id="story-page-layout" class="flex-1 flex flex-col justify-between h-full w-full space-y-4">
-          
-          <!-- Parchment page -->
-          <div class="flex-1 parchment-panel p-5 overflow-y-auto space-y-3.5 shadow-lg relative flex flex-col">
-            <span id="story-chapter" class="text-[8px] font-black tracking-[0.25em] text-purple-700 uppercase font-mono block">CAPÍTULO I</span>
-            <h2 id="story-title" class="text-base font-black tracking-wide uppercase text-stone-900 leading-snug">El Final del Sendero</h2>
-            
-            <hr class="border-stone-400/25 my-1" />
-            
-            <p id="story-text" class="text-xs text-stone-700 leading-relaxed font-semibold italic flex-1">
-              Cargando narrativa del otro mundo...
-            </p>
-          </div>
-
-          <!-- Dialog / choice cards container -->
-          <div id="story-choices" class="space-y-2 shrink-0">
-            <!-- Dynamically populated choices -->
-          </div>
-        </div>
-
-        <!-- OTHER TABS CONTAINER (CHARACTER, INVENTORY, WORLD, SKILLS, ETC) -->
-        <div id="tab-content-container" class="flex-1 w-full h-full scrollable-y hidden">
-          <!-- Dynamically populated tab panels -->
-        </div>
-
-        <!-- Notification center logs list (Floating scroll) -->
-        <div id="notification-log" class="absolute bottom-4 left-4 right-4 z-40 space-y-1.5 pointer-events-none">
-          <!-- Floating alerts injected here -->
-        </div>
-
-      </div>
-
-      <!-- Bottom navigation tabs -->
-      <div class="w-full px-4 pb-4 pt-1 bg-stone-950 border-t border-stone-900 shrink-0 z-20">
-        <div class="grid grid-cols-5 gap-1 text-center font-mono font-bold text-[8px] tracking-wider text-stone-400">
-          <button class="nav-tab active flex flex-col items-center p-2 rounded-xl transition-all" data-tab="story">
-            <span class="text-xs">📖</span><span>Historia</span>
-          </button>
-          <button class="nav-tab flex flex-col items-center p-2 rounded-xl transition-all" data-tab="character">
-            <span class="text-xs">🛡️</span><span>Personaje</span>
-          </button>
-          <button class="nav-tab flex flex-col items-center p-2 rounded-xl transition-all" data-tab="skills">
-            <span class="text-xs">🔮</span><span>Conjuros</span>
-          </button>
-          <button class="nav-tab flex flex-col items-center p-2 rounded-xl transition-all" data-tab="inventory">
-            <span class="text-xs">🎒</span><span>Bolsa</span>
-          </button>
-          <button class="nav-tab flex flex-col items-center p-2 rounded-xl transition-all" data-tab="world">
-            <span class="text-xs">🗺️</span><span>Mapa</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Discrete online/offline permanent connection indicator -->
-    <div id="connection-badge" class="connection-badge hidden">
-      <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse mr-1"></span> 🟢 Online
-    </div>
-
-  </div>
-
-  <!-- Entry Script Orchestrator (Loads as ES Module!) -->
-  <script type="module" src="./src/main.js"></script>
-</body>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#2b1f4e" />
+    <meta
+      name="description"
+      content="RENACER: Crónicas del Otro Mundo — RPG narrativo de fantasía persistente. El mundo ya existe. La historia la escribes tú."
+    />
+    <!-- PWA / iOS (§37-38) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Renacer" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
+    <title>RENACER: Crónicas del Otro Mundo</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

@@ -1,102 +1,140 @@
-# 📖✨ Renacer: Crónicas del Otro Mundo — Videojuego RPG Narrativo PWA
+# ✦ RENACER: Crónicas del Otro Mundo ✦
 
-¡Bienvenidos a **Renacer: Crónicas del Otro Mundo**! Este es un videojuego web RPG narrativo modular diseñado bajo la filosofía **Local-First (Offline-First)** y empaquetado como una **PWA (Progressive Web App)** de alto rendimiento.
+> **«El mundo ya existe. La historia la escribes tú.»**
 
-La aplicación está construida utilizando tecnologías nativas modernas (**HTML5, CSS3, ES6 Vanilla JS, IndexedDB, Web Crypto API**) para garantizar velocidad y soporte offline completo, integrándose con **Supabase** de manera idempotente para la sincronización de partidas en la nube.
+RPG narrativo de fantasía **persistente, Offline First, multiplataforma (PWA) y cooperativo**, construido para crecer durante años.
 
----
-
-## 🧩 Filosofía del Diseño: Local-First ➔ Cloud Sync
-
-El juego está diseñado desde cero pensando en que la conexión a Internet puede desaparecer en cualquier momento:
-1. **Estado persistente local:** Cada decisión, objeto obtenido o cambio en las relaciones de los personajes se guarda de inmediato de forma local en **IndexedDB**.
-2. **Cifrado AES-GCM:** Los datos sensibles de tu partida se cifran utilizando la API nativa de **Web Crypto** en el navegador de forma ultra-segura basándose en tu contraseña de ingreso.
-3. **Cola de Sincronización Idempotente:** Cuando juegas desconectado, cada acción relevante se acumula en una cola local (`sync_queue`). Al recuperar conexión, el motor de sincronización procesa cada acción con Supabase de manera idempotente (evitando duplicar oro, XP o misiones completadas accidentalmente).
+Tu personaje no está siguiendo una historia. **Está viviendo una.**
 
 ---
 
-## 🏃 Guía de Instalación y Ejecución Local
+## 🎮 Qué es
 
-### Paso 1: Clonar el Repositorio
-Clona este repositorio directamente en tu espacio de trabajo local:
+Un libro mágico interactivo + RPG: lees, decides, y el mundo **recuerda**. Cada decisión modifica relaciones, reputación, misiones y el estado global del mundo. Dos jugadores pueden compartir la misma partida mediante un código.
+
+- **8 personajes** únicos (stats, talentos y eventos propios)
+- **8 clases** (Guerrero, Caballero, Mago, Arquero, Sacerdote, Pícaro, Invocador, Aventurero) — el motor admite clases avanzadas/ocultas
+- **4 Diosas** con bendiciones y consecuencias narrativas reales
+- **Motor narrativo data-driven**: capítulos como datos validados con Zod
+- **Offline First real**: juega sin Internet; todo se sincroniza al volver
+- **Cooperativo**: partida compartida por código de 6 caracteres
+
+## 🏗️ Stack
+
+| Capa | Tecnología | Por qué |
+|---|---|---|
+| UI | React 18 + TypeScript | Madurez, comunidad, tipado estricto |
+| Build/PWA | Vite + vite-plugin-pwa (Workbox) | SPA estática sin servidor, precache completo |
+| Estado | Zustand | Ligero, sin boilerplate |
+| BD local | Dexie (IndexedDB) | Transacciones, índices, estable en iOS |
+| Cifrado local | Web Crypto (AES-GCM + PBKDF2) | Estándar del navegador, sin criptografía casera |
+| Validación | Zod | Contenido narrativo y datos validados en runtime |
+| Backend | Supabase (PostgreSQL + Auth + RLS + Realtime) | Serverless, gratuito en MVP |
+| Tests | Vitest + fake-indexeddb | Rápido, nativo de Vite |
+| CI/CD | GitHub Actions + Vercel | Typecheck, tests y build en cada push |
+
+Decisiones detalladas en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## 🚀 Instalación
+
 ```bash
 git clone https://github.com/yole-shop-oficial/renacer-cronicas-otro-mundo.git
 cd renacer-cronicas-otro-mundo
+npm install
+cp .env.example .env.local   # rellena tus claves de Supabase
+npm run dev                  # http://localhost:5173
 ```
 
-### Paso 2: Servir de forma Local
-Como el juego utiliza módulos ESM (`import/export`) y Service Workers de PWA, el navegador requiere que se sirva sobre un protocolo `http/https` (no funciona abriendo el archivo `.html` directamente). Puedes servirlo con cualquier servidor estático ligero:
+> **Sin Supabase configurado**, el juego arranca en **modo local**: todo el progreso se guarda cifrado en el dispositivo. Configura las variables para activar cuentas, nube y cooperativo.
 
-* **Con Node.js (Recomendado):**
-  ```bash
-  npm install -g serve
-  serve .
-  ```
-* **Con Python:**
-  ```bash
-  python -o python3 -m http.server 8080
-  ```
-Abre la dirección `http://localhost:3000` o `http://localhost:8080` en tu navegador.
+## 🔑 Variables de entorno
 
----
+| Variable | Descripción |
+|---|---|
+| `VITE_SUPABASE_URL` | URL del proyecto Supabase |
+| `VITE_SUPABASE_ANON_KEY` | Clave anónima pública (la seguridad la impone RLS) |
 
-## 🗄️ Configuración de Supabase
+⚠️ **Nunca** subas `.env`/`.env.local`, ni claves `service_role`, ni tokens de gestión. En Vercel usa *Environment Variables*; en GitHub Actions, *Secrets*.
 
-Para conectar tu partida en la nube de Supabase, debes crear las siguientes tablas en el **SQL Editor** de tu panel de Supabase:
+## 🗄️ Base de datos (Supabase)
 
-```sql
--- 1. Tabla de Perfiles de Usuario
-CREATE TABLE IF NOT EXISTS public.profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    email TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
-);
+Migraciones versionadas en [`supabase/migrations/`](supabase/migrations):
 
--- 2. Tabla de Personajes
-CREATE TABLE IF NOT EXISTS public.characters (
-    id UUID PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
-    name TEXT NOT NULL,
-    character_index INT NOT NULL,
-    class_index INT NOT NULL,
-    goddess_index INT NOT NULL,
-    primary_stats JSONB NOT NULL,
-    secondary_stats JSONB NOT NULL,
-    skills TEXT[] DEFAULT '{}',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
-);
+1. `0001_schema.sql` — perfiles, partidas, jugadores, guardados, decisiones (event sourcing), cola de sincronización idempotente. **Todo con Row Level Security.**
+2. `0002_seed.sql` — catálogos de contenido.
 
--- 3. Tabla de Inventario de Objetos
-CREATE TABLE IF NOT EXISTS public.inventory (
-    id UUID PRIMARY KEY,
-    player_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
-    item_id TEXT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
-);
+Aplicar: SQL Editor del dashboard (en orden) o `supabase db push` con la CLI.
 
--- 4. Habilitar Realtime para réplicas en caliente
-ALTER PUBLICATION supabase_realtime ADD TABLE public.characters;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.inventory;
+## 📡 Offline y sincronización
+
+```
+LOCAL → CHANGE → QUEUE → SYNC → CLOUD
 ```
 
-### Configuración de Variables
-Abre tu panel de Supabase, ve a **Project Settings ➔ API**, y copia las credenciales. Añádelas como variables globales en la cabecera de `index.html` o expónlas como variables de entorno de Vercel/Hosting:
-* `NEXT_PUBLIC_SUPABASE_URL` = *(La URL de tu proyecto de Supabase)*
-* `NEXT_PUBLIC_SUPABASE_ANON_KEY` = *(La clave Anon de tu Supabase)*
+1. Cada decisión se guarda **primero** en IndexedDB (cifrada con AES-GCM).
+2. Cada cambio genera una operación con **UUID idempotente** en la cola persistente.
+3. Al recuperar conexión, la cola se procesa en orden causal contra Supabase.
+4. Deduplicación en servidor: `UNIQUE(id)` — reenviar una operación es un no-op.
+5. La UI muestra: `ONLINE / OFFLINE / SYNCING / SYNC_ERROR / SYNC_SUCCESS`.
 
----
+Estrategia de conflictos por tipo de dato en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#resolución-de-conflictos).
 
-## 📱 Cómo Probar el Modo Offline-First y PWA
+## 📱 PWA
 
-1. **Instalación como PWA:** Abre la app en Chrome (Android/PC) o Safari (iPhone), haz clic en el botón de **"Instalar aplicación"** o **"Añadir a la pantalla de inicio"**. El juego se instalará y abrirá con una ventana auto-contenida sin barras de navegador.
-2. **Prueba Offline:**
-   * Entra al juego y crea tu personaje con Internet encendido.
-   * Apaga tu WiFi o activa el **Modo Avión** en tu celular.
-   * El indicador discreto de la esquina inferior cambiará automáticamente a: `🔴 Offline`.
-   * **¡Sigue jugando!** Toma decisiones, equipa espadas, cura tus heridas espirituales. Todo se guardará y cifrará en tu IndexedDB local en segundo plano.
-   * Enciende tu WiFi nuevamente. La app detectará la conexión recuperada, el indicador brillará como `🟠 Sincronizando` y enviará toda tu cola de decisiones a Supabase de manera secuencial, terminando con un check: `✓ Partida sincronizada correctamente.`
+Instalable en Android, iOS y PC. El *service worker* precachea el app shell completo: el juego **arranca sin red**. Las llamadas a Supabase nunca se cachean (la capa de sync decide).
 
----
+## 🤝 Cooperativo
 
-### 🍁 RENACER RESEARCH GROUP
-*✨ Tu personaje no está siguiendo una historia. Está viviendo una. ✨*
+1. Jugador 1: *Ajustes → Crear partida cooperativa* → recibe un código (p. ej. `K7MPQ2`).
+2. Jugador 2: introduce el código → ambos quedan vinculados al mismo mundo.
+3. Presencia en tiempo real vía Supabase Realtime (opcional: el juego nunca depende de ello).
+
+## ✍️ Crear contenido narrativo
+
+El contenido es **data-driven**: los escritores añaden capítulos sin tocar el motor. Guía completa en [`docs/STORY_ENGINE.md`](docs/STORY_ENGINE.md).
+
+## 🧪 Testing
+
+```bash
+npm test           # 25 tests: motor, condiciones, idempotencia, cola, persistencia cifrada
+npm run typecheck  # TypeScript estricto
+npm run build      # typecheck + build + PWA
+```
+
+## ☁️ Despliegue (Vercel)
+
+Proyecto SPA estático (`vercel.json` incluido). Conecta el repo en Vercel, define las dos variables de entorno y despliega. CI en GitHub Actions valida cada push.
+
+## 🔒 Seguridad
+
+- RLS en todas las tablas: cada usuario solo ve sus datos y los de su partida compartida.
+- Cifrado local AES-GCM del guardado.
+- Sin secretos en el código (ver `.env.example`).
+- ⚠️ El código antiguo en `legacy/` contenía una anon key hardcodeada: fue retirada del código nuevo. **Rota esa clave** en el dashboard de Supabase (Settings → API → Reset).
+
+## 🧭 Solución de problemas
+
+| Problema | Solución |
+|---|---|
+| "Supabase no está configurado" | Crea `.env.local` desde `.env.example` |
+| No sincroniza | Revisa el indicador de estado; la cola reintenta con backoff automático |
+| Progreso "perdido" tras limpiar el navegador | El guardado local vive en IndexedDB; si tenías nube, vuelve a iniciar sesión |
+| PWA no instala en iOS | Usa Safari → Compartir → Añadir a pantalla de inicio |
+
+## 📁 Estructura
+
+```
+src/
+  domain/     Tipos y reglas puras del juego (stats, progresión)
+  engine/     Motor narrativo (schema Zod, condiciones, efectos)
+  content/    Capítulos data-driven (prólogo, capítulo 1...)
+  data/       Catálogos: clases, Diosas, personajes, objetos, mundo
+  services/   Dexie, Web Crypto, Supabase, auth, red, multijugador
+  sync/       Cola offline idempotente + sincronizador
+  state/      Stores Zustand (app, juego, persistencia)
+  i18n/       Español + English
+  ui/         React: pantallas y tema visual
+supabase/migrations/   SQL versionado (esquema + seed)
+tests/                 Vitest
+legacy/                Prototipo anterior (referencia histórica)
+```

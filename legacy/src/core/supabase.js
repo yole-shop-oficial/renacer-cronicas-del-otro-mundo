@@ -10,7 +10,7 @@ import { dbGet, dbPut, queueRemove, queueUpdate } from './db.js';
 
 // Inicialización de Supabase con marcador de posición si es necesario
 const supabaseUrl = window.NEXT_PUBLIC_SUPABASE_URL || 'https://lustmqeqbninkavixttz.supabase.co';
-const supabaseKey = window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1c3RtcWVxYm5pbmthdml4dHR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzMTMxNjUsImV4cCI6MjA5ODg4OTE2NX0.hvBQsxSTYUzlLPgjCpALmTBkvvaF885-gJlBH-w1KdI';
+const supabaseKey = window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'REEMPLAZADA_POR_SEGURIDAD_ver_env_example' /* CLAVE RETIRADA: usa variables de entorno (.env.example). Revoca la clave anterior en el dashboard de Supabase. */;
 
 let supabaseClient = null;
 

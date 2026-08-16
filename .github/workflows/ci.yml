@@ -1,0 +1,38 @@
+# CI/CD (§50): lint de tipos, tests y build en cada push/PR.
+# El despliegue a Vercel se hace con la integración GitHub de Vercel
+# (sin tokens en el repo, §5).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          # Placeholders para el build de verificación (§88):
+          # el build real en Vercel usa sus Environment Variables.
+          VITE_SUPABASE_URL: ''
+          VITE_SUPABASE_ANON_KEY: ''
