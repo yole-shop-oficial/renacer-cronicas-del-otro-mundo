@@ -9,7 +9,7 @@ import { z } from 'zod';
 /** Condición declarativa evaluada contra el estado del juego. */
 export const ConditionSchema = z.object({
   /** p.ej. 'stat' | 'skill' | 'item' | 'flag' | 'relationship' | 'class' | 'goddess' | 'quest' */
-  kind: z.enum(['stat', 'skill', 'item', 'flag', 'relationship', 'class', 'goddess', 'quest', 'decision']),
+  kind: z.enum(['stat', 'skill', 'item', 'flag', 'relationship', 'class', 'goddess', 'quest', 'decision', 'power']),
   key: z.string(),
   op: z.enum(['>=', '<=', '==', '!=', 'has', 'not']).default('has'),
   value: z.union([z.string(), z.number(), z.boolean()]).optional(),

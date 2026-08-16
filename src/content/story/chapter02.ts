@@ -781,7 +781,16 @@ export const CHAPTER_02: Chapter = {
         { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'trust', amount: 15 },
         { kind: 'setFlag', key: 'servan_vell_arc_open', value: true }
       ],
-      choices: [],
+      choices: [
+        {
+          id: 'c2_08_continue',
+          text: { es: 'Capítulo 3 — La cuerda que sube', en: 'Chapter 3 — The Climbing Rope' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'chapter:chapter_03'
+        }
+      ],
       end: true
     }
   ]

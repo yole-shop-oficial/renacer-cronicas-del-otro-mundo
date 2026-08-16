@@ -1,5 +1,7 @@
 import type { Condition } from './schema';
 import type { CharacterState, WorldState, RelationshipAxis, PrimaryStat } from '@/domain/types';
+import { combatPower } from '@/domain/power';
+import { NPCS } from '@/data/world';
 
 /**
  * Evaluador de condiciones del motor narrativo (§22).
@@ -45,6 +47,10 @@ export function evaluateCondition(
         c.op,
         world.decisions.some((d) => d.choiceId === c.key || d.nodeId === c.key)
       );
+    case 'power':
+      // Puerta de poder de combate (§sistemas): la historia puede exigir
+      // un poder mínimo — entrena, equipa y cultiva vínculos para pasar.
+      return compare(combatPower(character, NPCS, world), c.op, Number(c.value ?? 0));
   }
 }
 

@@ -142,6 +142,7 @@ export const es = {
   'quest.quest_first_steps': 'Primeros pasos en un mundo nuevo',
   'quest.quest_whispering_forest': 'El misterio del Bosque de los Susurros',
   'quest.quest_serpent_seal': 'El sello de la Sierpe',
+  'quest.quest_winter_fair': 'La noche de la Feria de Invierno',
   'quest.status.active': 'En curso',
   'quest.status.completed': 'Completada',
   'quest.status.failed': 'Fallida',

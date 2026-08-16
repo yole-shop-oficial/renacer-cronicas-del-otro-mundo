@@ -144,6 +144,7 @@ export const en: typeof es = {
   'quest.quest_first_steps': 'First Steps in a New World',
   'quest.quest_whispering_forest': 'The Mystery of the Whispering Forest',
   'quest.quest_serpent_seal': 'The Seal of the Serpent',
+  'quest.quest_winter_fair': 'The Night of the Winter Fair',
   'quest.status.active': 'Active',
   'quest.status.completed': 'Completed',
   'quest.status.failed': 'Failed',
