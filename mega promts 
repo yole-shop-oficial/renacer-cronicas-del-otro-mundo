@@ -1,0 +1,2210 @@
+MEGA PROMPT — DESARROLLO COMPLETO DE RENACER: CRÓNICAS DEL OTRO MUNDO
+
+0. MISIÓN
+
+Quiero que actúes como un equipo completo de desarrollo de software, videojuegos narrativos y arquitectura cloud y construyas un videojuego web/PWA completo llamado:
+
+RENACER: CRÓNICAS DEL OTRO MUNDO
+
+Repositorio principal:
+
+"renacer-cronicas-otro-mundo"
+
+Existe un repositorio con ese nombre. Antes de modificar código, debes inspeccionarlo y comprender su estado actual.
+
+No quiero una demo superficial ni una maqueta.
+
+Quiero construir la base de un RPG narrativo persistente, Offline First, multiplataforma y preparado para jugarse entre dos personas, con arquitectura profesional y posibilidad de crecer durante años.
+
+---
+
+1. ROL DEL EQUIPO
+
+Actúa simultáneamente como:
+
+- Arquitecto de software senior.
+- Arquitecto frontend.
+- Arquitecto backend/cloud.
+- Ingeniero PWA.
+- Ingeniero Offline First.
+- Ingeniero especializado en sincronización distribuida.
+- Especialista en bases de datos PostgreSQL.
+- Especialista en Supabase.
+- Especialista en autenticación.
+- Especialista en seguridad web.
+- Diseñador UX/UI.
+- Diseñador de videojuegos.
+- Diseñador de RPG.
+- Diseñador de sistemas.
+- Diseñador narrativo.
+- Escritor de fantasía.
+- Especialista en accesibilidad.
+- Ingeniero QA/testing.
+- DevOps.
+- Ingeniero de CI/CD.
+
+No actúes como un simple generador de código.
+
+Toma decisiones técnicas razonadas.
+
+---
+
+2. ELECCIÓN LIBRE DE TECNOLOGÍA
+
+REGLA FUNDAMENTAL
+
+No estás obligado a utilizar una tecnología concreta.
+
+Puedes elegir cualquier lenguaje, framework, librería, motor, arquitectura o herramienta moderna que consideres apropiada.
+
+Evalúa antes de comenzar:
+
+- React
+- Next.js
+- Svelte
+- SvelteKit
+- Vue
+- Nuxt
+- Solid
+- Astro
+- Qwik
+- Lit
+- Web Components
+- TypeScript
+- Node.js
+- Bun
+- Deno
+- cualquier otra tecnología moderna y mantenida
+
+También puedes combinar tecnologías cuando tenga sentido.
+
+Tu objetivo NO es utilizar la tecnología más popular.
+
+Tu objetivo es elegir la tecnología que proporcione el mejor equilibrio entre:
+
+- rendimiento
+- mantenimiento
+- seguridad
+- escalabilidad
+- PWA
+- experiencia móvil
+- funcionamiento offline
+- sincronización
+- tiempo de desarrollo
+- coste
+- comunidad
+- estabilidad
+- facilidad de despliegue
+- compatibilidad con Supabase
+- facilidad para implementar multijugador
+
+Antes de implementar la arquitectura:
+
+1. Analiza las alternativas.
+2. Selecciona el stack.
+3. Explica brevemente por qué.
+4. Compara las principales alternativas descartadas.
+5. No cambies de stack arbitrariamente después.
+
+Si una tecnología inicialmente seleccionada demuestra ser una mala decisión durante el desarrollo, puedes reemplazarla, pero debes explicar la razón.
+
+---
+
+3. PRINCIPIO DE COSTE
+
+Quiero mantener el proyecto lo más económico posible.
+
+Prioridad:
+
+1. Tecnologías open source.
+2. Servicios gratuitos cuando sean suficientes.
+3. Infraestructura serverless.
+4. Supabase cuando sea apropiado.
+5. Vercel cuando sea apropiado.
+6. GitHub para repositorio y CI/CD.
+
+No crear arquitectura que obligue a pagar servidores dedicados para el MVP.
+
+La arquitectura debe poder crecer posteriormente.
+
+---
+
+4. INFRAESTRUCTURA EXISTENTE
+
+Existe una infraestructura previa que debes respetar si es compatible con la nueva arquitectura.
+
+GitHub
+
+Organización/usuario:
+
+"yole-shop-oficial"
+
+Repositorio:
+
+"renacer-cronicas-otro-mundo"
+
+Repositorio:
+
+"https://github.com/yole-shop-oficial/renacer-cronicas-otro-mundo"
+
+---
+
+Vercel
+
+Existe un proyecto relacionado con Renacer:
+
+"renacer-cronicas-otro-mundo"
+
+URL conocida:
+
+"https://renacer-cronicas-otro-mundo.vercel.app"
+
+No asumas que esta URL sigue siendo la configuración definitiva.
+
+Inspecciona primero el proyecto y adapta la configuración si es necesario.
+
+---
+
+Supabase
+
+Existe infraestructura Supabase previa.
+
+Proyecto de autenticación existente:
+
+Project Reference:
+
+"lustmqeqbninkavixttz"
+
+URL:
+
+"https://lustmqeqbninkavixttz.supabase.co"
+
+Existe también otro proyecto empresarial:
+
+Project Reference:
+
+"lqwyidsixjzjffwtrltw"
+
+URL:
+
+"https://lqwyidsixjzjffwtrltw.supabase.co"
+
+No debes copiar claves, tokens privados ni credenciales dentro del código fuente.
+
+---
+
+5. SEGURIDAD DE CREDENCIALES
+
+PROHIBIDO
+
+Nunca:
+
+- escribas tokens privados directamente en el código;
+- escribas PAT de GitHub en JavaScript;
+- escribas tokens privados de Vercel;
+- escribas Supabase Management Tokens;
+- escribas contraseñas;
+- escribas secretos en README;
+- escribas secretos en logs;
+- escribas secretos dentro del cliente;
+- hagas commit de ".env";
+- muestres credenciales en capturas o respuestas.
+
+Utiliza:
+
+".env"
+
+".env.local"
+
+secret managers
+
+variables de entorno del proveedor
+
+GitHub Secrets
+
+Vercel Environment Variables
+
+Supabase Secrets cuando corresponda.
+
+Crear:
+
+".env.example"
+
+con valores falsos/placeholder.
+
+---
+
+6. IMPORTANTE SOBRE LOS TOKENS EXISTENTES
+
+Los tokens entregados previamente deben considerarse potencialmente comprometidos.
+
+No los reutilices ni los imprimas.
+
+Si detectas tokens existentes dentro del repositorio:
+
+1. No los expongas.
+2. Reemplázalos por variables de entorno.
+3. Reporta dónde fueron detectados.
+4. Recomienda su revocación.
+5. Continúa utilizando placeholders.
+
+---
+
+7. CONCEPTO DEL JUEGO
+
+Renacer es un:
+
+RPG narrativo de fantasía interactiva.
+
+No es un juego de acción.
+
+No necesita combate en tiempo real.
+
+La interacción principal sucede mediante:
+
+- lectura
+- decisiones
+- habilidades
+- conversaciones
+- exploración
+- objetos
+- relaciones
+- eventos
+- misiones
+- consecuencias
+- construcción de personaje
+
+La experiencia debe sentirse como:
+
+Libro interactivo + RPG + aventura + mundo persistente.
+
+---
+
+8. FILOSOFÍA DEL JUEGO
+
+La frase principal:
+
+«"Tu personaje no está siguiendo una historia."»
+
+«"Está viviendo una."»
+
+Otra frase secundaria:
+
+«"El mundo existe. La historia la escribes tú."»
+
+---
+
+9. HISTORIA PRINCIPAL
+
+La protagonista es una joven que vive una vida vacía.
+
+Sus padres han muerto.
+
+Su mundo se ha vuelto monótono.
+
+No encuentra sentido ni futuro.
+
+La historia empieza con ella atravesando su peor momento.
+
+La muerte es presentada como el final de su antigua vida y como el punto narrativo que conduce al siguiente mundo.
+
+No debe romantizarse ni presentarse el suicidio como algo admirable.
+
+Después de morir aparece una misteriosa Diosa.
+
+La Diosa le explica que tiene una oportunidad de comenzar de nuevo.
+
+Será enviada a otro mundo.
+
+Pero este mundo tiene una particularidad.
+
+El destino no está completamente escrito.
+
+Las decisiones de la protagonista pueden cambiar:
+
+- personas
+- ciudades
+- relaciones
+- guerras
+- gobiernos
+- economía
+- criaturas
+- religiones
+- eventos
+- historia
+- futuro
+
+La Diosa le dice, en esencia:
+
+«"No voy a darte una historia."»
+
+«"Voy a darte un mundo."»
+
+«"La historia tendrás que escribirla tú."»
+
+---
+
+10. ESTRUCTURA DEL JUEGO
+
+El juego debe sentirse como un libro infinito.
+
+No significa generar texto sin control.
+
+Significa diseñar una arquitectura capaz de añadir contenido continuamente.
+
+El sistema debe permitir agregar:
+
+- capítulos
+- regiones
+- personajes
+- NPC
+- clases
+- habilidades
+- objetos
+- misiones
+- decisiones
+- eventos
+- relaciones
+- Diosas
+- ciudades
+- facciones
+- historias paralelas
+
+sin reescribir el motor.
+
+---
+
+11. CREACIÓN DEL PERSONAJE
+
+Antes de comenzar la aventura el jugador debe:
+
+1. Elegir uno de los 8 personajes.
+2. Elegir nombre.
+3. Elegir clase.
+4. Elegir Diosa.
+5. Confirmar.
+6. Crear partida.
+7. Guardar.
+8. Iniciar prólogo.
+
+---
+
+12. LOS 8 PERSONAJES
+
+Crear inicialmente 8 personajes.
+
+Cada uno debe ser realmente diferente.
+
+No deben ser simples skins.
+
+Cada uno debe tener:
+
+- apariencia
+- nombre
+- personalidad
+- estadísticas iniciales
+- talentos
+- fortalezas
+- debilidades
+- historia
+- relaciones potenciales
+- eventos únicos
+- posibilidades narrativas
+
+El jugador podrá personalizar el nombre.
+
+---
+
+13. CLASES
+
+Crear inicialmente:
+
+- Guerrero
+- Caballero
+- Mago
+- Arquero
+- Sacerdote
+- Pícaro
+- Invocador
+- Aventurero
+
+Pero NO limitar el motor a estas clases.
+
+Debe poder añadirse posteriormente:
+
+- clases avanzadas
+- subclases
+- clases ocultas
+- clases híbridas
+- clases desbloqueables
+- clases legendarias
+
+---
+
+14. DIOSAS
+
+Crear varias Diosas.
+
+Cada Diosa debe tener:
+
+- nombre
+- personalidad
+- apariencia
+- filosofía
+- bendición
+- bonificaciones
+- habilidades especiales
+- eventos exclusivos
+- relación con el jugador
+- secretos
+
+La elección de Diosa debe tener consecuencias reales.
+
+---
+
+15. SISTEMA DE ESTADÍSTICAS
+
+Estadísticas principales:
+
+- Fuerza
+- Inteligencia
+- Agilidad
+- Vitalidad
+- Suerte
+- Voluntad
+- Carisma
+
+Estadísticas derivadas:
+
+- HP
+- MP
+- Stamina
+- Ataque
+- Defensa
+- Crítico
+- Velocidad
+- Resistencia
+- Poder mágico
+
+Debe existir un sistema extensible de estadísticas.
+
+No hardcodear cada estadística dentro de diferentes módulos.
+
+---
+
+16. HABILIDADES
+
+Las habilidades deben formar parte del sistema narrativo.
+
+Ejemplos:
+
+- Analizar
+- Persuasión
+- Intimidación
+- Curación
+- Bola de fuego
+- Sigilo
+- Detectar magia
+- Invocación
+
+Una habilidad puede desbloquear:
+
+- opciones de diálogo
+- caminos narrativos
+- soluciones alternativas
+- eventos especiales
+- misiones
+- objetos
+- información secreta
+
+---
+
+17. COMBATE
+
+No desarrollar combate de acción.
+
+El combate será principalmente:
+
+narrativo + estratégico + basado en decisiones.
+
+Ejemplo:
+
+Una criatura aparece.
+
+El jugador puede encontrar:
+
+[Analizar]
+
+[Atacar]
+
+[Hablar]
+
+[Huir]
+
+[Utilizar habilidad]
+
+[Usar objeto]
+
+Las opciones dependen del estado del personaje.
+
+---
+
+18. INVENTARIO
+
+Implementar:
+
+- armas
+- armaduras
+- consumibles
+- materiales
+- objetos mágicos
+- objetos de misión
+- objetos únicos
+- objetos ocultos
+
+Cada objeto debe poder tener:
+
+- id
+- nombre
+- descripción
+- rareza
+- tipo
+- estadísticas
+- efectos
+- valor
+- restricciones
+- eventos asociados
+
+---
+
+19. NPC
+
+Cada NPC debe tener estado persistente.
+
+Datos posibles:
+
+- nombre
+- edad
+- personalidad
+- profesión
+- región
+- historia
+- confianza
+- amistad
+- miedo
+- respeto
+- relación
+- memoria
+- eventos
+- decisiones anteriores
+
+El NPC debe poder recordar acciones del jugador.
+
+---
+
+20. RELACIONES
+
+Crear sistema de relaciones.
+
+Ejemplo:
+
+"trust"
+
+"friendship"
+
+"respect"
+
+"fear"
+
+"affection"
+
+"rivalry"
+
+Las relaciones deben provocar cambios narrativos.
+
+Un NPC que confía en el jugador puede proporcionar información que otro NPC nunca ofrecería.
+
+---
+
+21. MUNDO
+
+Crear inicialmente:
+
+- Aldea inicial
+- Bosque
+- Ciudad
+- Ruinas
+- Templo
+- Región desconocida
+
+El mundo debe poder ampliarse.
+
+No usar un mapa 3D para el MVP.
+
+Utilizar mapa 2D/interactivo.
+
+---
+
+22. MOTOR NARRATIVO
+
+Crear un sistema independiente de la interfaz.
+
+Debe poder representar:
+
+- narración
+- diálogos
+- elecciones
+- condiciones
+- variables
+- eventos
+- recompensas
+- penalizaciones
+- cambios del mundo
+- cambios de relación
+- cambios de misión
+- desbloqueos
+- habilidades
+- objetos
+
+Ejemplo conceptual:
+
+EVENTO:
+
+"forest_creature"
+
+CONDICIÓN:
+
+"player.intelligence >= 10"
+
+OPCIÓN:
+
+"analyze_creature"
+
+CONSECUENCIA:
+
+"unlock_event("secret_weakness")"
+
+---
+
+23. EVENTOS DATA-DRIVEN
+
+El contenido narrativo debe preferiblemente almacenarse como datos estructurados.
+
+Puede utilizarse:
+
+JSON
+
+TypeScript objects
+
+Base de datos
+
+o una combinación.
+
+La elección dependerá de la arquitectura.
+
+La idea es que los escritores puedan crear contenido sin tocar el motor principal.
+
+---
+
+24. OFFLINE FIRST
+
+Esta es una de las partes más importantes del proyecto.
+
+NO construir primero el modo online.
+
+La arquitectura debe pensar desde el principio:
+
+LOCAL → CHANGE → QUEUE → SYNC → CLOUD
+
+---
+
+25. PRIMERA CONEXIÓN
+
+La primera vez:
+
+1. Abrir aplicación.
+2. Crear cuenta.
+3. Iniciar sesión.
+4. Verificar conexión.
+5. Crear personaje.
+6. Elegir clase.
+7. Elegir Diosa.
+8. Crear partida.
+9. Guardar remotamente.
+10. Guardar localmente.
+11. Descargar datos necesarios.
+12. Iniciar introducción.
+
+La primera inicialización necesita Internet.
+
+Después el juego debe poder continuar offline.
+
+---
+
+26. MODO OFFLINE
+
+Cuando Internet desaparezca:
+
+Detectar inmediatamente:
+
+"OFFLINE"
+
+Mostrar un indicador discreto.
+
+Continuar jugando.
+
+NO:
+
+- cerrar sesión
+- borrar progreso
+- bloquear historia
+- perder decisiones
+- mostrar error crítico
+
+Cada cambio se guarda localmente.
+
+---
+
+27. LOCAL DATABASE
+
+Utilizar la mejor solución moderna que el stack elegido considere apropiada.
+
+Puede ser:
+
+- IndexedDB
+- Dexie
+- RxDB
+- otra solución madura
+
+La selección debe justificarse.
+
+Debe soportar:
+
+- persistencia
+- consultas
+- transacciones
+- cola de sincronización
+- recuperación tras cierre
+- integridad de datos
+
+---
+
+28. CIFRADO LOCAL
+
+Los datos que realmente sean sensibles deben cifrarse.
+
+Preferir:
+
+Web Crypto API
+
+AES-GCM
+
+o una alternativa moderna y segura si la arquitectura escogida lo requiere.
+
+No almacenar contraseñas.
+
+No inventar un sistema criptográfico propio.
+
+La gestión de claves debe diseñarse correctamente.
+
+---
+
+29. SINCRONIZACIÓN
+
+Cuando vuelva Internet:
+
+Detectar automáticamente.
+
+Mostrar:
+
+"Conexión recuperada."
+
+Después:
+
+"Sincronizando y guardando tus datos..."
+
+Procesar la cola.
+
+Sincronizar.
+
+Resolver conflictos.
+
+Confirmar éxito.
+
+Mostrar:
+
+"✓ Partida sincronizada correctamente."
+
+---
+
+30. COLA OFFLINE
+
+Crear una cola persistente.
+
+Operaciones posibles:
+
+"CREATE_CHARACTER"
+
+"UPDATE_CHARACTER"
+
+"ADD_ITEM"
+
+"REMOVE_ITEM"
+
+"LEARN_SKILL"
+
+"COMPLETE_QUEST"
+
+"UPDATE_RELATIONSHIP"
+
+"MAKE_DECISION"
+
+"UPDATE_WORLD"
+
+Cada operación deberá tener un identificador único.
+
+Debe ser idempotente.
+
+Debe poder reintentarse.
+
+Debe registrar:
+
+- id
+- operation type
+- entity
+- entity id
+- payload
+- timestamp
+- retry count
+- status
+
+---
+
+31. RESOLUCIÓN DE CONFLICTOS
+
+No asumir simplemente:
+
+"el último cambio gana."
+
+Diseñar una estrategia según el tipo de dato.
+
+Ejemplos:
+
+- Inventario: operaciones transaccionales.
+- Experiencia: evitar duplicación.
+- Decisiones: event sourcing o IDs únicos.
+- Perfil: último cambio válido.
+- Relaciones: operaciones acumulativas o versión.
+- Estado del mundo: control de versión.
+
+Documentar claramente las reglas.
+
+---
+
+32. SUPABASE
+
+Utilizar Supabase como backend cuando sea la opción adecuada.
+
+Aprovechar:
+
+- PostgreSQL
+- Auth
+- Realtime
+- Storage
+- Row Level Security
+- Functions
+- Edge Functions cuando sean necesarias
+
+No utilizar Supabase únicamente como una tabla gigante de JSON.
+
+Diseñar una base de datos correctamente normalizada donde tenga sentido.
+
+---
+
+33. BASE DE DATOS PROPUESTA
+
+Evaluar tablas como:
+
+"profiles"
+
+"characters"
+
+"character_classes"
+
+"goddesses"
+
+"games"
+
+"game_players"
+
+"story_states"
+
+"story_events"
+
+"story_choices"
+
+"inventory_items"
+
+"skills"
+
+"character_skills"
+
+"quests"
+
+"relationships"
+
+"npcs"
+
+"npc_states"
+
+"world_regions"
+
+"world_states"
+
+"sync_operations"
+
+"saves"
+
+La estructura final debe ser decidida por el arquitecto según las necesidades reales.
+
+---
+
+34. MULTIJUGADOR COOPERATIVO
+
+El juego debe poder jugarse entre dos personas.
+
+Jugador 1:
+
+crea partida.
+
+El sistema genera:
+
+"GAME CODE"
+
+Jugador 2:
+
+introduce código.
+
+Se crea:
+
+"game_players"
+
+Ambos jugadores pertenecen al mismo mundo.
+
+---
+
+35. DECISIONES COOPERATIVAS
+
+Algunos eventos pueden requerir decisiones de ambos jugadores.
+
+Ejemplo:
+
+Jugador 1:
+
+[Salvar la ciudad]
+
+Jugador 2:
+
+[Abandonar la ciudad]
+
+El sistema puede:
+
+- esperar ambas decisiones;
+- resolver según reglas;
+- generar una consecuencia;
+- crear una ruta alternativa.
+
+Las decisiones no deben bloquear permanentemente el juego si uno de los jugadores se desconecta.
+
+Debe existir política de:
+
+- timeout
+- última decisión
+- decisión automática
+- modo individual
+
+---
+
+36. REALTIME
+
+Si resulta apropiado:
+
+Utilizar Supabase Realtime/WebSockets.
+
+Ejemplos:
+
+- presencia
+- jugador conectado
+- jugador desconectado
+- decisión del compañero
+- actualización de partida
+- mensajes
+- progreso
+
+Pero el juego nunca debe depender exclusivamente del realtime para funcionar.
+
+---
+
+37. PWA
+
+La aplicación debe ser realmente instalable.
+
+Implementar según la mejor tecnología elegida:
+
+- manifest
+- service worker
+- cache
+- offline fallback
+- actualización
+- instalación
+- iconos
+- splash
+- responsive
+
+Debe funcionar en:
+
+Android
+
+iPhone/iPad
+
+PC
+
+---
+
+38. COMPATIBILIDAD IOS
+
+Prestar especial atención a:
+
+- Safari iOS
+- almacenamiento local
+- PWA
+- suspensión de pestañas
+- recuperación de aplicación
+- conectividad
+- limitaciones de background
+- caché
+- notificaciones si se utilizan
+
+No asumir que las APIs funcionan exactamente igual que en Android.
+
+---
+
+39. DISEÑO VISUAL
+
+No quiero estética de anime.
+
+Aunque la inspiración narrativa sea isekai, el producto visual debe sentirse como:
+
+fantasía occidental + libro mágico + RPG moderno.
+
+Características:
+
+- colorido
+- elegante
+- amigable
+- mágico
+- legible
+- moderno
+- cómodo en móviles
+
+Utilizar:
+
+- cartas
+- paneles
+- pergaminos
+- marcos
+- iconos
+- botones grandes
+- animaciones sutiles
+
+---
+
+40. UX
+
+La historia es el centro.
+
+La pantalla principal debe priorizar:
+
+Narración.
+
+Diálogo.
+
+Decisiones.
+
+El inventario, estadísticas y sistemas secundarios no deben distraer mientras el jugador lee.
+
+---
+
+41. NAVEGACIÓN
+
+Diseñar navegación para móvil.
+
+Posibles secciones:
+
+- Historia
+- Personaje
+- Habilidades
+- Inventario
+- Misiones
+- Mundo
+- Relaciones
+- Configuración
+
+La IA puede modificar esta estructura si encuentra una mejor UX.
+
+---
+
+42. ESTADOS DE CONEXIÓN
+
+Crear estados claramente diferenciados:
+
+"ONLINE"
+
+"OFFLINE"
+
+"SYNCING"
+
+"SYNC_ERROR"
+
+"SYNC_SUCCESS"
+
+Debe existir una UI clara para cada estado.
+
+---
+
+43. GUARDADO
+
+Guardar automáticamente.
+
+No depender exclusivamente del botón Guardar.
+
+Primero:
+
+LOCAL SAVE
+
+Después:
+
+CLOUD SYNC
+
+Cada decisión importante debe generar un punto de persistencia.
+
+---
+
+44. RECUPERACIÓN
+
+Si la aplicación:
+
+- se cierra
+- pierde Internet
+- se reinicia
+- se actualiza
+- se suspende
+- pierde una solicitud de red
+
+el progreso no debe desaparecer.
+
+Al volver a abrir:
+
+1. cargar estado local
+2. mostrar juego
+3. intentar sincronizar
+4. continuar
+
+---
+
+45. SEGURIDAD
+
+Utilizar:
+
+- autenticación segura
+- Row Level Security
+- validación de datos
+- control de acceso
+- sanitización
+- protección contra manipulación del cliente
+- rate limiting donde corresponda
+- variables de entorno
+- secretos fuera del código
+
+Nunca confiar únicamente en validaciones frontend.
+
+---
+
+46. VALIDACIÓN
+
+Utilizar el mejor sistema de validación compatible con el stack.
+
+Ejemplos:
+
+Zod
+
+Valibot
+
+Schemas PostgreSQL
+
+Type-safe validation
+
+La IA debe decidir la mejor opción.
+
+---
+
+47. TYPESCRIPT
+
+Si el lenguaje elegido lo permite y resulta apropiado, preferir TypeScript sobre JavaScript puro.
+
+El proyecto debe evitar:
+
+"any"
+
+innecesario.
+
+Los modelos compartidos deben estar tipados.
+
+---
+
+48. TESTING
+
+Crear pruebas.
+
+Como mínimo:
+
+- unit tests
+- tests del motor narrativo
+- tests de sincronización
+- tests de cola offline
+- tests de inventario
+- tests de decisiones
+- tests de autenticación donde sea apropiado
+
+La herramienta puede ser:
+
+Vitest
+
+Jest
+
+Playwright
+
+Cypress
+
+u otra alternativa que el stack considere superior.
+
+---
+
+49. E2E
+
+Crear pruebas end-to-end para:
+
+1. Registro.
+2. Login.
+3. Creación de personaje.
+4. Inicio de partida.
+5. Desconectar Internet.
+6. Tomar decisiones offline.
+7. Cerrar aplicación.
+8. Volver.
+9. Recuperar datos.
+10. Reconectar.
+11. Sincronizar.
+
+---
+
+50. CI/CD
+
+Configurar, cuando sea apropiado:
+
+GitHub Actions
+
+para:
+
+- lint
+- type checking
+- tests
+- build
+- validaciones
+
+La aplicación debe poder desplegarse automáticamente.
+
+---
+
+51. VERCEL
+
+Si Vercel sigue siendo adecuado para el frontend/PWA, preparar el proyecto para Vercel.
+
+No colocar secretos dentro del repositorio.
+
+Utilizar Environment Variables.
+
+---
+
+52. GITHUB
+
+Mantener un repositorio limpio.
+
+Crear:
+
+README
+
+LICENSE si corresponde
+
+".gitignore"
+
+".env.example"
+
+documentación
+
+migraciones
+
+tests
+
+scripts
+
+No subir:
+
+".env"
+
+credenciales
+
+tokens
+
+secretos
+
+build artifacts innecesarios
+
+---
+
+53. ESTRUCTURA
+
+La estructura exacta queda a criterio del framework escogido.
+
+Pero debe mantenerse separación clara entre:
+
+UI
+
+dominio
+
+narrativa
+
+persistencia
+
+offline
+
+sync
+
+backend
+
+auth
+
+datos
+
+configuración
+
+tests
+
+assets
+
+No crear un monolito ilegible.
+
+---
+
+54. REGLA SOBRE ARCHIVOS
+
+Evitar archivos gigantes.
+
+Preferencia:
+
+menos de 200-300 líneas cuando sea razonable.
+
+Pero no fragmentar artificialmente un archivo solamente para cumplir el número.
+
+La arquitectura y legibilidad tienen prioridad.
+
+---
+
+55. DOCUMENTACIÓN
+
+Crear README detallado.
+
+Debe incluir:
+
+- descripción
+- arquitectura
+- stack
+- instalación
+- desarrollo
+- producción
+- Supabase
+- variables de entorno
+- base de datos
+- migraciones
+- PWA
+- offline
+- sincronización
+- testing
+- despliegue
+- solución de problemas
+
+---
+
+56. DOCUMENTACIÓN DE ARQUITECTURA
+
+Crear documento:
+
+"ARCHITECTURE.md"
+
+Debe explicar:
+
+- decisiones técnicas
+- flujo de datos
+- offline
+- sincronización
+- base de datos
+- autenticación
+- multijugador
+- seguridad
+
+---
+
+57. DOCUMENTACIÓN DEL MOTOR NARRATIVO
+
+Crear:
+
+"STORY_ENGINE.md"
+
+Explicar cómo crear:
+
+- capítulos
+- eventos
+- diálogos
+- decisiones
+- condiciones
+- recompensas
+- NPC
+- misiones
+
+sin modificar el núcleo.
+
+---
+
+58. HERRAMIENTA DE CONTENIDO
+
+Siempre que sea viable, diseñar el sistema para que posteriormente pueda conectarse a un editor de contenido.
+
+Ejemplo:
+
+Un diseñador podría crear un evento como:
+
+"EVENTO → condiciones → opciones → consecuencias"
+
+sin escribir código del motor.
+
+No es obligatorio crear el editor completo en la primera versión, pero la arquitectura debe dejarlo preparado.
+
+---
+
+59. CONTENIDO INICIAL
+
+La primera versión debe tener contenido jugable real.
+
+Debe incluir:
+
+- prólogo
+- Diosa
+- creación del personaje
+- elección de clase
+- elección de personaje
+- primera región
+- primera ciudad
+- primeros NPC
+- primera misión
+- primer objeto
+- primera habilidad
+- primeras decisiones
+- primera consecuencia narrativa
+
+No utilizar texto de relleno tipo:
+
+"Lorem ipsum"
+
+---
+
+60. HISTORIA INICIAL
+
+Crear un prólogo emocional y misterioso.
+
+El jugador debe experimentar:
+
+1. vida anterior
+2. aislamiento
+3. final de su antigua vida
+4. aparición de la Diosa
+5. explicación del nuevo mundo
+6. selección del personaje
+7. selección de clase
+8. selección de Diosa
+9. renacimiento
+10. llegada al nuevo mundo
+
+El tono puede ser:
+
+- dramático
+- misterioso
+- aventurero
+- mágico
+- emocional
+
+Sin depender de referencias directas a anime.
+
+---
+
+61. PRINCIPIO DE INMERSIÓN
+
+Cada sistema debe tener una explicación narrativa cuando sea posible.
+
+Ejemplo:
+
+No simplemente:
+
+"Ganaste +10 XP."
+
+Preferiblemente:
+
+"Tu experiencia en el bosque ha fortalecido tu comprensión de la supervivencia."
+
+La interfaz puede mostrar la información mecánica, mientras la narrativa explica el significado.
+
+---
+
+62. SISTEMA DE PROGRESIÓN
+
+Diseñar:
+
+- experiencia
+- niveles
+- habilidades
+- atributos
+- desbloqueos
+- clases avanzadas
+- títulos
+- reputación
+- relaciones
+
+Debe ser extensible.
+
+---
+
+63. REPUTACIÓN
+
+Añadir sistema de reputación.
+
+Puede existir:
+
+- reputación regional
+- reputación con facciones
+- reputación individual
+
+Las acciones modifican la reputación.
+
+---
+
+64. MUNDO DINÁMICO
+
+Preparar variables globales.
+
+Ejemplo:
+
+"war_started"
+
+"king_dead"
+
+"city_destroyed"
+
+"guild_created"
+
+"festival_active"
+
+Estas variables pueden cambiar dependiendo de decisiones.
+
+---
+
+65. MEMORIA DEL MUNDO
+
+Las decisiones importantes deben quedar registradas.
+
+Ejemplo:
+
+Jugador perdonó a un personaje.
+
+Muchos capítulos después:
+
+Ese personaje puede reaparecer.
+
+El mundo debe recordar.
+
+---
+
+66. OBJETIVO DEL MULTIJUGADOR
+
+No quiero solamente "dos personas mirando la misma pantalla".
+
+Quiero que exista una experiencia cooperativa real.
+
+Ambos jugadores deben sentir que sus decisiones importan.
+
+---
+
+67. JUEGO ASIMÉTRICO
+
+Explorar posteriormente sistemas donde cada jugador pueda tener:
+
+- información distinta
+- habilidades distintas
+- conversaciones distintas
+- objetivos distintos
+- decisiones distintas
+
+Esto puede generar situaciones donde ambos jugadores colaboren para descubrir la solución.
+
+---
+
+68. IA Y GENERACIÓN DE HISTORIA
+
+No implementar generación automática de historia sin controles.
+
+Si en el futuro se integra una IA:
+
+Debe existir:
+
+- límites
+- validación
+- memoria estructurada
+- consistencia
+- seguridad
+- moderación
+- control del lore
+- control de personajes
+- control del estado del mundo
+
+La IA no debe poder destruir arbitrariamente la continuidad del juego.
+
+---
+
+69. ARQUITECTURA PREPARADA PARA IA
+
+Si se decide utilizar IA en el futuro, separar:
+
+"WORLD STATE"
+
+"CHARACTER STATE"
+
+"NPC MEMORY"
+
+"STORY STATE"
+
+"PLAYER ACTION"
+
+"GENERATED RESPONSE"
+
+La IA nunca debe ser la fuente absoluta del estado real del juego.
+
+---
+
+70. RENDIMIENTO
+
+Optimizar especialmente para teléfonos.
+
+Prioridad:
+
+- carga rápida
+- poco uso de RAM
+- pocas peticiones de red
+- assets optimizados
+- lazy loading
+- cache
+- code splitting
+- compresión
+
+---
+
+71. ACCESIBILIDAD
+
+Implementar:
+
+- contraste adecuado
+- textos legibles
+- botones grandes
+- navegación por teclado cuando corresponda
+- labels
+- feedback visual
+- feedback no exclusivamente por color
+- soporte para tamaños de pantalla pequeños
+
+---
+
+72. IDIOMAS
+
+Preparar internacionalización desde el principio.
+
+Mínimo:
+
+Español
+
+Inglés
+
+No mezclar textos directamente en componentes si el framework elegido permite una solución mejor.
+
+---
+
+73. ANALYTICS
+
+No introducir analytics invasivo.
+
+Si posteriormente se necesita:
+
+usar solución respetuosa con privacidad.
+
+No recolectar información innecesaria.
+
+---
+
+74. PRIVACIDAD
+
+No guardar datos personales que no sean necesarios.
+
+Separar:
+
+datos de cuenta
+
+datos del jugador
+
+datos de la partida
+
+datos de telemetría
+
+---
+
+75. RESPUESTA A ERRORES DE RED
+
+Nunca asumir que una solicitud HTTP siempre funciona.
+
+Todo acceso remoto debe manejar:
+
+- timeout
+- retry
+- offline
+- respuesta inválida
+- autenticación expirada
+- conflicto
+- servidor caído
+
+---
+
+76. OBSERVABILIDAD
+
+Preparar logs de desarrollo.
+
+En producción:
+
+no registrar secretos.
+
+No registrar información privada innecesaria.
+
+---
+
+77. MIGRACIONES DE BASE DE DATOS
+
+No crear tablas manualmente desde el dashboard y olvidarse de ellas.
+
+Utilizar migraciones versionadas.
+
+La base de datos debe poder reconstruirse desde el repositorio.
+
+---
+
+78. SEED
+
+Crear datos iniciales mediante seed/migrations.
+
+Ejemplos:
+
+- clases
+- Diosas
+- habilidades
+- personajes
+- regiones
+- NPC
+- objetos
+- eventos iniciales
+
+---
+
+79. NO HARDCODEAR
+
+Evitar:
+
+- nombres dentro de demasiados componentes
+- estadísticas duplicadas
+- eventos duplicados
+- lógica narrativa dentro del HTML
+- credenciales
+- URLs sensibles
+- reglas del juego dispersas
+
+---
+
+80. REGLA DE DECISIÓN TÉCNICA
+
+Cuando existan varias soluciones válidas:
+
+NO preguntes automáticamente al usuario.
+
+Analiza.
+
+Decide.
+
+Implementa.
+
+Documenta por qué.
+
+Solo detenerte si falta información que realmente impida continuar.
+
+---
+
+81. PRIORIDAD DE CALIDAD
+
+Prioridad:
+
+1. Seguridad.
+2. Integridad del progreso.
+3. Offline First.
+4. Sincronización.
+5. Jugabilidad.
+6. Arquitectura.
+7. Rendimiento.
+8. UX/UI.
+9. Estética.
+10. Extras.
+
+No sacrificar la integridad del progreso por una animación o función visual.
+
+---
+
+82. ORDEN DE IMPLEMENTACIÓN
+
+FASE 1
+
+Auditar repositorio existente.
+
+FASE 2
+
+Analizar y seleccionar stack.
+
+FASE 3
+
+Diseñar arquitectura.
+
+FASE 4
+
+Configurar proyecto.
+
+FASE 5
+
+Configurar CI/CD.
+
+FASE 6
+
+Configurar autenticación.
+
+FASE 7
+
+Diseñar base de datos.
+
+FASE 8
+
+Crear migraciones.
+
+FASE 9
+
+Implementar almacenamiento local.
+
+FASE 10
+
+Implementar offline.
+
+FASE 11
+
+Implementar cola de sincronización.
+
+FASE 12
+
+Implementar sincronización con Supabase.
+
+FASE 13
+
+Implementar creación de personaje.
+
+FASE 14
+
+Implementar motor narrativo.
+
+FASE 15
+
+Implementar contenido inicial.
+
+FASE 16
+
+Implementar inventario.
+
+FASE 17
+
+Implementar habilidades.
+
+FASE 18
+
+Implementar NPC.
+
+FASE 19
+
+Implementar relaciones.
+
+FASE 20
+
+Implementar mundo.
+
+FASE 21
+
+Implementar cooperativo.
+
+FASE 22
+
+Implementar Realtime.
+
+FASE 23
+
+Implementar UI final.
+
+FASE 24
+
+Testing.
+
+FASE 25
+
+Optimización.
+
+FASE 26
+
+Producción.
+
+---
+
+83. CRITERIO DE ÉXITO DEL MVP
+
+El MVP se considera correcto únicamente si:
+
+1. El usuario puede registrarse.
+2. Puede iniciar sesión.
+3. Puede crear personaje.
+4. Puede escoger clase.
+5. Puede escoger Diosa.
+6. Puede comenzar la historia.
+7. Puede jugar una parte del prólogo.
+8. Puede cerrar la aplicación.
+9. Puede desconectarse de Internet.
+10. Puede seguir jugando.
+11. Sus decisiones quedan almacenadas localmente.
+12. Puede volver a abrir el juego.
+13. Su progreso permanece.
+14. Internet vuelve.
+15. La cola se sincroniza.
+16. Supabase recibe los cambios.
+17. El sistema no duplica operaciones.
+18. El usuario ve el estado de sincronización.
+19. El PWA puede instalarse.
+20. Dos usuarios pueden comenzar a compartir una partida.
+
+---
+
+84. COMANDOS Y SCRIPTS
+
+Crear scripts apropiados para:
+
+- instalación
+- desarrollo
+- producción
+- test
+- lint
+- typecheck
+- build
+- migraciones
+- seed
+
+Utilizar el gestor de paquetes adecuado al stack elegido.
+
+---
+
+85. CALIDAD DEL CÓDIGO
+
+Código:
+
+- limpio
+- tipado
+- modular
+- documentado cuando haga falta
+- mantenible
+- probado
+
+No crear funciones gigantes.
+
+No repetir lógica.
+
+No crear abstracciones innecesarias.
+
+---
+
+86. README
+
+El README debe permitir que otra persona clone el repositorio y entienda el proyecto sin preguntarte.
+
+Debe explicar:
+
+- qué es
+- cómo funciona
+- stack
+- arquitectura
+- instalación
+- variables
+- Supabase
+- desarrollo
+- testing
+- despliegue
+- PWA
+- offline
+- sincronización
+- cooperativo
+
+---
+
+87. AUDITORÍA ANTES DE TERMINAR
+
+Antes de considerar el trabajo finalizado:
+
+Revisa:
+
+- errores de consola
+- errores de TypeScript
+- imports rotos
+- rutas inexistentes
+- variables sin definir
+- secretos expuestos
+- problemas de autenticación
+- problemas de RLS
+- sincronización
+- conflictos
+- duplicación
+- pérdida de progreso
+- problemas responsive
+- problemas de PWA
+- rendimiento
+- accesibilidad
+
+---
+
+88. PROHIBICIÓN DE SIMULAR FUNCIONES
+
+No escribas:
+
+"TODO: implementar sincronización"
+
+cuando se supone que la función forma parte del MVP.
+
+No reemplaces una función real con:
+
+"console.log("sync")"
+
+No simules Supabase si Supabase forma parte del MVP.
+
+No simules offline.
+
+No simules autenticación.
+
+Cuando una función no pueda implementarse por falta de credenciales o configuración externa:
+
+- implementa toda la parte posible;
+- crea la configuración necesaria;
+- utiliza variables de entorno;
+- documenta exactamente lo que falta.
+
+---
+
+89. INFORME DE DECISIONES
+
+Al finalizar cada gran fase, documenta:
+
+Implementado
+
+Qué funciona.
+
+Decisiones técnicas
+
+Qué tecnología fue utilizada.
+
+Por qué
+
+Por qué fue elegida.
+
+Riesgos
+
+Qué problemas podrían aparecer.
+
+Próximo paso
+
+Qué debe construirse después.
+
+---
+
+90. RESULTADO FINAL
+
+Quiero un proyecto real llamado:
+
+"renacer-cronicas-otro-mundo"
+
+Debe convertirse en:
+
+un RPG narrativo de fantasía persistente, multiplataforma, Offline First, con sincronización cloud y cooperativo.
+
+No quiero solamente un sitio web bonito.
+
+Quiero construir el núcleo de un juego que pueda crecer durante años.
+
+Debe sentirse como:
+
+un libro mágico que nunca termina.
+
+El jugador entra en un mundo.
+
+Toma decisiones.
+
+Conoce personas.
+
+Aprende habilidades.
+
+Consigue objetos.
+
+Construye relaciones.
+
+Cambia ciudades.
+
+Afecta acontecimientos.
+
+Y algún día puede mirar atrás y descubrir que:
+
+su historia es completamente diferente de la historia de otro jugador.
+
+---
+
+91. FRASE FINAL DEL PROYECTO
+
+«RENACER
+
+El mundo ya existe.
+
+La historia la escribes tú.»
