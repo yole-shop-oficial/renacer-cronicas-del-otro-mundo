@@ -4,6 +4,7 @@ import { xpForNextLevel } from '@/domain/stats';
 import { PRIMARY_STATS } from '@/domain/types';
 import { NPCS } from '@/data/world';
 import { effectiveStats, effectiveDerived, powerBreakdown } from '@/domain/power';
+import { IconPower, IconCoin, IconBond, IconMedal } from '@/ui/icons';
 
 /**
  * Ficha de personaje: PODER DE COMBATE calculado automático (con desglose),
@@ -26,7 +27,7 @@ export function CharacterScreen() {
       {/* PODER DE COMBATE */}
       <div className="card power-card">
         <div className="power-value">
-          <span className="power-icon" aria-hidden>⚔</span>
+          <span className="power-icon" aria-hidden><IconPower size={34} /></span>
           <div>
             <div className="power-number">{power.total.toLocaleString()}</div>
             <div className="power-label">{t('power.title')}</div>
@@ -39,7 +40,7 @@ export function CharacterScreen() {
         </div>
         {Object.keys(power.bondContribution).length > 0 && (
           <p className="hint-text" style={{ marginTop: 8 }}>
-            💞 {t('power.bondsHelp')}:{' '}
+            <IconBond size={14} className="ico-pink inline-ico" /> {t('power.bondsHelp')}:{' '}
             {Object.entries(power.bondContribution)
               .map(([stat, v]) => `+${v} ${t(`stats.${stat}`)}`)
               .join(' · ')}
@@ -77,7 +78,7 @@ export function CharacterScreen() {
         </div>
         <div className="stat-row" style={{ marginTop: 8 }}>
           <span>{t('stats.gold')}</span>
-          <b>🪙 {c.gold}</b>
+          <b className="with-icon-inline"><IconCoin size={15} className="ico-gold" /> {c.gold}</b>
         </div>
       </div>
 
@@ -128,7 +129,7 @@ export function CharacterScreen() {
         <div className="card">
           <h3>✦</h3>
           {c.titles.map((title) => (
-            <p key={title}>🏅 {t(`title.${title}`)}</p>
+            <p key={title} className="with-icon-inline"><IconMedal size={16} className="ico-gold" /> {t(`title.${title}`)}</p>
           ))}
         </div>
       )}

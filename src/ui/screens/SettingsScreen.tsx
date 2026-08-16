@@ -1,54 +1,114 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getLocale, setLocale, t, type Locale } from '@/i18n';
 import { useAppStore } from '@/state/appStore';
-import { useGameStore } from '@/state/gameStore';
-import { createCoopGame, joinCoopGame } from '@/services/multiplayer';
-import { setActiveCoopGame } from '@/services/coopDecisions';
-import { isSupabaseConfigured } from '@/services/supabase';
+import { detectDevice, connectionType, loadPartnerSoul, type SoulProfile } from '@/services/souls';
+import { SoulScreen } from './SoulScreen';
+import { GameIcon, IconWave, IconSoul, IconGear } from '@/ui/icons';
 
-/** Ajustes: idioma, cooperativo (§34) y sesión. */
+/**
+ * AJUSTES: idioma, conexión y sincronización entre los dos teléfonos
+ * (iPhone / Android / Windows), estado del dispositivo y almas vinculadas.
+ */
 export function SettingsScreen() {
-  const session = useAppStore((s) => s.session);
+  const connection = useAppStore((s) => s.connection);
   const pendingOps = useAppStore((s) => s.pendingOps);
-  const save = useGameStore((s) => s.save);
   const [, force] = useState(0);
-  const [coopCode, setCoopCode] = useState<string | null>(null);
-  const [joinCode, setJoinCode] = useState('');
-  const [coopMsg, setCoopMsg] = useState<string | null>(null);
-  const cloudReady = isSupabaseConfigured() && session?.email !== 'local@offline';
+  const [view, setView] = useState<'main' | 'souls'>('main');
+  const [partner, setPartner] = useState<SoulProfile | null>(null);
+  const device = detectDevice();
+
+  useEffect(() => {
+    void loadPartnerSoul().then(setPartner);
+  }, [view]);
+
+  if (view === 'souls') {
+    return (
+      <>
+        <div className="subtabs">
+          <button className="subtab" onClick={() => setView('main')}>
+            ← {t('nav.settings')}
+          </button>
+          <button className="subtab active">{t('soul.title')}</button>
+        </div>
+        <SoulScreen />
+      </>
+    );
+  }
 
   function switchLocale(l: Locale) {
     setLocale(l);
     force((n) => n + 1);
   }
 
-  async function hostCoop() {
-    if (!session || !save) return;
-    try {
-      const coop = await createCoopGame(session.userId, save.gameId);
-      await setActiveCoopGame(coop.gameId);
-      setCoopCode(coop.code);
-      setCoopMsg(null);
-    } catch (err) {
-      setCoopMsg(err instanceof Error ? err.message : String(err));
-    }
-  }
-
-  async function joinCoop() {
-    if (!session) return;
-    try {
-      const coop = await joinCoopGame(session.userId, joinCode);
-      await setActiveCoopGame(coop.gameId);
-      setCoopMsg(`✓ ${coop.code}`);
-    } catch (err) {
-      setCoopMsg(err instanceof Error ? err.message : String(err));
-    }
-  }
+  const online = connection !== 'OFFLINE';
 
   return (
     <div className="panel">
       <h2 className="section-title">{t('nav.settings')}</h2>
 
+      {/* CONEXIÓN */}
+      <div className="card">
+        <h3 className="with-icon">
+          <IconWave size={18} className={online ? 'ico-teal' : 'ico-danger'} />
+          {t('settings.connection')}
+        </h3>
+        <div className="settings-rows">
+          <div className="settings-row">
+            <span>{t('settings.network')}</span>
+            <b className={online ? 'text-ok' : 'text-bad'}>
+              {online ? t('status.online') : t('status.offline')}
+            </b>
+          </div>
+          <div className="settings-row">
+            <span>{t('settings.connType')}</span>
+            <b>{connectionType()}</b>
+          </div>
+          <div className="settings-row">
+            <span>{t('settings.pendingChanges')}</span>
+            <b>{pendingOps}</b>
+          </div>
+        </div>
+        <p className="hint-text" style={{ marginTop: 8 }}>{t('settings.offlineFirstNote')}</p>
+      </div>
+
+      {/* DISPOSITIVO */}
+      <div className="card">
+        <h3 className="with-icon">
+          <IconGear size={18} className="ico-arcane" />
+          {t('settings.device')}
+        </h3>
+        <div className="settings-rows">
+          <div className="settings-row">
+            <span>{t('settings.platform')}</span>
+            <b>{device.label}</b>
+          </div>
+          <div className="settings-row">
+            <span>{t('settings.installed')}</span>
+            <b>{device.standalone ? t('settings.yes') : t('settings.no')}</b>
+          </div>
+        </div>
+        <p className="hint-text" style={{ marginTop: 8 }}>{t('settings.compatNote')}</p>
+      </div>
+
+      {/* ALMAS VINCULADAS */}
+      <button className="card soul-settings-card" onClick={() => setView('souls')}>
+        <h3 className="with-icon">
+          <IconSoul size={18} className="ico-gold" />
+          {t('soul.title')}
+        </h3>
+        {partner ? (
+          <p>
+            {t('soul.linkedWith', { name: partner.name })} · {t(`region.${partner.regionId}`)}
+          </p>
+        ) : (
+          <p className="hint-text">{t('soul.noneLinked')}</p>
+        )}
+        <span className="soul-settings-arrow">
+          <GameIcon name="arrow" size={18} />
+        </span>
+      </button>
+
+      {/* IDIOMA */}
       <div className="card">
         <h3>{t('settings.language')}</h3>
         <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
@@ -68,51 +128,10 @@ export function SettingsScreen() {
       </div>
 
       <div className="card">
-        <h3>{t('coop.title')}</h3>
-        {cloudReady && save ? (
-          <>
-            <button className="btn-primary" style={{ marginTop: 8 }} onClick={() => void hostCoop()}>
-              {t('coop.create')}
-            </button>
-            {coopCode && (
-              <p style={{ marginTop: 10, fontSize: 22, letterSpacing: '0.3em', color: 'var(--gold-soft)' }}>
-                {t('coop.codeLabel')} <b>{coopCode}</b>
-              </p>
-            )}
-            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <input
-                aria-label={t('coop.joinPlaceholder')}
-                placeholder={t('coop.joinPlaceholder')}
-                value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                maxLength={6}
-                style={{
-                  flex: 1, padding: '10px 12px', borderRadius: 10, fontSize: 16,
-                  background: 'var(--bg-panel)', color: 'var(--text)',
-                  border: '1px solid rgba(139,111,216,0.4)', textTransform: 'uppercase'
-                }}
-              />
-              <button className="btn-secondary" onClick={() => void joinCoop()}>
-                {t('coop.join')}
-              </button>
-            </div>
-            {coopMsg && <p className="hint-text" style={{ marginTop: 8 }}>{coopMsg}</p>}
-          </>
-        ) : (
-          <p className="hint-text">{t('coop.needsCloud')}</p>
-        )}
-      </div>
-
-      <div className="card">
         <h3>{t('settings.about')}</h3>
-        <p>
-          {session?.email} · {t('settings.version')} 0.1.0
+        <p className="hint-text">
+          {t('settings.version')} 0.2.0 · {t('settings.storageNote')}
         </p>
-        {pendingOps > 0 && (
-          <p className="hint-text" style={{ marginTop: 6 }}>
-            {t('status.pendingOps', { count: pendingOps })}
-          </p>
-        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { checkCloudReachable } from './supabase';
+import { checkCloudReachable, isSupabaseConfigured } from './supabase';
 
 /**
  * DETECCIÓN DE CONEXIÓN (§26, §42, §75).
@@ -18,7 +18,12 @@ export function onConnectivityChange(listener: Listener): () => void {
 }
 
 async function evaluate(): Promise<void> {
-  const online = navigator.onLine ? await checkCloudReachable() : false;
+  // Sin backend configurado (modo GitHub+Vercel puro), navigator.onLine manda.
+  const online = navigator.onLine
+    ? isSupabaseConfigured()
+      ? await checkCloudReachable()
+      : true
+    : false;
   if (online !== lastKnownOnline) {
     lastKnownOnline = online;
     listeners.forEach((l) => l(online));

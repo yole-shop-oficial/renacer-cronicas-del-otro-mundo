@@ -3,44 +3,46 @@ import { t } from '@/i18n';
 import { useAppStore } from '@/state/appStore';
 import { useGameStore } from '@/state/gameStore';
 import { loadLatestGame } from '@/state/persistence';
-import { AuthScreen } from './screens/AuthScreen';
+import { createLocalGuestSession } from '@/services/auth';
+import { LoadingScreen } from './screens/LoadingScreen';
 import { CharacterCreator } from './screens/CharacterCreator';
 import { StoryScreen } from './screens/StoryScreen';
 import { CharacterScreen } from './screens/CharacterScreen';
-import {
-  SkillsScreen,
-  QuestsScreen,
-  WorldScreen,
-  RelationsScreen
-} from './screens/PanelsScreens';
+import { SkillsScreen, QuestsScreen, RelationsScreen } from './screens/PanelsScreens';
 import { InventoryScreen } from './screens/InventoryScreen';
 import { SkillTreeScreen } from './screens/SkillTreeScreen';
+import { WorldMapScreen } from './screens/WorldMapScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { LifeTreeButton } from './LifeTreeButton';
+import { GameIcon, type IconName } from './icons';
 
 type Tab = 'story' | 'character' | 'inventory' | 'quests' | 'world' | 'settings';
 
-const TABS: { id: Tab; icon: string; label: string }[] = [
-  { id: 'story', icon: '📖', label: 'nav.story' },
-  { id: 'character', icon: '🛡️', label: 'nav.character' },
-  { id: 'inventory', icon: '🎒', label: 'nav.inventory' },
-  { id: 'quests', icon: '📜', label: 'nav.quests' },
-  { id: 'world', icon: '🗺️', label: 'nav.world' },
-  { id: 'settings', icon: '⚙️', label: 'nav.settings' }
+const TABS: { id: Tab; icon: IconName; label: string }[] = [
+  { id: 'story', icon: 'book', label: 'nav.story' },
+  { id: 'character', icon: 'helm', label: 'nav.character' },
+  { id: 'inventory', icon: 'bag', label: 'nav.inventory' },
+  { id: 'quests', icon: 'scroll', label: 'nav.quests' },
+  { id: 'world', icon: 'map', label: 'nav.world' },
+  { id: 'settings', icon: 'gear', label: 'nav.settings' }
 ];
 
 export function App() {
-  const { session, connection, banner, init } = useAppStore();
+  const { connection, banner, init } = useAppStore();
+  const setSession = useAppStore((s) => s.setSession);
   const save = useGameStore((s) => s.save);
   const loadGame = useGameStore((s) => s.loadGame);
   const [booted, setBooted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [tab, setTab] = useState<Tab>('story');
   const [subTab, setSubTab] = useState<'character' | 'skills' | 'tree' | 'relations'>('character');
 
-  // Arranque (§44): cargar estado local → mostrar juego → sincronizar.
+  // Arranque (§44): datos locales → alma local → juego. Sin nube obligatoria.
   useEffect(() => {
     void (async () => {
       await init();
+      // Sin Supabase: el alma vive en este dispositivo (GitHub + Vercel only).
+      setSession(await createLocalGuestSession());
       const existing = await loadLatestGame();
       if (existing) loadGame(existing);
       setBooted(true);
@@ -48,13 +50,11 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!booted) {
+  // Pantalla de carga (~6s): precachea el juego para el modo offline.
+  if (!loaded || !booted) {
     return (
       <div className="app-shell">
-        <div className="center-screen">
-          <h1 className="game-title">{t('app.title')}</h1>
-          <p className="game-tagline">{t('ui.loading')}</p>
-        </div>
+        <LoadingScreen onReady={() => setLoaded(true)} />
       </div>
     );
   }
@@ -78,21 +78,18 @@ export function App() {
         {banner && <span className="status-banner">{t(banner)}</span>}
       </div>
 
-      {!session ? (
-        <AuthScreen />
-      ) : !save ? (
+      {!save ? (
         <CharacterCreator />
       ) : (
         <>
           {tab === 'story' && <StoryScreen />}
           {tab === 'character' && (
             <>
-              <div style={{ display: 'flex', gap: 8, padding: '10px 16px 0', overflowX: 'auto' }}>
+              <div className="subtabs">
                 {(['character', 'skills', 'tree', 'relations'] as const).map((st) => (
                   <button
                     key={st}
-                    className={subTab === st ? 'btn-primary' : 'btn-secondary'}
-                    style={{ minHeight: 38, padding: '8px 14px', fontSize: 13, flexShrink: 0 }}
+                    className={`subtab ${subTab === st ? 'active' : ''}`}
                     onClick={() => setSubTab(st)}
                   >
                     {t(`nav.${st === 'tree' ? 'skilltree' : st}`)}
@@ -107,10 +104,9 @@ export function App() {
           )}
           {tab === 'inventory' && <InventoryScreen />}
           {tab === 'quests' && <QuestsScreen />}
-          {tab === 'world' && <WorldScreen />}
+          {tab === 'world' && <WorldMapScreen />}
           {tab === 'settings' && <SettingsScreen />}
 
-          {/* Árbol de la Vida: botón flotante siempre visible en partida */}
           <LifeTreeButton />
 
           <nav className="bottom-nav" aria-label="Navegación principal">
@@ -121,7 +117,9 @@ export function App() {
                 onClick={() => setTab(id)}
                 aria-current={tab === id ? 'page' : undefined}
               >
-                <span className="icon" aria-hidden>{icon}</span>
+                <span className="nav-icon">
+                  <GameIcon name={icon} size={21} />
+                </span>
                 {t(label)}
               </button>
             ))}

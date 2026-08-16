@@ -10,8 +10,8 @@ import { test, expect, type Page } from '@playwright/test';
  */
 
 async function createCharacterAndStart(page: Page, goddess: RegExp = /Aurelia/) {
-  // Modo local (Supabase sin configurar en CI).
-  await page.getByRole('button', { name: /modo local|local mode/i }).click();
+  // Esperar la pantalla de carga (~6s) hasta que aparezca el creador.
+  await page.getByText(/Elige tu encarnación|Choose your incarnation/).waitFor({ timeout: 20_000 });
 
   // Paso 1: elegir personaje (Liria).
   await page.getByText('Liria').first().click();

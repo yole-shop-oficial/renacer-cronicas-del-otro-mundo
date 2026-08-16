@@ -1,9 +1,10 @@
 import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { skillById } from '@/data/skills';
-import { NPCS, REGIONS } from '@/data/world';
+import { NPCS } from '@/data/world';
 import { RELATIONSHIP_AXES } from '@/domain/types';
 import { bondLevel, bondScore } from '@/domain/power';
+import { IconScroll, IconLock, IconSpark } from '@/ui/icons';
 
 /** Habilidades (§16): cada una lista sus usos narrativos. */
 export function SkillsScreen() {
@@ -39,41 +40,13 @@ export function QuestsScreen() {
       {quests.map((q) => (
         <div className="card" key={q.questId}>
           <h3>{t(`quest.${q.questId}`)}</h3>
-          <p>{q.status === 'completed' ? '✓ ' : '◈ '}{t(`quest.status.${q.status}`)}</p>
+          <p>{q.status === 'completed' ? '✓ ' : '❖ '}{t(`quest.status.${q.status}`)}</p>
         </div>
       ))}
     </div>
   );
 }
 
-/** Mundo (§21): mapa 2D por cartas de región. */
-export function WorldScreen() {
-  const save = useGameStore((s) => s.save);
-  if (!save) return null;
-  const { discoveredRegions, currentRegionId } = save.world;
-  const icons: Record<string, string> = {
-    village: '🏘️', forest: '🌲', city: '🏰', ruins: '🏛️', temple: '⛩️', unknown: '❓'
-  };
-  return (
-    <div className="panel">
-      <h2 className="section-title">{t('nav.world')}</h2>
-      <div className="region-grid">
-        {REGIONS.map((r) => {
-          const discovered = discoveredRegions.includes(r.id);
-          return (
-            <div
-              key={r.id}
-              className={`card region-card ${r.id === currentRegionId ? 'current' : ''} ${discovered ? '' : 'undiscovered'}`}
-            >
-              <span className="icon" aria-hidden>{icons[r.kind]}</span>
-              <h3 style={{ fontSize: 14 }}>{discovered ? t(`region.${r.id}`) : t('region.unknown')}</h3>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /**
  * Vínculos (§19-20) + SISTEMA DE PODER POR VÍNCULO:
@@ -119,7 +92,7 @@ export function RelationsScreen() {
             </div>
             {npc && (
               <p className="bond-power">
-                💠 {t('bond.grants', { stat: t(`stats.${npc.bondStat}`) })}
+                <IconSpark size={14} className="ico-arcane inline-ico" /> {t('bond.grants', { stat: t(`stats.${npc.bondStat}`) })}
                 {level > 0 && <b> +{level}</b>}
                 {level < 5 && (
                   <span className="hint-text"> · {t('bond.nextAt', { score: (level + 1) * 20 })}</span>
@@ -139,7 +112,7 @@ export function RelationsScreen() {
             {/* MISIONES DEL NPC */}
             {quests.length > 0 && (
               <div className="npc-quests">
-                <h4>📜 {t('bond.quests')}</h4>
+                <h4 className="with-icon-inline"><IconScroll size={15} className="ico-gold" /> {t('bond.quests')}</h4>
                 {quests.map(({ quest, ok, reason }) => (
                   <div className={`npc-quest ${ok ? '' : 'locked'}`} key={quest.id}>
                     <div className="npc-quest-info">
@@ -157,7 +130,7 @@ export function RelationsScreen() {
                       </button>
                     ) : (
                       <span className="npc-quest-lock">
-                        🔒 {reason === 'level' && t('bond.lockLevel')}
+                        <IconLock size={13} className="inline-ico" /> {reason === 'level' && t('bond.lockLevel')}
                         {reason === 'power' && t('bond.lockPower')}
                         {reason === 'bond' && t('bond.lockBond')}
                       </span>

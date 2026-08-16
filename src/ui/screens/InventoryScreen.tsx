@@ -3,21 +3,22 @@ import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { itemById } from '@/data/items';
 import { EQUIPMENT_SLOTS, type EquipmentSlot } from '@/domain/types';
+import { GameIcon, IconCoin, IconHeart, IconDrop, type IconName } from '@/ui/icons';
 
 /**
  * INVENTARIO renovado: slots de equipo (arma/armadura/accesorio),
  * rejilla de objetos, panel de detalle con stats y equipar/desequipar.
  */
 
-const SLOT_ICONS: Record<EquipmentSlot, string> = {
-  weapon: '⚔️',
-  armor: '🛡️',
-  accessory: '💍'
+const SLOT_ICONS: Record<EquipmentSlot, IconName> = {
+  weapon: 'sword',
+  armor: 'shield',
+  accessory: 'ring'
 };
 
-const TYPE_ICONS: Record<string, string> = {
-  weapon: '⚔️', armor: '🛡️', consumable: '🧪', material: '⚒️',
-  magic: '✨', quest: '📜', unique: '🌟', hidden: '❓'
+const TYPE_ICONS: Record<string, IconName> = {
+  weapon: 'sword', armor: 'shield', consumable: 'potion', material: 'ore',
+  magic: 'rune', quest: 'scroll', unique: 'star', hidden: 'mystery'
 };
 
 const RARITY_CLASS: Record<string, string> = {
@@ -58,7 +59,7 @@ export function InventoryScreen() {
                 aria-label={`${t(`inv.slot.${slot}`)}: ${itemId ? t(`item.${itemId}`) : t('inv.emptySlot')}`}
               >
                 <span className="equip-slot-icon" aria-hidden>
-                  {item ? TYPE_ICONS[item.type] : SLOT_ICONS[slot]}
+                  <GameIcon name={item ? TYPE_ICONS[item.type] : SLOT_ICONS[slot]} size={24} />
                 </span>
                 <span className="equip-slot-label">{t(`inv.slot.${slot}`)}</span>
                 <span className="equip-slot-name">
@@ -86,7 +87,7 @@ export function InventoryScreen() {
                 onClick={() => setSelected(entry.itemId)}
                 aria-label={t(`item.${entry.itemId}`)}
               >
-                <span className="inv-cell-icon" aria-hidden>{TYPE_ICONS[item.type]}</span>
+                <span className="inv-cell-icon" aria-hidden><GameIcon name={TYPE_ICONS[item.type]} size={26} /></span>
                 {entry.quantity > 1 && <span className="inv-cell-qty">×{entry.quantity}</span>}
                 {equipped && <span className="inv-cell-equipped" aria-hidden>✓</span>}
               </button>
@@ -102,8 +103,8 @@ export function InventoryScreen() {
       {/* DETALLE DEL OBJETO */}
       {selectedItem && selectedEntry && (
         <div className={`card inv-detail ${RARITY_CLASS[selectedItem.rarity]}`}>
-          <h3>
-            {TYPE_ICONS[selectedItem.type]} {t(`item.${selectedItem.id}`)}
+          <h3 className="with-icon">
+            <GameIcon name={TYPE_ICONS[selectedItem.type]} size={19} className="ico-gold" /> {t(`item.${selectedItem.id}`)}
             <span className={`rarity-tag ${RARITY_CLASS[selectedItem.rarity]}`}>
               {t(`rarity.${selectedItem.rarity}`)}
             </span>
@@ -122,16 +123,16 @@ export function InventoryScreen() {
           )}
           {selectedItem.effects?.restoreHp && (
             <p className="hint-text" style={{ marginTop: 6 }}>
-              ❤️ +{selectedItem.effects.restoreHp} {t('stats.hp')}
+              <IconHeart size={14} className="ico-danger inline-ico" /> +{selectedItem.effects.restoreHp} {t('stats.hp')}
             </p>
           )}
           {selectedItem.effects?.restoreMp && (
             <p className="hint-text" style={{ marginTop: 6 }}>
-              💧 +{selectedItem.effects.restoreMp} {t('stats.mp')}
+              <IconDrop size={14} className="ico-teal inline-ico" /> +{selectedItem.effects.restoreMp} {t('stats.mp')}
             </p>
           )}
           {selectedItem.value > 0 && (
-            <p className="hint-text" style={{ marginTop: 6 }}>🪙 {selectedItem.value}</p>
+            <p className="hint-text" style={{ marginTop: 6 }}><IconCoin size={14} className="ico-gold inline-ico" /> {selectedItem.value}</p>
           )}
 
           {selectedItem.slot && (

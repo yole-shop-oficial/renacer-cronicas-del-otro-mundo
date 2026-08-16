@@ -8,6 +8,7 @@ import {
   type PartnerDecision
 } from '@/services/coopDecisions';
 import { renderStoryText } from '@/engine/text';
+import { IconLock } from '@/ui/icons';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -111,7 +112,7 @@ export function StoryScreen() {
           <button key={choice.id} className="choice-btn locked" disabled aria-disabled="true">
             {renderStoryText(lt(choice.text), textCtx)}
             <span className="lock-hint">
-              🔒 {choice.lockedHint ? lt(choice.lockedHint) : t('ui.locked')}
+              <IconLock size={13} className="inline-ico" /> {choice.lockedHint ? lt(choice.lockedHint) : t('ui.locked')}
             </span>
           </button>
         ))}

@@ -1,6 +1,7 @@
 import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { treeForClass, canLearnNode, type SkillTreeNode } from '@/data/skilltree';
+import { IconRune } from '@/ui/icons';
 
 /**
  * ÁRBOL DE HABILIDADES por clase: 3 ramas × 3 niveles.
@@ -85,7 +86,7 @@ function TreeNodeCard({
             </span>
           )}
           {node.unlocksSkill && (
-            <span className="tree-node-skill">🔮 {t(`skill.${node.unlocksSkill}`)}</span>
+            <span className="tree-node-skill with-icon-inline"><IconRune size={13} className="ico-arcane" /> {t(`skill.${node.unlocksSkill}`)}</span>
           )}
         </div>
         {!learned && (

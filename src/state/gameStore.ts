@@ -10,6 +10,7 @@ import { NPCS, REGIONS } from '@/data/world';
 import { itemById } from '@/data/items';
 import { treeNodeById, canLearnNode } from '@/data/skilltree';
 import { NPC_QUESTS, type NpcQuestDef } from '@/data/npcQuests';
+import { POIS } from '@/data/pois';
 import { applyEffects } from '@/engine/effects';
 import { bondLevel, combatPower } from '@/domain/power';
 import type { PrimaryStat, EquipmentSlot } from '@/domain/types';
@@ -52,6 +53,8 @@ interface GameStoreState {
   completeNpcQuest: (questId: string) => Promise<void>;
   /** Misiones de NPC disponibles ahora mismo para un NPC. */
   availableNpcQuests: (npcId: string) => { quest: NpcQuestDef; ok: boolean; reason?: string }[];
+  /** Puntos de recorrido del mapa: realizar una acción de un punto. */
+  performPoiAction: (poiId: string, actionId: string) => Promise<void>;
 }
 
 function buildInitialWorld(): WorldState {
@@ -323,6 +326,31 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
         const status = checkQuestRequirements(quest, save);
         return { quest, ok: status.ok, reason: status.reason };
       });
+  },
+
+  performPoiAction: async (poiId, actionId) => {
+    const { save } = get();
+    if (!save) return;
+    const poi = POIS.find((p) => p.id === poiId);
+    const action = poi?.actions.find((a) => a.id === actionId);
+    if (!poi || !action) return;
+    // Idempotente: cada acción de punto solo una vez.
+    const doneFlag = `_poi_act_${action.id}`;
+    if (save.world.flags[doneFlag]) return;
+    // Revalidar requisitos.
+    const c = save.character;
+    if (action.requiredLevel && c.level < action.requiredLevel) return;
+    if (action.requiredPower && combatPower(c, NPCS, save.world) < action.requiredPower) return;
+    if (action.requiresFlag && !save.world.flags[action.requiresFlag]) return;
+
+    const result = applyEffects(action.effects, save.character, save.world);
+    result.world.flags[doneFlag] = true;
+    // Si todas las acciones del punto están hechas, marcar el punto.
+    if (poi.actions.every((a) => result.world.flags[`_poi_act_${a.id}`])) {
+      result.world.flags[`_poi_done_${poi.id}`] = true;
+    }
+    const updated = await persist({ ...save, character: result.character, world: result.world });
+    set({ save: updated, narrationLog: result.log });
   }
 }));
 

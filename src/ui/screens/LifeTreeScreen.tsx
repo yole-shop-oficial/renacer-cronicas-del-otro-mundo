@@ -3,6 +3,7 @@ import { t, lt } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { renderStoryText } from '@/engine/text';
 import { createStoryEngine } from '@/content/story';
+import { IconLock } from '@/ui/icons';
 
 /**
  * ÁRBOL DE LA VIDA — El libro de TU historia.
@@ -168,7 +169,7 @@ export function LifeTreeScreen({ onClose }: { onClose: () => void }) {
             {t('lifetree.next')} →
           </button>
         </footer>
-        <p className="lifetree-sealed">🔒 {t('lifetree.sealed')}</p>
+        <p className="lifetree-sealed"><IconLock size={13} className="inline-ico" /> {t('lifetree.sealed')}</p>
       </div>
     </div>
   );
