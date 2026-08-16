@@ -54,7 +54,15 @@ export async function queueDecision(
   nodeId: string,
   choiceId: string
 ): Promise<void> {
-  await enqueue('MAKE_DECISION', 'story_decision', decisionId, { gameId, nodeId, choiceId });
+  // Cooperativo (§34-35): si hay partida compartida activa, la decisión se
+  // registra bajo el gameId COMPARTIDO para que ambos jugadores la vean en
+  // el mismo event log. Sin coop, se usa el gameId local.
+  const coopGameId = await getMeta('coop_game_id');
+  await enqueue('MAKE_DECISION', 'story_decision', decisionId, {
+    gameId: coopGameId ?? gameId,
+    nodeId,
+    choiceId
+  });
 }
 
 export async function queueSnapshot(save: GameSave, type: OperationType): Promise<void> {

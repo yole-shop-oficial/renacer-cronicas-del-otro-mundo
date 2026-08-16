@@ -96,7 +96,16 @@ El juego **nunca** espera a la red para continuar. La nube es una réplica.
 - Validación Zod de todo el contenido al cargar; el servidor valida con constraints y RLS (nunca solo frontend).
 - **Incidencia registrada**: el prototipo `legacy/` publicaba una anon key hardcodeada (proyecto `lustmqeqbninkavixttz`). Fue retirada; se recomienda **rotarla** en el dashboard.
 
-## 12. Riesgos conocidos
+## 12. Decisiones cooperativas duales (§35)
+
+Implementación en `services/coopDecisions.ts` + `coopEventId` en el esquema de nodos:
+
+- Cada jugador decide de forma **no bloqueante** (si el compañero se desconecta, el juego continúa: política de "modo individual").
+- Ambas decisiones se escriben en `story_decisions` bajo el `game_id` **compartido** (INSERT-only, sin carreras destructivas).
+- La UI muestra la elección del compañero: consulta puntual + Realtime opcional (`postgres_changes`). Sin red, simplemente no se muestra.
+- Consecuencias combinadas: los capítulos futuros condicionan con `kind:'decision'` contra el event log — la "última decisión" y el "timeout" son políticas de lectura, no bloqueos de escritura.
+
+## 13. Riesgos conocidos
 
 1. Snapshot LWW entre dos dispositivos del mismo usuario jugando a la vez: ganaría el último; mitigable con merge por event log (previsto).
 2. iOS puede purgar IndexedDB tras semanas sin uso: mitigado con sync temprano a la nube.

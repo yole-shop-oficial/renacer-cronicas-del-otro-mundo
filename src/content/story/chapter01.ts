@@ -435,11 +435,20 @@ export const CHAPTER_01: Chapter = {
       chapterId: 'chapter_01',
       kind: 'narration',
       text: {
-        es: 'Esa noche, en el pequeño cuarto que Marta te ha prestado sobre la posada, miras por la ventana hacia el bosque envuelto en niebla. En tu vieja vida, los días eran páginas en blanco que nadie escribía. Hoy has escrito la primera página de verdad. Y el mundo —puedes sentirlo— la ha leído.\n\n✦ Fin del Capítulo 1. Tu historia continuará en próximos capítulos. Tus decisiones han quedado grabadas en el mundo. ✦',
-        en: 'That night, in the small room Marta lent you above the inn, you look out the window toward the mist-wrapped forest. In your old life, days were blank pages nobody wrote on. Today you wrote the first real page. And the world — you can feel it — has read it.\n\n✦ End of Chapter 1. Your story will continue in future chapters. Your decisions are engraved in the world. ✦'
+        es: 'Esa noche, en el pequeño cuarto que Marta te ha prestado sobre la posada, miras por la ventana hacia el bosque envuelto en niebla. En tu vieja vida, los días eran páginas en blanco que nadie escribía. Hoy has escrito la primera página de verdad. Y el mundo —puedes sentirlo— la ha leído.\n\n✦ Fin del Capítulo 1. Tus decisiones han quedado grabadas en el mundo. ✦',
+        en: 'That night, in the small room Marta lent you above the inn, you look out the window toward the mist-wrapped forest. In your old life, days were blank pages nobody wrote on. Today you wrote the first real page. And the world — you can feel it — has read it.\n\n✦ End of Chapter 1. Your decisions are engraved in the world. ✦'
       },
       onEnter: [],
-      choices: [],
+      choices: [
+        {
+          id: 'c1_end_continue',
+          text: { es: 'Capítulo 2 — El sello de la Sierpe', en: 'Chapter 2 — The Seal of the Serpent' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'chapter:chapter_02'
+        }
+      ],
       end: true
     }
   ]

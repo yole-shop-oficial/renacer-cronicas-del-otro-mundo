@@ -1,7 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { t, lt } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { useAppStore } from '@/state/appStore';
+import {
+  fetchPartnerDecision,
+  watchPartnerDecision,
+  type PartnerDecision
+} from '@/services/coopDecisions';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -15,13 +20,33 @@ export function StoryScreen() {
   const choicesFor = useGameStore((s) => s.choicesForCurrentNode);
   const refreshPending = useAppStore((s) => s.refreshPending);
   const triggerSync = useAppStore((s) => s.triggerSync);
+  const session = useAppStore((s) => s.session);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [partnerDecision, setPartnerDecision] = useState<PartnerDecision | null>(null);
 
   const node = currentNode();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [node?.id]);
+
+  // Evento cooperativo (§35): consultar y vigilar la decisión del compañero.
+  // Nunca bloquea: si no hay coop/red, simplemente no se muestra nada.
+  useEffect(() => {
+    setPartnerDecision(null);
+    if (!node?.coopEventId || !session) return;
+    let cancelled = false;
+    void fetchPartnerDecision(session.userId, node.id).then((d) => {
+      if (!cancelled && d) setPartnerDecision(d);
+    });
+    const unwatch = watchPartnerDecision(session.userId, node.id, (d) => {
+      if (!cancelled) setPartnerDecision(d);
+    });
+    return () => {
+      cancelled = true;
+      unwatch();
+    };
+  }, [node?.id, node?.coopEventId, session]);
 
   if (!save || !node) return <div className="center-screen">{t('ui.loading')}</div>;
 
@@ -49,6 +74,24 @@ export function StoryScreen() {
             {narrationLog.map((entry, i) => (
               <div key={i}>{t(entry.key, localizeParams(entry.params))}</div>
             ))}
+          </div>
+        )}
+        {node.coopEventId && (
+          <div className="effect-log coop-banner" aria-live="polite">
+            <div>{t('coop.dualEvent')}</div>
+            {partnerDecision ? (
+              <div style={{ marginTop: 6 }}>
+                {t('coop.partnerChose', {
+                  choice: lt(
+                    node.choices.find((c) => c.id === partnerDecision.choiceId)?.text ?? {
+                      es: partnerDecision.choiceId
+                    }
+                  )
+                })}
+              </div>
+            ) : (
+              <div style={{ marginTop: 6 }}>{t('coop.partnerPending')}</div>
+            )}
           </div>
         )}
         {node.end && node.choices.length === 0 && (

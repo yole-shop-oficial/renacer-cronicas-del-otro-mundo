@@ -75,6 +75,12 @@ export const StoryNodeSchema = z.object({
   /** Efectos aplicados al ENTRAR al nodo (una sola vez, deduplicado). */
   onEnter: z.array(EffectSchema).default([]),
   choices: z.array(ChoiceSchema).default([]),
+  /**
+   * Evento cooperativo (§35): si está definido, la decisión de cada jugador
+   * se publica en el event log compartido y la UI muestra la del compañero.
+   * Nunca bloquea: cada jugador puede decidir aunque el otro esté offline.
+   */
+  coopEventId: z.string().optional(),
   /** Nodo terminal de capítulo. */
   end: z.boolean().default(false)
 });

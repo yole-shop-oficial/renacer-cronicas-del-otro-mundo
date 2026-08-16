@@ -137,6 +137,7 @@ export const es = {
 
   'quest.quest_first_steps': 'Primeros pasos en un mundo nuevo',
   'quest.quest_whispering_forest': 'El misterio del Bosque de los Susurros',
+  'quest.quest_serpent_seal': 'El sello de la Sierpe',
   'quest.status.active': 'En curso',
   'quest.status.completed': 'Completada',
   'quest.status.failed': 'Fallida',
@@ -162,6 +163,11 @@ export const es = {
   'log.titleGranted': 'Has ganado el título: {title}.',
 
   'title.friend_of_the_mist': 'Amiga de la Niebla',
+  'title.cub_guardian': 'Guardiana de las Crías',
+
+  'coop.dualEvent': '⚖ Decisión compartida: el mundo recordará lo que cada jugador elija.',
+  'coop.partnerChose': 'Tu compañero ya eligió: «{choice}»',
+  'coop.partnerPending': 'Tu compañero aún no ha decidido. Puedes continuar sin esperar.',
 
   'coop.title': 'Aventura compartida',
   'coop.create': 'Crear partida cooperativa',

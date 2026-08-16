@@ -97,6 +97,28 @@ Ejemplos:
 6. El mundo recuerda: usa `setFlag`/`addNpcMemory` generosamente y condiciónalos capítulos después (§65).
 7. Añadir NPC/objetos/regiones nuevos: `src/data/*.ts` + traducciones + (opcional) espejo en `supabase/migrations`.
 
+## Eventos cooperativos de decisión dual (§35)
+
+Marca un nodo con `coopEventId` para convertirlo en decisión compartida:
+
+```ts
+{
+  id: 'c2_06',
+  coopEventId: 'c2_pier_choice',   // activa la UI cooperativa
+  choices: [ /* una elección por camino */ ]
+}
+```
+
+Comportamiento:
+- En partida cooperativa, la UI muestra qué eligió el compañero (consulta al
+  event log compartido + suscripción Realtime como refuerzo).
+- **Nunca bloquea**: si el compañero está offline, el jugador decide y sigue
+  (política "modo individual" del §35). La decisión de ambos queda registrada
+  en `story_decisions` bajo el `game_id` compartido.
+- Para consecuencias que dependan de AMBAS decisiones, condiciona nodos
+  futuros con `{ kind: 'decision', key: '<choiceId>' }` leyendo la memoria
+  del mundo.
+
 ## Editor futuro (§58)
 
 Como el contenido es JSON-serializable y validado por Zod, un editor visual solo necesita producir objetos `Chapter` válidos — el esquema `ChapterSchema` es el contrato.

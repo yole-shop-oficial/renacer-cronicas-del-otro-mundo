@@ -3,6 +3,7 @@ import { getLocale, setLocale, t, type Locale } from '@/i18n';
 import { useAppStore } from '@/state/appStore';
 import { useGameStore } from '@/state/gameStore';
 import { createCoopGame, joinCoopGame } from '@/services/multiplayer';
+import { setActiveCoopGame } from '@/services/coopDecisions';
 import { isSupabaseConfigured } from '@/services/supabase';
 
 /** Ajustes: idioma, cooperativo (§34) y sesión. */
@@ -25,6 +26,7 @@ export function SettingsScreen() {
     if (!session || !save) return;
     try {
       const coop = await createCoopGame(session.userId, save.gameId);
+      await setActiveCoopGame(coop.gameId);
       setCoopCode(coop.code);
       setCoopMsg(null);
     } catch (err) {
@@ -36,6 +38,7 @@ export function SettingsScreen() {
     if (!session) return;
     try {
       const coop = await joinCoopGame(session.userId, joinCode);
+      await setActiveCoopGame(coop.gameId);
       setCoopMsg(`✓ ${coop.code}`);
     } catch (err) {
       setCoopMsg(err instanceof Error ? err.message : String(err));

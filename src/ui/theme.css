@@ -178,6 +178,12 @@ body {
   margin-top: 4px;
 }
 
+.effect-log.coop-banner {
+  background: rgba(139, 111, 216, 0.1);
+  border-color: rgba(139, 111, 216, 0.4);
+  color: var(--arcane-soft);
+}
+
 /* ── Navegación inferior (§41) ───────────────────────────── */
 .bottom-nav {
   display: grid;

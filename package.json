@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
     "db:migrate": "echo 'Aplica supabase/migrations/*.sql en orden con supabase db push o el SQL editor' && ls supabase/migrations",
-    "db:seed": "echo 'El seed vive en supabase/migrations/0002_seed.sql'"
+    "db:seed": "echo 'El seed vive en supabase/migrations/0002_seed.sql'",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
@@ -24,6 +25,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

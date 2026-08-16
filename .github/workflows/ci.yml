@@ -36,3 +36,9 @@ jobs:
           # el build real en Vercel usa sus Environment Variables.
           VITE_SUPABASE_URL: ''
           VITE_SUPABASE_ANON_KEY: ''
+
+      - name: Instalar navegador Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Tests E2E (flujo MVP + offline §49)
+        run: npm run test:e2e

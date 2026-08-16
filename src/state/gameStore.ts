@@ -150,12 +150,14 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
       schemaVersion: SCHEMA_VERSION
     };
 
-    set({ save: updated, narrationLog: [...result.log, ...entered.log] });
-
-    // Persistencia: primero local, luego cola → nube (§24, §43).
+    // Persistencia PRIMERO (§43: LOCAL SAVE antes que nada) y UI después.
+    // Evita la carrera en la que un cierre/recarga inmediato pierde la
+    // última decisión (integridad del progreso §81 > latencia de ~ms).
     await saveGameLocally(updated);
     await queueDecision(updated.gameId, decisionId, node.id, choice.id);
     await queueSnapshot(updated, 'SAVE_SNAPSHOT');
+
+    set({ save: updated, narrationLog: [...result.log, ...entered.log] });
   },
 
   currentNode: () => {

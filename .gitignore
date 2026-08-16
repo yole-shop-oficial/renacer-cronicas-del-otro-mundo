@@ -18,3 +18,5 @@ coverage/
 
 # Vercel
 .vercel
+test-results/
+playwright-report/

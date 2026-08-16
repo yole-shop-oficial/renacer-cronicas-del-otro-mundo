@@ -139,6 +139,7 @@ export const en: typeof es = {
 
   'quest.quest_first_steps': 'First Steps in a New World',
   'quest.quest_whispering_forest': 'The Mystery of the Whispering Forest',
+  'quest.quest_serpent_seal': 'The Seal of the Serpent',
   'quest.status.active': 'Active',
   'quest.status.completed': 'Completed',
   'quest.status.failed': 'Failed',
@@ -164,6 +165,11 @@ export const en: typeof es = {
   'log.titleGranted': 'Title earned: {title}.',
 
   'title.friend_of_the_mist': 'Friend of the Mist',
+  'title.cub_guardian': 'Guardian of the Cubs',
+
+  'coop.dualEvent': '⚖ Shared decision: the world will remember what each player chooses.',
+  'coop.partnerChose': 'Your partner already chose: "{choice}"',
+  'coop.partnerPending': 'Your partner has not decided yet. You may continue without waiting.',
 
   'coop.title': 'Shared Adventure',
   'coop.create': 'Create co-op game',
