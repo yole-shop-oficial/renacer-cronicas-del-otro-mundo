@@ -17,8 +17,8 @@ const STATIC_ASSETS = [
   './src/game/multiplayer.js',
   './src/ui/renderer.js',
   './src/ui/onboarding.js',
-  './public/icons/icon-192x192.png',
-  './public/icons/icon-512x512.png'
+  './public_assets/icons/icon-192x192.png',
+  './public_assets/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
