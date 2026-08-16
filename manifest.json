@@ -1,0 +1,22 @@
+{
+  "name": "RENACER: Crónicas del Otro Mundo",
+  "short_name": "Renacer",
+  "description": "Videojuego de Rol Narrativo modular PWA Local-First.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#110e14",
+  "theme_color": "#8b5cf6",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./public/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./public/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
