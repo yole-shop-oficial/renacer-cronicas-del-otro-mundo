@@ -7,6 +7,12 @@ import { templateById } from '@/data/characters';
 import { classById } from '@/data/classes';
 import { goddessById } from '@/data/goddesses';
 import { NPCS, REGIONS } from '@/data/world';
+import { itemById } from '@/data/items';
+import { treeNodeById, canLearnNode } from '@/data/skilltree';
+import { NPC_QUESTS, type NpcQuestDef } from '@/data/npcQuests';
+import { applyEffects } from '@/engine/effects';
+import { bondLevel, combatPower } from '@/domain/power';
+import type { PrimaryStat, EquipmentSlot } from '@/domain/types';
 import { saveGameLocally, queueDecision, queueSnapshot } from './persistence';
 
 /**
@@ -14,7 +20,7 @@ import { saveGameLocally, queueDecision, queueSnapshot } from './persistence';
  * Cada decisión importante = LOCAL SAVE + operación en cola (§43).
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 const engine = createStoryEngine();
 
 export interface NarrationEntry {
@@ -35,6 +41,17 @@ interface GameStoreState {
   chooseOption: (choice: Choice) => Promise<void>;
   currentNode: () => ReturnType<typeof engine.getNode> | null;
   choicesForCurrentNode: () => { available: Choice[]; locked: Choice[] };
+  /** Sistema de atributos: gastar puntos de nivel (+10/nivel). */
+  spendAttributePoint: (stat: PrimaryStat, amount?: number) => Promise<void>;
+  /** Árbol de habilidades: aprender un nodo. */
+  learnTreeNode: (nodeId: string) => Promise<void>;
+  /** Equipamiento: equipar / desequipar objetos con slot. */
+  equipItem: (itemId: string) => Promise<void>;
+  unequipSlot: (slot: EquipmentSlot) => Promise<void>;
+  /** Misiones de NPC: completar una misión disponible. */
+  completeNpcQuest: (questId: string) => Promise<void>;
+  /** Misiones de NPC disponibles ahora mismo para un NPC. */
+  availableNpcQuests: (npcId: string) => { quest: NpcQuestDef; ok: boolean; reason?: string }[];
 }
 
 function buildInitialWorld(): WorldState {
@@ -76,6 +93,17 @@ function buildCharacter(opts: {
   const skills = [...new Set([...cls.startingSkills, ...(goddess.grantsSkill ? [goddess.grantsSkill] : [])])];
   const derived = deriveStats(stats, 1);
 
+  // Equipar automáticamente los objetos iniciales que tengan slot.
+  const equipment: CharacterState['equipment'] = {};
+  for (const itemId of cls.startingItems) {
+    try {
+      const item = itemById(itemId);
+      if (item.slot && !equipment[item.slot]) equipment[item.slot] = itemId;
+    } catch {
+      /* sin slot */
+    }
+  }
+
   return {
     id: crypto.randomUUID(),
     templateId: opts.templateId,
@@ -86,14 +114,30 @@ function buildCharacter(opts: {
     level: 1,
     xp: 0,
     stats,
+    unspentPoints: 0,
+    skillPoints: 0,
+    treeNodes: [],
     currentHp: derived.hp,
     currentMp: derived.mp,
     skills,
-    inventory: cls.startingItems.map((itemId) => ({ itemId, quantity: 1, equipped: true })),
+    inventory: cls.startingItems.map((itemId) => ({
+      itemId,
+      quantity: 1,
+      equipped: Boolean(equipment[itemById(itemId).slot ?? 'weapon'] === itemId)
+    })),
+    equipment,
     gold: 0,
     titles: [],
     reputation: {}
   };
+}
+
+/** Persistir un save mutado: LOCAL primero, luego cola (§43). */
+async function persist(save: GameSave): Promise<GameSave> {
+  const updated = { ...save, updatedAt: Date.now() };
+  await saveGameLocally(updated);
+  await queueSnapshot(updated, 'SAVE_SNAPSHOT');
+  return updated;
 }
 
 export const useGameStore = create<GameStoreState>((set, get) => ({
@@ -117,7 +161,8 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     return save;
   },
 
-  loadGame: (save) => {
+  loadGame: (rawSave) => {
+    const save = migrateSave(rawSave);
     set({ save, narrationLog: [] });
     // Aplicar efectos de entrada pendientes del nodo actual (idempotente).
     const state = get();
@@ -176,5 +221,156 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     if (!save) return { available: [], locked: [] };
     const node = engine.getNode(save.currentNodeId);
     return engine.availableChoices(node, save.character, save.world);
+  },
+
+  spendAttributePoint: async (stat, amount = 1) => {
+    const { save } = get();
+    if (!save) return;
+    const points = Math.min(amount, save.character.unspentPoints ?? 0);
+    if (points <= 0) return;
+    const character = structuredClone(save.character);
+    character.stats[stat] += points;
+    character.unspentPoints -= points;
+    const updated = await persist({ ...save, character });
+    set({ save: updated });
+  },
+
+  learnTreeNode: async (nodeId) => {
+    const { save } = get();
+    if (!save) return;
+    const node = treeNodeById(nodeId);
+    const c = save.character;
+    const check = canLearnNode(node, {
+      level: c.level,
+      skillPoints: c.skillPoints ?? 0,
+      learnedNodes: c.treeNodes ?? []
+    });
+    if (!check.ok || node.classId !== c.classId) return;
+
+    const character = structuredClone(c);
+    character.skillPoints -= node.cost;
+    character.treeNodes = [...(character.treeNodes ?? []), node.id];
+    for (const [stat, value] of Object.entries(node.statBonus ?? {})) {
+      character.stats[stat as PrimaryStat] += value ?? 0;
+    }
+    if (node.unlocksSkill && !character.skills.includes(node.unlocksSkill)) {
+      character.skills.push(node.unlocksSkill);
+    }
+    const updated = await persist({ ...save, character });
+    set({ save: updated, narrationLog: [{ key: 'log.treeNodeLearned', params: { node: node.id } }] });
+  },
+
+  equipItem: async (itemId) => {
+    const { save } = get();
+    if (!save) return;
+    const item = itemById(itemId);
+    if (!item.slot) return;
+    const c = save.character;
+    if (!c.inventory.some((e) => e.itemId === itemId && e.quantity > 0)) return;
+    if (item.restrictions?.minLevel && c.level < item.restrictions.minLevel) return;
+    if (item.restrictions?.classIds && !item.restrictions.classIds.includes(c.classId)) return;
+
+    const character = structuredClone(c);
+    const previous = character.equipment[item.slot];
+    character.equipment[item.slot] = itemId;
+    for (const entry of character.inventory) {
+      if (entry.itemId === itemId) entry.equipped = true;
+      else if (entry.itemId === previous) entry.equipped = false;
+    }
+    const updated = await persist({ ...save, character });
+    set({ save: updated });
+  },
+
+  unequipSlot: async (slot) => {
+    const { save } = get();
+    if (!save) return;
+    const character = structuredClone(save.character);
+    const itemId = character.equipment[slot];
+    if (!itemId) return;
+    delete character.equipment[slot];
+    for (const entry of character.inventory) {
+      if (entry.itemId === itemId) entry.equipped = false;
+    }
+    const updated = await persist({ ...save, character });
+    set({ save: updated });
+  },
+
+  completeNpcQuest: async (questId) => {
+    const { save } = get();
+    if (!save) return;
+    const quest = NPC_QUESTS.find((q) => q.id === questId);
+    if (!quest) return;
+    // Revalidar requisitos y no repetir (idempotente).
+    const doneFlag = `_nq_done_${quest.id}`;
+    if (save.world.flags[doneFlag]) return;
+    const status = checkQuestRequirements(quest, save);
+    if (!status.ok) return;
+
+    const result = applyEffects(quest.rewards, save.character, save.world);
+    result.world.flags[doneFlag] = true;
+    const updated = await persist({ ...save, character: result.character, world: result.world });
+    set({ save: updated, narrationLog: result.log });
+  },
+
+  availableNpcQuests: (npcId) => {
+    const { save } = get();
+    if (!save) return [];
+    const list = npcId ? NPC_QUESTS.filter((q) => q.npcId === npcId) : NPC_QUESTS;
+    return list
+      .filter((q) => !save.world.flags[`_nq_done_${q.id}`])
+      .filter((q) => !q.requiresFlag || Boolean(save.world.flags[q.requiresFlag]))
+      .map((quest) => {
+        const status = checkQuestRequirements(quest, save);
+        return { quest, ok: status.ok, reason: status.reason };
+      });
   }
 }));
+
+/**
+ * Migración de guardados de versiones anteriores del esquema:
+ * completa campos nuevos con valores seguros (§77: nunca perder progreso).
+ */
+function migrateSave(save: GameSave): GameSave {
+  const c = save.character;
+  const migrated: GameSave = {
+    ...save,
+    character: {
+      ...c,
+      gender: c.gender ?? templateById(c.templateId).gender,
+      unspentPoints: c.unspentPoints ?? Math.max(0, (c.level - 1) * 10),
+      skillPoints: c.skillPoints ?? Math.max(0, c.level - 1),
+      treeNodes: c.treeNodes ?? [],
+      equipment: c.equipment ?? {}
+    },
+    schemaVersion: SCHEMA_VERSION
+  };
+  // Equipar retroactivamente lo marcado como equipped en el inventario.
+  if (!c.equipment) {
+    for (const entry of migrated.character.inventory) {
+      if (!entry.equipped) continue;
+      try {
+        const item = itemById(entry.itemId);
+        if (item.slot && !migrated.character.equipment[item.slot]) {
+          migrated.character.equipment[item.slot] = entry.itemId;
+        }
+      } catch {
+        /* objeto desconocido */
+      }
+    }
+  }
+  return migrated;
+}
+
+function checkQuestRequirements(
+  quest: NpcQuestDef,
+  save: GameSave
+): { ok: boolean; reason?: string } {
+  const c = save.character;
+  if (c.level < quest.requiredLevel) return { ok: false, reason: 'level' };
+  const power = combatPower(c, NPCS, save.world);
+  if (power < quest.requiredPower) return { ok: false, reason: 'power' };
+  const rel = save.world.npcRelationships[quest.npcId];
+  if (rel && bondLevel(rel) < quest.requiredBondLevel) return { ok: false, reason: 'bond' };
+  if (!rel && quest.requiredBondLevel > 0) return { ok: false, reason: 'bond' };
+  return { ok: true };
+}

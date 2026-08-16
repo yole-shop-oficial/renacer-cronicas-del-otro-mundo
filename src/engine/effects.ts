@@ -31,15 +31,21 @@ export function applyEffect(effect: Effect, character: CharacterState, world: Wo
   switch (effect.kind) {
     case 'gainXp': {
       const gained = effect.amount ?? 0;
+      const prevLevel = c.level;
       const r = applyXp(c.level, c.xp, gained);
       c.level = r.level;
       c.xp = r.xp;
       log.push({ key: 'log.xpGained', params: { amount: gained } });
       if (r.leveledUp) {
+        const levelsGained = c.level - prevLevel;
+        // Sistema de progresión: +10 puntos de atributo y +1 de habilidad por nivel.
+        c.unspentPoints = (c.unspentPoints ?? 0) + levelsGained * 10;
+        c.skillPoints = (c.skillPoints ?? 0) + levelsGained * 1;
         const d = deriveStats(c.stats, c.level);
         c.currentHp = d.hp;
         c.currentMp = d.mp;
         log.push({ key: 'log.levelUp', params: { level: c.level } });
+        log.push({ key: 'log.pointsGained', params: { points: levelsGained * 10, skillPoints: levelsGained } });
       }
       break;
     }

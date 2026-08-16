@@ -1,18 +1,52 @@
 import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
-import { deriveStats, xpForNextLevel } from '@/domain/stats';
+import { xpForNextLevel } from '@/domain/stats';
 import { PRIMARY_STATS } from '@/domain/types';
+import { NPCS } from '@/data/world';
+import { effectiveStats, effectiveDerived, powerBreakdown } from '@/domain/power';
 
-/** Ficha de personaje: stats primarias, derivadas, títulos y reputación. */
+/**
+ * Ficha de personaje: PODER DE COMBATE calculado automático (con desglose),
+ * stats efectivas (base + equipo + vínculos) y asignación de puntos
+ * (+10 por nivel).
+ */
 export function CharacterScreen() {
   const save = useGameStore((s) => s.save);
+  const spendPoint = useGameStore((s) => s.spendAttributePoint);
   if (!save) return null;
   const c = save.character;
-  const derived = deriveStats(c.stats, c.level);
+  const eff = effectiveStats(c, NPCS, save.world);
+  const derived = effectiveDerived(c, NPCS, save.world);
+  const power = powerBreakdown(c, NPCS, save.world);
   const nextXp = xpForNextLevel(c.level);
+  const points = c.unspentPoints ?? 0;
 
   return (
     <div className="panel">
+      {/* PODER DE COMBATE */}
+      <div className="card power-card">
+        <div className="power-value">
+          <span className="power-icon" aria-hidden>⚔</span>
+          <div>
+            <div className="power-number">{power.total.toLocaleString()}</div>
+            <div className="power-label">{t('power.title')}</div>
+          </div>
+        </div>
+        <div className="stat-grid" style={{ marginTop: 10 }}>
+          <div className="stat-row"><span>{t('power.fromStats')}</span><b>{power.fromStats}</b></div>
+          <div className="stat-row"><span>{t('power.fromLevel')}</span><b>+{power.fromLevel}</b></div>
+          <div className="stat-row"><span>{t('power.fromSkills')}</span><b>+{power.fromSkills}</b></div>
+        </div>
+        {Object.keys(power.bondContribution).length > 0 && (
+          <p className="hint-text" style={{ marginTop: 8 }}>
+            💞 {t('power.bondsHelp')}:{' '}
+            {Object.entries(power.bondContribution)
+              .map(([stat, v]) => `+${v} ${t(`stats.${stat}`)}`)
+              .join(' · ')}
+          </p>
+        )}
+      </div>
+
       <div className="card">
         <h3>{c.name}</h3>
         <p>
@@ -32,14 +66,14 @@ export function CharacterScreen() {
             <span>{t('stats.hp')}</span>
             <b>{c.currentHp}/{derived.hp}</b>
           </div>
-          <div className="hp-bar"><div style={{ width: `${(c.currentHp / derived.hp) * 100}%` }} /></div>
+          <div className="hp-bar"><div style={{ width: `${Math.min(100, (c.currentHp / derived.hp) * 100)}%` }} /></div>
         </div>
         <div style={{ marginTop: 8 }}>
           <div className="stat-row">
             <span>{t('stats.mp')}</span>
             <b>{c.currentMp}/{derived.mp}</b>
           </div>
-          <div className="mp-bar"><div style={{ width: `${(c.currentMp / derived.mp) * 100}%` }} /></div>
+          <div className="mp-bar"><div style={{ width: `${Math.min(100, (c.currentMp / derived.mp) * 100)}%` }} /></div>
         </div>
         <div className="stat-row" style={{ marginTop: 8 }}>
           <span>{t('stats.gold')}</span>
@@ -47,15 +81,46 @@ export function CharacterScreen() {
         </div>
       </div>
 
+      {/* ATRIBUTOS + ASIGNACIÓN DE PUNTOS */}
       <div className="card">
-        <h3>{t('nav.character')}</h3>
-        <div className="stat-grid">
-          {PRIMARY_STATS.map((s) => (
-            <div className="stat-row" key={s}>
-              <span>{t(`stats.${s}`)}</span>
-              <b>{c.stats[s]}</b>
+        <h3>
+          {t('attrs.title')}
+          {points > 0 && <span className="points-badge">{t('attrs.points', { points })}</span>}
+        </h3>
+        {PRIMARY_STATS.map((s) => {
+          const bonus = eff[s] - c.stats[s];
+          return (
+            <div className="attr-row" key={s}>
+              <span className="attr-name">{t(`stats.${s}`)}</span>
+              <span className="attr-value">
+                <b>{c.stats[s]}</b>
+                {bonus > 0 && <em className="attr-bonus">+{bonus}</em>}
+              </span>
+              {points > 0 && (
+                <button
+                  className="attr-plus"
+                  aria-label={`+1 ${t(`stats.${s}`)}`}
+                  onClick={() => void spendPoint(s)}
+                >
+                  +
+                </button>
+              )}
             </div>
-          ))}
+          );
+        })}
+        <p className="hint-text" style={{ marginTop: 8 }}>{t('attrs.hint')}</p>
+      </div>
+
+      {/* DERIVADAS EFECTIVAS */}
+      <div className="card">
+        <h3>{t('attrs.derived')}</h3>
+        <div className="stat-grid">
+          <div className="stat-row"><span>{t('derived.attack')}</span><b>{derived.attack}</b></div>
+          <div className="stat-row"><span>{t('derived.defense')}</span><b>{derived.defense}</b></div>
+          <div className="stat-row"><span>{t('derived.magicPower')}</span><b>{derived.magicPower}</b></div>
+          <div className="stat-row"><span>{t('derived.speed')}</span><b>{derived.speed}</b></div>
+          <div className="stat-row"><span>{t('derived.crit')}</span><b>{derived.crit}%</b></div>
+          <div className="stat-row"><span>{t('derived.resistance')}</span><b>{derived.resistance}</b></div>
         </div>
       </div>
 

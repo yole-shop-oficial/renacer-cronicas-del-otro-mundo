@@ -34,6 +34,11 @@ export type DerivedBlock = Record<DerivedStat, number>;
 
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'unique';
 
+/** Slots de equipamiento del personaje. */
+export const EQUIPMENT_SLOTS = ['weapon', 'armor', 'accessory'] as const;
+export type EquipmentSlot = (typeof EQUIPMENT_SLOTS)[number];
+export type Equipment = Partial<Record<EquipmentSlot, string>>;
+
 export type ItemType =
   | 'weapon'
   | 'armor'
@@ -48,6 +53,8 @@ export interface ItemDef {
   id: string;
   type: ItemType;
   rarity: Rarity;
+  /** Si el objeto es equipable, en qué slot va. */
+  slot?: EquipmentSlot;
   stats?: Partial<StatBlock>;
   effects?: { restoreHp?: number; restoreMp?: number; grantFlag?: string };
   value: number;
@@ -110,6 +117,11 @@ export interface NpcDef {
   regionId: string;
   profession: string;
   age: number;
+  /**
+   * Estadística que este NPC potencia mediante el vínculo (§sistema de
+   * vínculos): a mayor vínculo positivo, más bonificación otorga.
+   */
+  bondStat: PrimaryStat;
   initialRelationships: Partial<RelationshipBlock>;
 }
 
@@ -139,10 +151,18 @@ export interface CharacterState {
   level: number;
   xp: number;
   stats: StatBlock;
+  /** Puntos de atributo sin gastar: +10 por nivel. */
+  unspentPoints: number;
+  /** Puntos de habilidad para el árbol: +1 por nivel. */
+  skillPoints: number;
+  /** Nodos del árbol de habilidades ya aprendidos. */
+  treeNodes: string[];
   currentHp: number;
   currentMp: number;
   skills: string[];
   inventory: InventoryEntry[];
+  /** Objetos equipados por slot (arma / armadura / accesorio). */
+  equipment: Equipment;
   gold: number;
   titles: string[];
   reputation: Record<string, number>;

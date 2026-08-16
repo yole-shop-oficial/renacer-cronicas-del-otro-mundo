@@ -1,9 +1,9 @@
 import { t } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
 import { skillById } from '@/data/skills';
-import { itemById } from '@/data/items';
 import { NPCS, REGIONS } from '@/data/world';
 import { RELATIONSHIP_AXES } from '@/domain/types';
+import { bondLevel, bondScore } from '@/domain/power';
 
 /** Habilidades (§16): cada una lista sus usos narrativos. */
 export function SkillsScreen() {
@@ -19,34 +19,6 @@ export function SkillsScreen() {
             <h3>{t(`skill.${id}`)}</h3>
             <p>
               {t('stats.mp')}: {skill.mpCost} · {skill.narrativeTags.join(' · ')}
-            </p>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/** Inventario (§18). */
-export function InventoryScreen() {
-  const save = useGameStore((s) => s.save);
-  if (!save) return null;
-  const inv = save.character.inventory;
-  return (
-    <div className="panel">
-      <h2 className="section-title">{t('nav.inventory')}</h2>
-      {inv.length === 0 && <p className="hint-text">{t('ui.empty')}</p>}
-      {inv.map((entry) => {
-        const item = itemById(entry.itemId);
-        return (
-          <div className="card" key={entry.itemId}>
-            <h3>
-              {t(`item.${entry.itemId}`)} ×{entry.quantity}
-              {entry.equipped ? ` · ${t('ui.equipped')}` : ''}
-            </h3>
-            <p>
-              {item.rarity} · {item.type}
-              {item.value > 0 ? ` · 🪙 ${item.value}` : ''}
             </p>
           </div>
         );
@@ -103,9 +75,15 @@ export function WorldScreen() {
   );
 }
 
-/** Vínculos (§19-20): relaciones, biografía y memoria de NPC conocidos. */
+/**
+ * Vínculos (§19-20) + SISTEMA DE PODER POR VÍNCULO:
+ * cada NPC potencia una estadística; a mayor vínculo, más bonificación.
+ * Desde aquí también se hacen las misiones de NPC.
+ */
 export function RelationsScreen() {
   const save = useGameStore((s) => s.save);
+  const availableNpcQuests = useGameStore((s) => s.availableNpcQuests);
+  const completeNpcQuest = useGameStore((s) => s.completeNpcQuest);
   if (!save) return null;
   const rels = save.world.npcRelationships;
   const known = Object.entries(rels).filter(([, r]) =>
@@ -114,16 +92,38 @@ export function RelationsScreen() {
   return (
     <div className="panel">
       <h2 className="section-title">{t('nav.relations')}</h2>
+      <p className="hint-text">{t('bond.explain')}</p>
       {known.length === 0 && <p className="hint-text">{t('ui.empty')}</p>}
       {known.map(([npcId, rel]) => {
         const npc = NPCS.find((n) => n.id === npcId);
         const memories = save.world.npcMemory[npcId] ?? [];
+        const level = bondLevel(rel);
+        const score = bondScore(rel);
+        const quests = availableNpcQuests(npcId);
         return (
           <div className="card" key={npcId}>
-            <h3>{t(`speaker.${npcId}`)}</h3>
+            <h3>
+              {t(`speaker.${npcId}`)}
+              <span className="bond-badge">
+                {t('bond.level', { level })}
+              </span>
+            </h3>
             {npc && (
-              <p className="hint-text" style={{ marginBottom: 8 }}>
+              <p className="hint-text" style={{ marginBottom: 6 }}>
                 {t(`region.${npc.regionId}`)} · {npc.age} ⌛
+              </p>
+            )}
+            {/* Barra de vínculo + stat que potencia */}
+            <div className="bond-bar" role="progressbar" aria-valuenow={score} aria-valuemax={100}>
+              <div style={{ width: `${score}%` }} />
+            </div>
+            {npc && (
+              <p className="bond-power">
+                💠 {t('bond.grants', { stat: t(`stats.${npc.bondStat}`) })}
+                {level > 0 && <b> +{level}</b>}
+                {level < 5 && (
+                  <span className="hint-text"> · {t('bond.nextAt', { score: (level + 1) * 20 })}</span>
+                )}
               </p>
             )}
             <p style={{ marginBottom: 10 }}>{t(`npc.${npcId}.bio`)}</p>
@@ -135,6 +135,38 @@ export function RelationsScreen() {
                 </div>
               ))}
             </div>
+
+            {/* MISIONES DEL NPC */}
+            {quests.length > 0 && (
+              <div className="npc-quests">
+                <h4>📜 {t('bond.quests')}</h4>
+                {quests.map(({ quest, ok, reason }) => (
+                  <div className={`npc-quest ${ok ? '' : 'locked'}`} key={quest.id}>
+                    <div className="npc-quest-info">
+                      <span className="npc-quest-name">{t(`nq.${quest.id}`)}</span>
+                      <span className="npc-quest-desc hint-text">{t(`nq.${quest.id}.desc`)}</span>
+                      <span className="npc-quest-req hint-text">
+                        {t('bond.reqLevel', { level: quest.requiredLevel })}
+                        {quest.requiredPower > 0 && ` · ⚔ ${quest.requiredPower}`}
+                        {quest.requiredBondLevel > 0 && ` · 💞 ${quest.requiredBondLevel}`}
+                      </span>
+                    </div>
+                    {ok ? (
+                      <button className="btn-primary npc-quest-btn" onClick={() => void completeNpcQuest(quest.id)}>
+                        {t('bond.doQuest')}
+                      </button>
+                    ) : (
+                      <span className="npc-quest-lock">
+                        🔒 {reason === 'level' && t('bond.lockLevel')}
+                        {reason === 'power' && t('bond.lockPower')}
+                        {reason === 'bond' && t('bond.lockBond')}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
             {memories.length > 0 && (
               <p className="hint-text" style={{ marginTop: 8, fontStyle: 'italic' }}>
                 ✦ {memories.length === 1 ? t('rel.remembers_one') : t('rel.remembers', { count: memories.length })}

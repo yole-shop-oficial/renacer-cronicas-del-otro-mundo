@@ -9,11 +9,12 @@ import { StoryScreen } from './screens/StoryScreen';
 import { CharacterScreen } from './screens/CharacterScreen';
 import {
   SkillsScreen,
-  InventoryScreen,
   QuestsScreen,
   WorldScreen,
   RelationsScreen
 } from './screens/PanelsScreens';
+import { InventoryScreen } from './screens/InventoryScreen';
+import { SkillTreeScreen } from './screens/SkillTreeScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { LifeTreeButton } from './LifeTreeButton';
 
@@ -34,7 +35,7 @@ export function App() {
   const loadGame = useGameStore((s) => s.loadGame);
   const [booted, setBooted] = useState(false);
   const [tab, setTab] = useState<Tab>('story');
-  const [subTab, setSubTab] = useState<'character' | 'skills' | 'relations'>('character');
+  const [subTab, setSubTab] = useState<'character' | 'skills' | 'tree' | 'relations'>('character');
 
   // Arranque (§44): cargar estado local → mostrar juego → sincronizar.
   useEffect(() => {
@@ -86,20 +87,21 @@ export function App() {
           {tab === 'story' && <StoryScreen />}
           {tab === 'character' && (
             <>
-              <div style={{ display: 'flex', gap: 8, padding: '10px 16px 0' }}>
-                {(['character', 'skills', 'relations'] as const).map((st) => (
+              <div style={{ display: 'flex', gap: 8, padding: '10px 16px 0', overflowX: 'auto' }}>
+                {(['character', 'skills', 'tree', 'relations'] as const).map((st) => (
                   <button
                     key={st}
                     className={subTab === st ? 'btn-primary' : 'btn-secondary'}
-                    style={{ minHeight: 38, padding: '8px 14px', fontSize: 13 }}
+                    style={{ minHeight: 38, padding: '8px 14px', fontSize: 13, flexShrink: 0 }}
                     onClick={() => setSubTab(st)}
                   >
-                    {t(`nav.${st === 'character' ? 'character' : st === 'skills' ? 'skills' : 'relations'}`)}
+                    {t(`nav.${st === 'tree' ? 'skilltree' : st}`)}
                   </button>
                 ))}
               </div>
               {subTab === 'character' && <CharacterScreen />}
               {subTab === 'skills' && <SkillsScreen />}
+              {subTab === 'tree' && <SkillTreeScreen />}
               {subTab === 'relations' && <RelationsScreen />}
             </>
           )}

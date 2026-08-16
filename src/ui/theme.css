@@ -520,3 +520,146 @@ body {
   padding: 0 14px 12px;
   font-style: italic;
 }
+
+/* ══════════════════════════════════════════════════════════
+   SISTEMAS RPG: poder, atributos, vínculos, árbol, inventario
+   ══════════════════════════════════════════════════════════ */
+
+/* Poder de combate */
+.power-card { border-color: rgba(212, 169, 78, 0.55); background: linear-gradient(135deg, #2e2650, #241d3d); }
+.power-value { display: flex; align-items: center; gap: 14px; }
+.power-icon { font-size: 34px; filter: drop-shadow(0 0 8px rgba(212,169,78,0.6)); }
+.power-number {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  line-height: 1;
+}
+.power-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* Atributos */
+.points-badge {
+  margin-left: 10px; padding: 3px 10px; border-radius: 14px; font-size: 12px;
+  background: rgba(63, 184, 175, 0.15); color: var(--teal);
+  border: 1px solid rgba(63, 184, 175, 0.4); animation: pulse 2s infinite;
+}
+.attr-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; margin-top: 6px;
+  background: rgba(139, 111, 216, 0.08);
+}
+.attr-name { flex: 1; font-size: 14px; }
+.attr-value b { color: var(--gold-soft); font-size: 15px; }
+.attr-bonus { color: var(--success); font-style: normal; margin-left: 6px; font-size: 13px; }
+.attr-plus {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(63, 184, 175, 0.5); background: rgba(63, 184, 175, 0.12);
+  color: var(--teal); font-size: 18px; font-weight: 700; cursor: pointer;
+}
+.attr-plus:hover { background: rgba(63, 184, 175, 0.3); }
+
+/* Vínculos */
+.bond-badge {
+  margin-left: 8px; padding: 2px 9px; border-radius: 12px; font-size: 11px;
+  background: rgba(212, 169, 78, 0.12); color: var(--gold-soft);
+  border: 1px solid rgba(212, 169, 78, 0.35); vertical-align: middle;
+}
+.bond-bar { height: 8px; border-radius: 5px; background: rgba(255,255,255,0.08); overflow: hidden; margin: 6px 0; }
+.bond-bar > div { height: 100%; background: linear-gradient(90deg, #d86fa8, #e0a3c4); }
+.bond-power { font-size: 13px; color: var(--arcane-soft); margin: 4px 0 8px; }
+.bond-power b { color: var(--success); }
+
+/* Misiones de NPC */
+.npc-quests { margin-top: 12px; border-top: 1px dashed rgba(139,111,216,0.3); padding-top: 10px; }
+.npc-quests h4 { margin: 0 0 8px; font-size: 13px; color: var(--gold-soft); }
+.npc-quest {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px; margin-top: 6px;
+  background: rgba(212, 169, 78, 0.06); border: 1px solid rgba(212, 169, 78, 0.2);
+}
+.npc-quest.locked { opacity: 0.6; }
+.npc-quest-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.npc-quest-name { font-size: 13.5px; font-weight: 600; }
+.npc-quest-desc { font-size: 12px; }
+.npc-quest-req { font-size: 11px; }
+.npc-quest-btn { min-height: 36px; padding: 6px 14px; font-size: 12.5px; flex-shrink: 0; }
+.npc-quest-lock { font-size: 11.5px; color: var(--text-dim); flex-shrink: 0; max-width: 90px; text-align: right; }
+
+/* Árbol de habilidades */
+.tree-branch { display: flex; flex-direction: column; align-items: stretch; }
+.tree-connector { width: 3px; height: 16px; margin: 0 auto; background: rgba(139,111,216,0.3); border-radius: 2px; }
+.tree-connector.active { background: var(--gold); box-shadow: 0 0 8px rgba(212,169,78,0.5); }
+.tree-node {
+  border: 1px solid rgba(139, 111, 216, 0.35); border-radius: 12px;
+  padding: 10px 12px; background: rgba(139, 111, 216, 0.06);
+}
+.tree-node.learned { border-color: var(--gold); background: rgba(212, 169, 78, 0.1); }
+.tree-node.available { border-color: rgba(63, 184, 175, 0.55); }
+.tree-node.locked { opacity: 0.6; }
+.tree-node-head { display: flex; align-items: center; gap: 8px; }
+.tree-node-tier { color: var(--gold-soft); font-size: 11px; letter-spacing: 0.1em; }
+.tree-node-name { flex: 1; font-weight: 600; font-size: 14px; }
+.tree-node-cost { color: var(--arcane-soft); font-size: 12.5px; }
+.tree-node-state.learned { color: var(--success); font-weight: 700; }
+.tree-node-body { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.tree-node-bonus { font-size: 12px; color: var(--success); }
+.tree-node-skill { font-size: 12px; color: var(--arcane-soft); }
+.tree-node-foot { margin-top: 8px; }
+.tree-learn-btn { min-height: 34px; padding: 5px 16px; font-size: 12.5px; }
+.tree-node-req { font-size: 11.5px; color: var(--text-dim); font-style: italic; }
+
+/* Inventario con slots */
+.equip-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+.equip-slot {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 6px; border-radius: 12px; cursor: pointer;
+  border: 1.5px solid rgba(139, 111, 216, 0.35);
+  background: rgba(139, 111, 216, 0.06); color: var(--text);
+}
+.equip-slot.empty { border-style: dashed; opacity: 0.65; }
+.equip-slot-icon { font-size: 24px; }
+.equip-slot-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); }
+.equip-slot-name { font-size: 11.5px; text-align: center; line-height: 1.25; }
+
+.inv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.inv-cell {
+  position: relative; aspect-ratio: 1; border-radius: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid rgba(139, 111, 216, 0.3);
+  background: rgba(139, 111, 216, 0.06);
+}
+.inv-cell.empty { border-style: dashed; opacity: 0.35; cursor: default; }
+.inv-cell.selected { box-shadow: 0 0 0 2px var(--gold); }
+.inv-cell-icon { font-size: 26px; }
+.inv-cell-qty {
+  position: absolute; bottom: 4px; right: 6px; font-size: 11px;
+  color: var(--gold-soft); font-weight: 700;
+}
+.inv-cell-equipped {
+  position: absolute; top: 4px; right: 6px; font-size: 11px;
+  color: var(--success); font-weight: 700;
+}
+
+/* Rarezas: color de borde */
+.r-common { border-color: rgba(200, 200, 200, 0.35) !important; }
+.r-uncommon { border-color: rgba(127, 201, 143, 0.55) !important; }
+.r-rare { border-color: rgba(109, 165, 224, 0.6) !important; }
+.r-epic { border-color: rgba(185, 111, 216, 0.65) !important; }
+.r-legendary { border-color: rgba(224, 169, 78, 0.7) !important; }
+.r-unique { border-color: rgba(216, 111, 168, 0.7) !important; }
+
+.rarity-tag {
+  margin-left: 8px; padding: 2px 9px; border-radius: 10px; font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.06em; vertical-align: middle;
+  border: 1px solid; background: rgba(0,0,0,0.2);
+}
+.rarity-tag.r-common { color: #c8c8c8; }
+.rarity-tag.r-uncommon { color: #7fc98f; }
+.rarity-tag.r-rare { color: #6da5e0; }
+.rarity-tag.r-epic { color: #b96fd8; }
+.rarity-tag.r-legendary { color: #e0a94e; }
+.rarity-tag.r-unique { color: #d86fa8; }
+
+.inv-detail { animation: riseIn 0.2s ease; }

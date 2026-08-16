@@ -16,13 +16,13 @@ export const REGIONS: RegionDef[] = [
  * historia, dónde vive, qué quiere, qué teme. El mundo está habitado.
  */
 export const NPCS: NpcDef[] = [
-  { id: 'marta', regionId: 'aldea_brumal', profession: 'innkeeper', age: 54, initialRelationships: { trust: 10 } },
-  { id: 'joren', regionId: 'aldea_brumal', profession: 'blacksmith', age: 41, initialRelationships: {} },
-  { id: 'pip', regionId: 'aldea_brumal', profession: 'orphan', age: 11, initialRelationships: { friendship: 5 } },
-  { id: 'capitan_bren', regionId: 'aldea_brumal', profession: 'guard_captain', age: 47, initialRelationships: { respect: 0 } },
-  { id: 'vendedora_lu', regionId: 'ciudad_petra', profession: 'merchant', age: 33, initialRelationships: {} },
-  { id: 'sargento_vela', regionId: 'ciudad_petra', profession: 'canal_guard', age: 29, initialRelationships: {} },
-  { id: 'cazador_tomas', regionId: 'ciudad_petra', profession: 'hunter', age: 61, initialRelationships: {} }
+  { id: 'marta', bondStat: 'vitality', regionId: 'aldea_brumal', profession: 'innkeeper', age: 54, initialRelationships: { trust: 10 } },
+  { id: 'joren', bondStat: 'strength', regionId: 'aldea_brumal', profession: 'blacksmith', age: 41, initialRelationships: {} },
+  { id: 'pip', bondStat: 'luck', regionId: 'aldea_brumal', profession: 'orphan', age: 11, initialRelationships: { friendship: 5 } },
+  { id: 'capitan_bren', bondStat: 'willpower', regionId: 'aldea_brumal', profession: 'guard_captain', age: 47, initialRelationships: { respect: 0 } },
+  { id: 'vendedora_lu', bondStat: 'charisma', regionId: 'ciudad_petra', profession: 'merchant', age: 33, initialRelationships: {} },
+  { id: 'sargento_vela', bondStat: 'intelligence', regionId: 'ciudad_petra', profession: 'canal_guard', age: 29, initialRelationships: {} },
+  { id: 'cazador_tomas', bondStat: 'agility', regionId: 'ciudad_petra', profession: 'hunter', age: 61, initialRelationships: {} }
 ];
 
 export const regionById = (id: string) => {
