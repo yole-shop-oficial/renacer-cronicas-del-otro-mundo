@@ -72,6 +72,12 @@ export const StoryNodeSchema = z.object({
   kind: z.enum(['narration', 'dialogue', 'encounter']).default('narration'),
   speaker: z.string().optional(),
   text: z.record(z.string()),
+  /**
+   * Texto alternativo cuando DOS ALMAS viajan juntas (modo dúo).
+   * Si falta, se usa `text`. Marcadores {name} y {a|o} disponibles,
+   * más {partner} para el nombre del alma compañera.
+   */
+  duoText: z.record(z.string()).optional(),
   /** Efectos aplicados al ENTRAR al nodo (una sola vez, deduplicado). */
   onEnter: z.array(EffectSchema).default([]),
   choices: z.array(ChoiceSchema).default([]),

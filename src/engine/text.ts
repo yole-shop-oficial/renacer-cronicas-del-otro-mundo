@@ -9,11 +9,14 @@
 export interface TextContext {
   name: string;
   gender: 'f' | 'm';
+  /** Nombre del alma compañera (modo dúo). */
+  partner?: string;
 }
 
 export function renderStoryText(raw: string, ctx: TextContext): string {
   return raw
     .replaceAll('{name}', ctx.name)
+    .replaceAll('{partner}', ctx.partner ?? '')
     .replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_match, f: string, m: string) =>
       ctx.gender === 'f' ? f : m
     );

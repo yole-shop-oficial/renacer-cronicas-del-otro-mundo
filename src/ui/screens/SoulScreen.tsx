@@ -13,6 +13,7 @@ import {
   type SoulProfile
 } from '@/services/souls';
 import { GameIcon, IconSoul, IconLink, IconPower, IconMap as IconMapSvg, IconMedal } from '@/ui/icons';
+import { LiveLinkPanel } from './LiveLinkPanel';
 
 /**
  * ALMAS SINCRONIZADAS: comparte tu código de alma y registra el del
@@ -68,6 +69,10 @@ export function SoulScreen() {
   return (
     <div className="panel">
       <h2 className="section-title">{t('soul.title')}</h2>
+
+      {/* ENLACE EN TIEMPO REAL POR WIFI */}
+      <LiveLinkPanel />
+
       <p className="hint-text">{t('soul.explain')}</p>
 
       {/* MI ALMA */}

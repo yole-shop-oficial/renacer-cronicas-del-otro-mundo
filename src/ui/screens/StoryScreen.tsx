@@ -8,7 +8,9 @@ import {
   type PartnerDecision
 } from '@/services/coopDecisions';
 import { renderStoryText } from '@/engine/text';
-import { IconLock } from '@/ui/icons';
+import { IconLock, IconBond } from '@/ui/icons';
+import { useCoopStore } from '@/state/coopStore';
+import { DiceOfFate } from '@/ui/DiceOfFate';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -52,13 +54,29 @@ export function StoryScreen() {
 
   if (!save || !node) return <div className="center-screen">{t('ui.loading')}</div>;
 
-  const textCtx = { name: save.character.name, gender: save.character.gender ?? 'f' };
+  const coopPartner = useCoopStore((s) => s.partner);
+  const inGroup = useCoopStore((s) => s.inGroup);
+  const negotiation = useCoopStore((s) => s.negotiation);
+  const pickChoice = useCoopStore((s) => s.pickChoice);
+  const yieldToPartner = useCoopStore((s) => s.yieldToPartner);
+  const invokeDice = useCoopStore((s) => s.invokeDice);
+  const duoMode = Boolean(coopPartner && inGroup);
+  const textCtx = {
+    name: save.character.name,
+    gender: save.character.gender ?? 'f',
+    partner: coopPartner?.name
+  };
 
   const { available, locked } = choicesFor();
 
   async function handleChoice(choiceId: string) {
     const choice = available.find((c) => c.id === choiceId);
-    if (!choice) return;
+    if (!choice || !node) return;
+    if (duoMode) {
+      // Modo dúo: la elección es una PROPUESTA; se negocia con el alma compañera.
+      pickChoice(node.id, choiceId);
+      return;
+    }
     await chooseOption(choice);
     await refreshPending();
     void triggerSync();
@@ -71,7 +89,7 @@ export function StoryScreen() {
         <div className="parchment">
           {node.speaker && <span className="speaker-tag">{t(`speaker.${node.speaker}`)}</span>}
           {node.speaker && <br />}
-          {renderStoryText(lt(node.text), textCtx)}
+          {renderStoryText(lt(duoMode && node.duoText ? node.duoText : node.text), textCtx)}
         </div>
         {narrationLog.length > 0 && (
           <div className="effect-log" aria-live="polite">
@@ -98,16 +116,64 @@ export function StoryScreen() {
             )}
           </div>
         )}
+        {duoMode && negotiation && negotiation.nodeId === node.id && (
+          <div className="negotiation-panel" aria-live="polite">
+            <div className="negotiation-head">
+              <IconBond size={16} className="ico-pink" />
+              <b>{t('nego.title')}</b>
+            </div>
+            {negotiation.phase === 'waiting_picks' && negotiation.myPick && !negotiation.partnerPick && (
+              <p>{t('nego.waitingPartner', { name: coopPartner?.name ?? '' })}</p>
+            )}
+            {negotiation.phase === 'waiting_picks' && !negotiation.myPick && negotiation.partnerPick && (
+              <p>
+                {t('nego.partnerPicked', {
+                  name: coopPartner?.name ?? '',
+                  choice: lt(node.choices.find((c) => c.id === negotiation.partnerPick)?.text ?? { es: '…' })
+                })}
+              </p>
+            )}
+            {negotiation.phase === 'discord' && (
+              <>
+                <p className="nego-discord">{t('nego.discord', { name: coopPartner?.name ?? '' })}</p>
+                <div className="nego-picks">
+                  <div className="nego-pick mine">
+                    <span>{save.character.name}</span>
+                    <em>«{lt(node.choices.find((c) => c.id === negotiation.myPick)?.text ?? { es: '…' })}»</em>
+                  </div>
+                  <div className="nego-pick theirs">
+                    <span>{coopPartner?.name}</span>
+                    <em>«{lt(node.choices.find((c) => c.id === negotiation.partnerPick)?.text ?? { es: '…' })}»</em>
+                  </div>
+                </div>
+                <div className="nego-actions">
+                  <button className="btn-secondary" onClick={yieldToPartner}>{t('nego.yield')}</button>
+                  <button className="btn-primary nego-dice-btn" onClick={invokeDice}>{t('nego.dice')}</button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
         {node.end && node.choices.length === 0 && (
           <div className="effect-log">{t('ui.chapterEnd')}</div>
         )}
       </div>
       <div className="choices">
-        {available.map((choice) => (
-          <button key={choice.id} className="choice-btn" onClick={() => void handleChoice(choice.id)}>
-            {renderStoryText(lt(choice.text), textCtx)}
-          </button>
-        ))}
+        {available.map((choice) => {
+          const isMine = negotiation?.myPick === choice.id;
+          const isTheirs = negotiation?.partnerPick === choice.id;
+          return (
+            <button
+              key={choice.id}
+              className={`choice-btn ${isMine ? 'picked-mine' : ''} ${isTheirs ? 'picked-theirs' : ''}`}
+              onClick={() => void handleChoice(choice.id)}
+            >
+              {renderStoryText(lt(choice.text), textCtx)}
+              {isMine && <span className="pick-tag mine">{save.character.name}</span>}
+              {isTheirs && <span className="pick-tag theirs">{coopPartner?.name}</span>}
+            </button>
+          );
+        })}
         {locked.map((choice) => (
           <button key={choice.id} className="choice-btn locked" disabled aria-disabled="true">
             {renderStoryText(lt(choice.text), textCtx)}
@@ -117,6 +183,7 @@ export function StoryScreen() {
           </button>
         ))}
       </div>
+      <DiceOfFate />
     </>
   );
 }

@@ -964,3 +964,131 @@ body {
   background: linear-gradient(135deg, var(--gold-soft), var(--arcane-soft));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+
+/* ══════════════════════════════════════════════════════════
+   DOS ALMAS: negociación, dados del destino, enlace en vivo
+   ══════════════════════════════════════════════════════════ */
+
+/* elecciones propuestas */
+.choice-btn.picked-mine { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(63,184,175,0.3); }
+.choice-btn.picked-theirs { border-color: var(--caramel); box-shadow: 0 0 0 2px rgba(201,138,75,0.35); }
+.choice-btn.picked-mine.picked-theirs {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(212,169,78,0.5), 0 0 18px rgba(212,169,78,0.3);
+}
+.pick-tag {
+  display: inline-block; margin-left: 8px; padding: 2px 9px;
+  border-radius: 10px; font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.pick-tag.mine { background: rgba(63,184,175,0.18); color: var(--teal); border: 1px solid rgba(63,184,175,0.4); }
+.pick-tag.theirs { background: rgba(201,138,75,0.2); color: #e8c795; border: 1px solid rgba(201,138,75,0.45); }
+
+/* panel de negociación */
+.negotiation-panel {
+  border-radius: 12px; padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(216,111,168,0.1), rgba(139,111,216,0.1));
+  border: 1px solid rgba(216,111,168,0.35);
+  font-size: 13.5px;
+}
+.negotiation-head { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; color: var(--pink); }
+.nego-discord { color: var(--gold-soft); font-weight: 600; margin: 4px 0 8px; }
+.nego-picks { display: flex; flex-direction: column; gap: 6px; }
+.nego-pick {
+  padding: 8px 10px; border-radius: 9px; font-size: 12.5px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.nego-pick span { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.nego-pick.mine { background: rgba(63,184,175,0.1); border: 1px solid rgba(63,184,175,0.3); }
+.nego-pick.mine span { color: var(--teal); }
+.nego-pick.theirs { background: rgba(201,138,75,0.12); border: 1px solid rgba(201,138,75,0.35); }
+.nego-pick.theirs span { color: #e8c795; }
+.nego-actions { display: flex; gap: 8px; margin-top: 10px; }
+.nego-actions .btn-secondary, .nego-actions .btn-primary { flex: 1; min-height: 42px; font-size: 13px; padding: 8px 10px; }
+.nego-dice-btn {
+  background: linear-gradient(135deg, #7c4dc4, #8b6fd8);
+  color: #f5efff;
+  box-shadow: 0 2px 14px rgba(139,111,216,0.45);
+}
+
+/* escenario de los dados */
+.dice-overlay { background: rgba(8, 5, 16, 0.92); }
+.dice-stage {
+  position: relative; width: 100%; max-width: 520px;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 26px 18px; gap: 6px; overflow: hidden;
+  border-radius: 20px;
+  background: radial-gradient(600px 300px at 50% -10%, rgba(139,111,216,0.25), transparent), linear-gradient(170deg, #241d3d, #16112a);
+  border: 1px solid rgba(212,169,78,0.4);
+  box-shadow: 0 16px 60px rgba(0,0,0,0.7), 0 0 60px rgba(139,111,216,0.2);
+  animation: riseIn 0.3s ease;
+}
+.dice-rays {
+  position: absolute; inset: -40%; pointer-events: none; opacity: 0.14;
+  background: conic-gradient(from 0deg,
+    transparent 0deg, rgba(255,233,184,0.9) 8deg, transparent 16deg,
+    transparent 60deg, rgba(185,165,236,0.9) 68deg, transparent 76deg,
+    transparent 120deg, rgba(255,233,184,0.9) 128deg, transparent 136deg,
+    transparent 180deg, rgba(185,165,236,0.9) 188deg, transparent 196deg,
+    transparent 240deg, rgba(255,233,184,0.9) 248deg, transparent 256deg,
+    transparent 300deg, rgba(185,165,236,0.9) 308deg, transparent 316deg);
+  animation: raysSpin 14s linear infinite;
+}
+@keyframes raysSpin { to { transform: rotate(360deg); } }
+.dice-title {
+  position: relative; margin: 0; font-family: var(--font-serif); font-size: 20px;
+  background: linear-gradient(135deg, var(--gold-soft), var(--arcane-soft));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-align: center;
+}
+.dice-sub { position: relative; margin: 0; font-size: 12.5px; color: var(--text-dim); font-style: italic; text-align: center; }
+.dice-arena {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  margin-top: 14px; width: 100%; justify-content: space-around;
+}
+.dice-side {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px; border-radius: 16px; min-width: 130px;
+  border: 1px solid transparent; transition: all 0.4s ease;
+}
+.dice-side.winner {
+  border-color: var(--gold);
+  background: rgba(212,169,78,0.1);
+  box-shadow: 0 0 28px rgba(212,169,78,0.35);
+}
+.dice-soul-name { font-weight: 700; font-size: 14px; color: var(--gold-soft); }
+.dice-vs { font-size: 22px; color: var(--arcane-soft); }
+.d20 { filter: drop-shadow(0 4px 14px rgba(139,111,216,0.5)); }
+.d20.spinning { animation: d20spin 0.5s linear infinite; }
+@keyframes d20spin {
+  0% { transform: rotate(-8deg) scale(0.96); }
+  50% { transform: rotate(8deg) scale(1.05); }
+  100% { transform: rotate(-8deg) scale(0.96); }
+}
+.d20.landed { animation: d20land 0.45s ease; }
+@keyframes d20land {
+  0% { transform: scale(1.5); opacity: 0.4; }
+  70% { transform: scale(0.92); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.dice-roll-btn { min-height: 42px; padding: 9px 18px; font-size: 13.5px; }
+.dice-waiting { font-size: 12px; color: var(--text-dim); font-style: italic; }
+.dice-verdict { position: relative; text-align: center; margin-top: 12px; animation: riseIn 0.4s ease; }
+.dice-winner-text {
+  font-family: var(--font-serif); font-size: 18px; margin: 0 0 4px;
+  color: var(--gold-soft);
+  text-shadow: 0 0 18px rgba(212,169,78,0.5);
+}
+.dice-actions { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
+.dice-defy { border-color: rgba(216,111,111,0.55); color: var(--danger); }
+.dice-price-note { font-size: 11px; color: var(--danger); margin-top: 8px; max-width: 340px; opacity: 0.85; }
+
+/* enlace en vivo */
+.link-connected { border-color: rgba(63,184,175,0.5); }
+.link-partner-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+.link-group-badge {
+  margin-left: auto; padding: 3px 11px; border-radius: 12px;
+  font-size: 11px; font-weight: 700;
+}
+.link-group-badge.on { background: rgba(63,184,175,0.15); color: var(--teal); border: 1px solid rgba(63,184,175,0.4); }
+.link-group-badge.off { background: rgba(216,111,111,0.12); color: var(--danger); border: 1px solid rgba(216,111,111,0.35); }
