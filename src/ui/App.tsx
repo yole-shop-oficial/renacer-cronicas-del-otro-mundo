@@ -15,6 +15,7 @@ import {
   RelationsScreen
 } from './screens/PanelsScreens';
 import { SettingsScreen } from './screens/SettingsScreen';
+import { LifeTreeButton } from './LifeTreeButton';
 
 type Tab = 'story' | 'character' | 'inventory' | 'quests' | 'world' | 'settings';
 
@@ -106,6 +107,9 @@ export function App() {
           {tab === 'quests' && <QuestsScreen />}
           {tab === 'world' && <WorldScreen />}
           {tab === 'settings' && <SettingsScreen />}
+
+          {/* Árbol de la Vida: botón flotante siempre visible en partida */}
+          <LifeTreeButton />
 
           <nav className="bottom-nav" aria-label="Navegación principal">
             {TABS.map(({ id, icon, label }) => (

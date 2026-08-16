@@ -101,6 +101,9 @@ export const es = {
   'speaker.capitan_bren': 'Capitán Bren',
   'speaker.vendedora_lu': 'Lu',
 
+  'speaker.sargento_vela': 'Sargento Vela',
+  'speaker.cazador_tomas': 'Tomás',
+
   'skill.analyze': 'Analizar',
   'skill.persuasion': 'Persuasión',
   'skill.intimidation': 'Intimidación',
@@ -150,6 +153,9 @@ export const es = {
   'npc.capitan_bren.bio': 'Capitán de la guardia. Veterano de la Guerra de las Dos Coronas: sostuvo el puente de Vharen él solo hasta que cruzaron los últimos refugiados — entre ellos su hija Nara, pero no su mujer. Nara estudia ahora en el Templo del Alba y le escribe cada luna nueva. Protege Aldea Brumal como si fuera aquel puente.',
   'npc.vendedora_lu.bio': 'Vendedora de especias del mercado de Petra. Llegó de los puertos del sur hace una década con un carro, tres monedas y un oído infalible. Sabe todo lo que se murmura en la ciudad porque nadie sospecha de quien vende azafrán. Cobra por la verdad, pero nunca vende mentiras.',
 
+  'npc.sargento_vela.bio': 'Sargento de la guardia del canal de Petra. Hija de un refugiado que Bren cargó a la espalda por el puente de Vharen. El año pasado estuvo a una noche de desmantelar a la Sierpe: sus superiores la reasignaron y los testigos "olvidaron". Desde entonces revisa manifiestos doce horas al día, esperando una segunda oportunidad.',
+  'npc.cazador_tomas.bio': 'El cazador más viejo de "El Ancla Rota". Sesenta y un años, medio siglo de bosque. Recuerda cuando los cazadores tenían códigos: no cazar madres con cría, no vender vivo lo que sufre enjaulado. La Sierpe compró a sus compañeros; a él no le alcanzó el precio. Su nieto quiere ser cazador, y eso le quita el sueño.',
+
   'rel.remembers_one': 'Recuerda algo que hiciste.',
   'rel.remembers': 'Recuerda {count} cosas que hiciste.',
   'rel.trust': 'Confianza',
@@ -190,6 +196,24 @@ export const es = {
   'settings.language': 'Idioma',
   'settings.about': 'Acerca de',
   'settings.version': 'Versión',
+
+'lifetree.fabLabel': 'Árbol de la Vida — ver tu historia',
+  'lifetree.title': 'El Árbol de la Vida',
+  'lifetree.subtitle': 'El libro de la historia de {name}',
+  'lifetree.confirmTitle': 'El Árbol de la Vida te llama',
+  'lifetree.confirmBody.f': '¿Estás segura de teletransportarte al Árbol de la Vida? Verás el recorrido de tu historia, tal y como tú la escribiste... pero solo hasta donde has llegado. El futuro permanece sellado.',
+  'lifetree.confirmBody.m': '¿Estás seguro de teletransportarte al Árbol de la Vida? Verás el recorrido de tu historia, tal y como tú la escribiste... pero solo hasta donde has llegado. El futuro permanece sellado.',
+  'lifetree.travel': 'Teletransportarme',
+  'lifetree.stay': 'Quedarme',
+  'lifetree.close': 'Cerrar el libro',
+  'lifetree.chapters': 'Capítulos vividos',
+  'lifetree.page': 'Página {num} de {total}',
+  'lifetree.youChose': 'Elegiste:',
+  'lifetree.youAreHere': 'Estás aquí — la tinta aún está fresca',
+  'lifetree.prev': 'Anterior',
+  'lifetree.next': 'Siguiente',
+  'lifetree.empty': 'Tu libro aún está en blanco. Vive tu historia, y el Árbol la recordará.',
+  'lifetree.sealed': 'El Árbol solo muestra las páginas que ya has vivido. Lo que está por venir permanece sellado.',
 
   'ui.locked': 'Bloqueado',
   'ui.continue': 'Continuar',

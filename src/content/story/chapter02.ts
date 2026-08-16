@@ -1,12 +1,11 @@
 import type { Chapter } from '@/engine/schema';
 
 /**
- * CAPÍTULO 2 — El sello de la Sierpe.
- * - Memoria del mundo (§65): el capítulo reacciona a las decisiones del C1
- *   (freed_mist_creature / attacked_mist_creature / left_creature_trapped).
- * - Primer evento de decisión dual cooperativa (§35): en c2_06 cada jugador
- *   decide su camino; en coop, la UI muestra la elección del compañero y la
- *   consecuencia queda registrada en el event log compartido.
+ * CAPÍTULO 2 — El sello de la Sierpe — VERSIÓN AMPLIADA.
+ * Árbol de decisiones en Ciudad Petra: la vida de Lu, paseo por los canales,
+ * la taberna de los cazadores, la carta sellada de Bren (¿la abres?), la
+ * sargento Vela... Cada rama siembra flags que germinan en capítulos futuros.
+ * Memoria del mundo (§65) + decisión dual cooperativa (§35) en el muelle.
  */
 export const CHAPTER_02: Chapter = {
   id: 'chapter_02',
@@ -18,8 +17,8 @@ export const CHAPTER_02: Chapter = {
       chapterId: 'chapter_02',
       kind: 'narration',
       text: {
-        es: 'Tres días después, con una carta sellada del capitán Bren en el morral, cruzas el Bosque de los Susurros rumbo a Ciudad Petra. Las trampas de hierro no eran un caso aislado: Bren encontró dos más, todas marcadas con el mismo símbolo grabado a fuego — una sierpe enroscada mordiendo su propia cola. «Ese sello se compra en Petra», te dijo. «Y quien lo usa no caza por hambre.»\n\nLas murallas de la ciudad emergen de la niebla como la proa de un barco de piedra.',
-        en: 'Three days later, with a sealed letter from Captain Bren in your satchel, you cross the Whispering Forest toward the City of Petra. The iron traps were no isolated case: Bren found two more, all branded with the same fire-etched symbol — a coiled serpent biting its own tail. "That seal is bought in Petra," he told you. "And whoever uses it does not hunt out of hunger."\n\nThe city walls rise from the mist like the prow of a stone ship.'
+        es: 'Tres días después, con una carta sellada del capitán Bren en el morral, cruzas el Bosque de los Susurros rumbo a Ciudad Petra. Las trampas de hierro no eran un caso aislado: Bren encontró dos más, todas marcadas con el mismo símbolo grabado a fuego — una sierpe enroscada mordiendo su propia cola. «Ese sello se compra en Petra», te dijo. «Y quien lo usa no caza por hambre. Entrega esta carta a la sargento Vela, de la guardia del canal. Solo a ella.»\n\nLas murallas de la ciudad emergen de la niebla como la proa de un barco de piedra.',
+        en: 'Three days later, with a sealed letter from Captain Bren in your satchel, you cross the Whispering Forest toward the City of Petra. The iron traps were no isolated case: Bren found two more, all branded with the same fire-etched symbol — a coiled serpent biting its own tail. "That seal is bought in Petra," he told you. "And whoever uses it does not hunt out of hunger. Deliver this letter to Sergeant Vela of the canal guard. Her and no one else."\n\nThe city walls rise from the mist like the prow of a stone ship.'
       },
       onEnter: [
         { kind: 'startQuest', key: 'quest_serpent_seal' },
@@ -51,7 +50,7 @@ export const CHAPTER_02: Chapter = {
       kind: 'dialogue',
       speaker: 'vendedora_lu',
       text: {
-        es: 'En el mercado de Petra, una vendedora de especias con pañuelo azafrán te detiene con una sonrisa cómplice.\n\n«Tú eres la de Brumal, ¿verdad? La que liberó a la bestia de niebla en vez de matarla.» Baja la voz. «Los cazadores hablan de ti en las tabernas. Unos con respeto... y otros con rabia. Soy Lu. Y si buscas al dueño del sello de la sierpe, cuidado: aquí las paredes tienen bolsillos, y los bolsillos tienen dueños.»',
+        es: 'En el mercado de Petra, una vendedora de especias con pañuelo azafrán te detiene con una sonrisa cómplice.\n\n«Tú eres l{a|} de Brumal, ¿verdad? {La|El} que liberó a la bestia de niebla en vez de matarla.» Baja la voz. «Los cazadores hablan de ti en las tabernas. Unos con respeto... y otros con rabia. Soy Lu. Y si buscas al dueño del sello de la sierpe, cuidado: aquí las paredes tienen bolsillos, y los bolsillos tienen dueños.»',
         en: 'In Petra\'s market, a spice seller in a saffron headscarf stops you with a knowing smile.\n\n"You\'re the one from Brumal, aren\'t you? The one who freed the mist beast instead of killing it." She lowers her voice. "The hunters talk about you in the taverns. Some with respect... others with anger. I\'m Lu. And if you\'re looking for the owner of the serpent seal, careful: here the walls have pockets, and the pockets have owners."'
       },
       onEnter: [
@@ -66,6 +65,22 @@ export const CHAPTER_02: Chapter = {
           visibleWhenLocked: false,
           effects: [{ kind: 'addNpcMemory', target: 'vendedora_lu', value: 'player_asked_about_seal' }],
           goto: 'c2_03'
+        },
+        {
+          id: 'c2_02f_lu',
+          text: { es: '«¿Y tú quién eres, Lu? Cuéntame de ti.»', en: '"And who are you, Lu? Tell me about yourself."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_lu_story'
+        },
+        {
+          id: 'c2_02f_stroll',
+          text: { es: 'Recorrer Petra antes de hablar de negocios', en: 'Explore Petra before talking business' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
         }
       ],
       end: false
@@ -76,7 +91,7 @@ export const CHAPTER_02: Chapter = {
       kind: 'dialogue',
       speaker: 'vendedora_lu',
       text: {
-        es: 'En el mercado de Petra, una vendedora de especias con pañuelo azafrán observa la carta sellada que asoma de tu morral.\n\n«Sello de la guardia de Brumal... Llevas asuntos serios encima, forastera.» Te estudia un momento y decide algo. «Soy Lu. Vendo especias y escucho cosas. Si buscas respuestas sobre trampas y sierpes, puede que las tenga. Pero en Petra nada es gratis: ni el azafrán ni la verdad.»',
+        es: 'En el mercado de Petra, una vendedora de especias con pañuelo azafrán observa la carta sellada que asoma de tu morral.\n\n«Sello de la guardia de Brumal... Llevas asuntos serios encima, foraster{a|o}.» Te estudia un momento y decide algo. «Soy Lu. Vendo especias y escucho cosas. Si buscas respuestas sobre trampas y sierpes, puede que las tenga. Pero en Petra nada es gratis: ni el azafrán ni la verdad.»',
         en: 'In Petra\'s market, a spice seller in a saffron headscarf eyes the sealed letter poking out of your satchel.\n\n"Seal of the Brumal guard... You carry serious business, outsider." She studies you a moment and decides something. "I\'m Lu. I sell spices and I hear things. If you\'re after answers about traps and serpents, I may have them. But in Petra nothing is free: not saffron, not truth."'
       },
       onEnter: [],
@@ -103,6 +118,428 @@ export const CHAPTER_02: Chapter = {
             { kind: 'gainXp', amount: 10 }
           ],
           goto: 'c2_03'
+        },
+        {
+          id: 'c2_02p_lu',
+          text: { es: '«Antes de negociar... ¿quién eres tú, Lu?»', en: '"Before we bargain... who are you, Lu?"' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_lu_story'
+        },
+        {
+          id: 'c2_02p_stroll',
+          text: { es: 'Recorrer Petra antes de decidir', en: 'Explore Petra before deciding' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_lu_story',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'vendedora_lu',
+      text: {
+        es: 'Lu parpadea, sinceramente sorprendida. Luego ríe, y por primera vez su sonrisa no es una herramienta de venta.\n\n«Diez años en este mercado y nadie me lo había preguntado.» Sirve dos vasitos de té especiado sin que se lo pidas. «Nací en los puertos del sur, en Zafir, donde los barcos traen especias y se llevan gente. Mi madre vendía pimienta; los aranceles del gremio la arruinaron dos veces. La segunda vez, no se levantó. Yo cargué el carro, crucé media tierra y llegué aquí con tres monedas y este pañuelo.»\n\nSe encoge de hombros.\n\n«¿Por qué escucho tanto? Porque cuando eres pobre y extranjera, saber cosas es la única moneda que nadie puede robarte. Y aprendí algo, foraster{a|o}: en Petra, los que compran criaturas enjauladas y los que arruinaron a mi madre... suelen cenar en la misma mesa.»',
+        en: 'Lu blinks, genuinely surprised. Then she laughs, and for the first time her smile is not a sales tool.\n\n"Ten years in this market and nobody ever asked me that." She pours two small cups of spiced tea unbidden. "I was born in the southern ports, in Zafir, where ships bring spices and take people away. My mother sold pepper; the guild tariffs ruined her twice. The second time, she did not get up. I loaded the cart, crossed half the land, and arrived here with three coins and this headscarf."\n\nShe shrugs.\n\n"Why do I listen so much? Because when you are poor and foreign, knowing things is the only coin nobody can steal from you. And I learned something, outsider: in Petra, the people who buy caged creatures and the people who ruined my mother... tend to dine at the same table."'
+      },
+      onEnter: [
+        { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'friendship', amount: 15 },
+        { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'trust', amount: 10 },
+        { kind: 'addNpcMemory', target: 'vendedora_lu', value: 'player_asked_about_lu_life' },
+        { kind: 'gainXp', amount: 10 }
+      ],
+      choices: [
+        {
+          id: 'c2_lu_story_seal',
+          text: { es: '«Háblame del sello de la sierpe.»', en: '"Tell me about the serpent seal."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'addNpcMemory', target: 'vendedora_lu', value: 'player_asked_about_seal' }],
+          goto: 'c2_03'
+        },
+        {
+          id: 'c2_lu_story_stroll',
+          text: { es: 'Recorrer la ciudad y volver luego', en: 'Explore the city and come back later' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_stroll',
+      chapterId: 'chapter_02',
+      kind: 'narration',
+      text: {
+        es: 'Petra es una ciudad cosida por el agua. Los canales la cruzan como venas verdes, y sobre ellos se arquean puentes de piedra tan viejos que los escalones están gastados en forma de cuchara. Los barrios cambian de olor: pescado y brea junto al canal, pan y cera en la plaza del reloj, cuero y tinta cerca del barrio de los gremios, donde cada puerta luce un sello de bronce.\n\nDos lugares te llaman la atención: una taberna junto al agua — "El Ancla Rota", de donde salen voces de cazadores — y el puesto de la guardia del canal, donde ondea el estandarte azul. La carta de Bren pesa en tu morral.',
+        en: 'Petra is a city stitched together by water. Canals cross it like green veins, and stone bridges arch over them, their steps worn spoon-shaped by centuries. The neighborhoods change smell: fish and tar by the canal, bread and wax in the clock square, leather and ink near the guild quarter, where every door wears a bronze seal.\n\nTwo places catch your eye: a waterside tavern — "The Broken Anchor", spilling hunters\' voices — and the canal guard post flying its blue banner. Bren\'s letter weighs in your satchel.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'walked_petra', value: true },
+        { kind: 'gainXp', amount: 5 }
+      ],
+      choices: [
+        {
+          id: 'c2_stroll_tavern',
+          text: { es: 'Entrar en "El Ancla Rota"', en: 'Enter "The Broken Anchor"' },
+          conditions: [{ kind: 'flag', key: 'visited_tavern', op: 'not' }],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_tavern'
+        },
+        {
+          id: 'c2_stroll_guard',
+          text: { es: 'Ir al puesto de la guardia del canal', en: 'Go to the canal guard post' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_guardpost'
+        },
+        {
+          id: 'c2_stroll_letter',
+          text: { es: 'Buscar un rincón discreto y leer la carta de Bren', en: 'Find a quiet corner and read Bren\'s letter' },
+          conditions: [
+            { kind: 'flag', key: 'opened_bren_letter', op: 'not' },
+            { kind: 'flag', key: 'letter_delivered', op: 'not' }
+          ],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_letter'
+        },
+        {
+          id: 'c2_stroll_back',
+          text: { es: 'Volver al puesto de Lu', en: 'Return to Lu\'s stall' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'addNpcMemory', target: 'vendedora_lu', value: 'player_asked_about_seal' }],
+          goto: 'c2_03'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_letter',
+      chapterId: 'chapter_02',
+      kind: 'narration',
+      text: {
+        es: 'Bajo un puente, con el rumor del agua tapando el mundo, giras la carta entre los dedos. El sello de cera de Brumal te mira como un ojo. Bren dijo: «Solo a ella». Pero Bren no está aquí... y tú sí.\n\nRompes el sello. La letra del capitán es recta y sin adornos, como él:\n\n«Vela: trampas de gremio en mi bosque, sello de la sierpe. Sé lo que significa y tú también. Si "ellos" vuelven a mover mercancía viva por el canal, esta vez llega hasta el final, caiga quien caiga. La persona que te entrega esto tiene mi confianza. Dale la tuya. — B.»\n\nEsta vez. Ellos. Bren y Vela ya se habían enfrentado antes a la Sierpe... y alguien impidió que llegaran hasta el final. Vuelves a doblar la carta. El sello roto ya no puede repararse.',
+        en: 'Under a bridge, the murmur of water covering the world, you turn the letter in your fingers. The wax seal of Brumal stares at you like an eye. Bren said: "Her and no one else." But Bren is not here... and you are.\n\nYou break the seal. The captain\'s handwriting is straight and unadorned, like the man:\n\n"Vela: guild traps in my forest, serpent seal. I know what it means and so do you. If \'they\' move live cargo through the canal again, this time it goes all the way, no matter who falls. The bearer of this letter has my trust. Give them yours. — B."\n\nThis time. They. Bren and Vela had faced the Serpent before... and someone stopped them from going all the way. You fold the letter again. The broken seal cannot be repaired.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'opened_bren_letter', value: true },
+        { kind: 'gainXp', amount: 10 }
+      ],
+      choices: [
+        {
+          id: 'c2_letter_back',
+          text: { es: 'Guardar la carta y volver a las calles', en: 'Pocket the letter and return to the streets' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_tavern',
+      chapterId: 'chapter_02',
+      kind: 'encounter',
+      text: {
+        es: '"El Ancla Rota" huele a cerveza, sebo y ropa mojada. En la mesa del fondo, cuatro cazadores de manos callosas hablan en voz baja sobre jarras a medio vaciar. Uno lleva al cinto un cuchillo de desollar con mango de hueso; otro, una cicatriz de mordisco reciente en el antebrazo. Sobre la mesa, entre las jarras, hay algo que reconoces al instante: el pasador de una trampa de hierro, con la sierpe grabada.',
+        en: '"The Broken Anchor" smells of ale, tallow and wet clothes. At the back table, four hunters with calloused hands talk quietly over half-empty tankards. One carries a bone-handled skinning knife; another, a fresh bite scar on his forearm. On the table, between the tankards, lies something you recognize instantly: the pin of an iron trap, engraved with the serpent.'
+      },
+      onEnter: [{ kind: 'setFlag', key: 'visited_tavern', value: true }],
+      choices: [
+        {
+          id: 'c2_tavern_sneak',
+          text: { es: '[Sigilo] Sentarte cerca y escuchar sin ser vist{a|o}', en: '[Stealth] Sit close and listen unseen' },
+          conditions: [{ kind: 'skill', key: 'stealth', op: 'has' }],
+          visibleWhenLocked: true,
+          lockedHint: { es: 'Requiere Sigilo', en: 'Requires Stealth' },
+          effects: [{ kind: 'gainXp', amount: 15 }],
+          goto: 'c2_tavern_listen'
+        },
+        {
+          id: 'c2_tavern_famed_approach',
+          text: { es: 'Acercarte a su mesa abiertamente', en: 'Approach their table openly' },
+          conditions: [{ kind: 'flag', key: 'freed_mist_creature', op: 'has' }],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_tavern_famed'
+        },
+        {
+          id: 'c2_tavern_normal_approach',
+          text: { es: 'Acercarte a su mesa abiertamente', en: 'Approach their table openly' },
+          conditions: [{ kind: 'flag', key: 'freed_mist_creature', op: 'not' }],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_tavern_normal'
+        },
+        {
+          id: 'c2_tavern_leave',
+          text: { es: 'Salir sin llamar la atención', en: 'Leave without drawing attention' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_tavern_listen',
+      chapterId: 'chapter_02',
+      kind: 'narration',
+      text: {
+        es: 'Te deslizas hasta el banco de al lado con una jarra que no piensas beber. Las palabras llegan a retazos, pero los retazos bastan:\n\n«...paga el doble si respira. El triple si es cría.» «¿Y si la guardia pregunta?» «La guardia del canal no pregunta. Ya no. Desde lo del año pasado, la sargento va sola contra el mundo.» «Esta noche, muelle tres. El barco no espera.»\n\nUno de ellos hace girar el pasador de la trampa sobre la mesa, como quien juega con una moneda. Ya tienes lo que necesitas: la Sierpe paga por capturas vivas, tiene comprado el silencio de casi toda la guardia... y esta noche mueve mercancía.',
+        en: 'You slide onto the next bench with a tankard you have no intention of drinking. The words come in scraps, but scraps suffice:\n\n"...pays double if it breathes. Triple if it\'s a cub." "And if the guard asks?" "The canal guard doesn\'t ask. Not anymore. Since last year, the sergeant fights the world alone." "Tonight, pier three. The ship won\'t wait."\n\nOne of them spins the trap pin on the table like a coin. You have what you need: the Serpent pays for live captures, has bought the silence of most of the guard... and moves cargo tonight.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'heard_hunters_serpent', value: true },
+        { kind: 'setFlag', key: 'knows_guard_corrupt', value: true }
+      ],
+      choices: [
+        {
+          id: 'c2_tavern_listen_out',
+          text: { es: 'Salir con disimulo', en: 'Slip out quietly' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_tavern_famed',
+      chapterId: 'chapter_02',
+      kind: 'encounter',
+      text: {
+        es: 'Las conversaciones mueren una a una, como velas. El cazador de la cicatriz te reconoce primero; se le endurece la cara.\n\n«Vaya, vaya. L{a|El} amig{a|o} de las bestias en persona.» Se levanta despacio. «¿Sabes cuánto pagaban por esa criatura que soltaste? El jornal de un invierno entero. Mis hijos comen de esas capturas.»\n\nPero el cazador más viejo, uno de barba gris y ojos cansados, le pone una mano en el brazo: «Siéntate, Olmo. Si los rumores son ciertos, l{a|el} foraster{a|o} liberó a un animal con cría. Hasta nosotros teníamos códigos, antes de la Sierpe.» Se vuelve hacia ti, y en su voz hay algo parecido a la vergüenza. «Antes cazábamos para comer. Ahora enjaulamos para nobles. No todos estamos orgullosos, ¿sabes?»',
+        en: 'The conversations die one by one, like candles. The scarred hunter recognizes you first; his face hardens.\n\n"Well, well. The beast-lover in the flesh." He rises slowly. "Do you know what they paid for that creature you freed? A whole winter\'s wages. My children eat from those captures."\n\nBut the oldest hunter, grey-bearded with tired eyes, lays a hand on his arm: "Sit down, Olmo. If the rumors are true, the outsider freed an animal with a cub. Even we had codes, before the Serpent." He turns to you, and in his voice there is something like shame. "We used to hunt to eat. Now we cage things for nobles. Not all of us are proud of it, you know?"'
+      },
+      onEnter: [],
+      choices: [
+        {
+          id: 'c2_tavern_famed_stand',
+          text: { es: 'Sostener la mirada: «Vuestros códigos tenían razón.»', en: 'Hold their gaze: "Your codes had it right."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [
+            { kind: 'setFlag', key: 'hunters_respect_earned', value: true },
+            { kind: 'changeReputation', key: 'ciudad_petra', amount: 5 },
+            { kind: 'gainXp', amount: 10 }
+          ],
+          goto: 'c2_tavern_famed_info'
+        },
+        {
+          id: 'c2_tavern_famed_round',
+          text: { es: 'Pagar una ronda y escuchar su historia (5 monedas)', en: 'Buy a round and hear them out (5 coins)' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [
+            { kind: 'gainGold', amount: -5 },
+            { kind: 'setFlag', key: 'hunters_befriended', value: true },
+            { kind: 'gainXp', amount: 10 }
+          ],
+          goto: 'c2_tavern_famed_info'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_tavern_famed_info',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'cazador_tomas',
+      text: {
+        es: 'El viejo cazador — Tomás, lo llaman — baja la voz hasta que solo la mesa puede oírla.\n\n«Escucha bien, porque esto no lo repetiré. La Sierpe no es un gremio: es un contrato. Alguien de arriba pone el oro, los intermediarios ponen el sello, y desgraciados como Olmo ponen las manos. Pagan doble por pieza viva, triple por cría. Esta noche cargan en el muelle tres.» Aprieta la jarra hasta que los nudillos se le ponen blancos. «Mi nieto me preguntó el otro día si de mayor sería cazador, como yo. No supe qué contestarle. Haz que la respuesta sea fácil, foraster{a|o}.»',
+        en: 'The old hunter — Tomás, they call him — lowers his voice until only the table can hear it.\n\n"Listen well, because I won\'t repeat this. The Serpent is not a guild: it\'s a contract. Someone above puts up the gold, middlemen put up the seal, and poor devils like Olmo put up their hands. They pay double for a live piece, triple for a cub. Tonight they load at pier three." He grips his tankard until his knuckles whiten. "My grandson asked me the other day if he\'d grow up to be a hunter like me. I didn\'t know what to answer. Make the answer easy, outsider."'
+      },
+      onEnter: [{ kind: 'setFlag', key: 'heard_hunters_serpent', value: true }],
+      choices: [
+        {
+          id: 'c2_tavern_famed_out',
+          text: { es: 'Prometérselo y salir de la taberna', en: 'Promise him and leave the tavern' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'promised_tomas', value: true }],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_tavern_normal',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'cazador_tomas',
+      text: {
+        es: 'Los cazadores te miran llegar con la desconfianza tranquila de los que trabajan con las manos. El más viejo, de barba gris, te hace un gesto con la jarra.\n\n«¿Buscas mesa o buscas algo más, foraster{a|o}? Porque las dos cosas se pagan.» Cuando mencionas las trampas del bosque de Brumal, se hace un silencio espeso. El viejo lo rompe: «Trampas con sello en bosque ajeno... eso es la Sierpe, y de la Sierpe aquí no se habla. Solo te diré una cosa, porque tienes cara de no rendirte: últimamente vienen tipos de fuera, con acento del sur y bolsas llenas, comprando mapas de bosques. Bosques con criaturas del velo. Y quien compra el mapa, compra el silencio.»',
+        en: 'The hunters watch you come with the calm distrust of people who work with their hands. The oldest, grey-bearded, gestures with his tankard.\n\n"Looking for a table or something more, outsider? Both cost." When you mention the traps in Brumal\'s forest, a thick silence falls. The old man breaks it: "Sealed traps in another\'s forest... that\'s the Serpent, and we don\'t speak of the Serpent here. I\'ll tell you one thing only, because you have the face of someone who doesn\'t quit: lately men come from outside, southern accents and full purses, buying maps of forests. Forests with veil creatures. And whoever buys the map, buys the silence."'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'visited_tavern', value: true },
+        { kind: 'setFlag', key: 'heard_city_buyers', value: true },
+        { kind: 'gainXp', amount: 10 }
+      ],
+      choices: [
+        {
+          id: 'c2_tavern_normal_out',
+          text: { es: 'Agradecer y salir de la taberna', en: 'Thank him and leave the tavern' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_guardpost',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'sargento_vela',
+      text: {
+        es: 'El puesto de la guardia del canal es una torre baja con el estandarte azul deshilachado por el viento. Dentro, una mujer de uniforme impecable y ojos de no haber dormido bien en meses revisa manifiestos de carga a la luz de una lámpara. Levanta la vista, y su mirada te cataloga en un segundo: botas de camino, polvo de bosque, morral de mensajer{a|o}.\n\n«Sargento Vela, guardia del canal. Si vienes a denunciar un robo, la cola empieza fuera. Si vienes por otra cosa... habla rápido.»',
+        en: 'The canal guard post is a squat tower, its blue banner frayed by the wind. Inside, a woman in an impeccable uniform, her eyes those of someone who has not slept well in months, reviews cargo manifests by lamplight. She looks up, and her gaze catalogues you in a second: road boots, forest dust, a messenger\'s satchel.\n\n"Sergeant Vela, canal guard. If you\'re here to report a theft, the queue starts outside. If you\'re here for something else... speak quickly."'
+      },
+      onEnter: [],
+      choices: [
+        {
+          id: 'c2_vela_give_sealed',
+          text: { es: 'Entregarle la carta sellada de Bren', en: 'Hand her Bren\'s sealed letter' },
+          conditions: [
+            { kind: 'flag', key: 'opened_bren_letter', op: 'not' },
+            { kind: 'flag', key: 'letter_delivered', op: 'not' }
+          ],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_vela_sealed'
+        },
+        {
+          id: 'c2_vela_give_admit',
+          text: { es: 'Entregar la carta abierta y admitir que la leíste', en: 'Hand over the opened letter and admit you read it' },
+          conditions: [
+            { kind: 'flag', key: 'opened_bren_letter', op: 'has' },
+            { kind: 'flag', key: 'letter_delivered', op: 'not' }
+          ],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_vela_admit'
+        },
+        {
+          id: 'c2_vela_give_hide',
+          text: { es: 'Entregar la carta abierta como si nada', en: 'Hand over the opened letter as if nothing happened' },
+          conditions: [
+            { kind: 'flag', key: 'opened_bren_letter', op: 'has' },
+            { kind: 'flag', key: 'letter_delivered', op: 'not' }
+          ],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_vela_lie'
+        },
+        {
+          id: 'c2_vela_leave',
+          text: { es: 'Disculparte y volver a la calle', en: 'Excuse yourself and return to the street' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_vela_sealed',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'sargento_vela',
+      text: {
+        es: 'Vela examina el sello intacto antes de romperlo — la costumbre de quien ha aprendido a desconfiar hasta de la cera. Lee dos veces. Cuando termina, algo ha cambiado en su cara: el cansancio sigue ahí, pero debajo arde otra cosa.\n\n«Bren...» Dobla la carta con cuidado, casi con ternura. «Ese hombre cruzó el puente de Vharen con mi padre a la espalda. Yo tenía seis años.» Te mira de frente por primera vez. «El año pasado seguí un cargamento de la Sierpe hasta el muelle tres. Tenía testigos, manifiestos, todo. La noche de la redada, mis superiores me reasignaron a contar gaviotas y los testigos olvidaron sus nombres. ¿Entiendes lo que te estoy diciendo? La Sierpe tiene manos dentro de la guardia.»\n\nSe pone en pie y descuelga su capa.\n\n«Pero si Bren dice que llegue hasta el final... esta vez llego. Muelle tres, esta noche. Yo vigilaré desde el agua. Lo que tú hagas allí, foraster{a|o}, hazlo sabiendo que no estás sol{a|o}.»',
+        en: 'Vela examines the intact seal before breaking it — the habit of someone who has learned to distrust even wax. She reads it twice. When she finishes, something in her face has changed: the tiredness is still there, but underneath it something else burns.\n\n"Bren..." She folds the letter carefully, almost tenderly. "That man crossed Vharen bridge with my father on his back. I was six." She looks you in the eye for the first time. "Last year I tracked a Serpent shipment to pier three. I had witnesses, manifests, everything. The night of the raid, my superiors reassigned me to counting seagulls and the witnesses forgot their names. Do you understand what I\'m telling you? The Serpent has hands inside the guard."\n\nShe rises and takes down her cloak.\n\n"But if Bren says go all the way... this time I go. Pier three, tonight. I\'ll watch from the water. Whatever you do there, outsider, do it knowing you are not alone."'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'letter_delivered', value: true },
+        { kind: 'setFlag', key: 'vela_ally', value: true },
+        { kind: 'changeRelationship', target: 'sargento_vela', axis: 'trust', amount: 20 },
+        { kind: 'changeRelationship', target: 'sargento_vela', axis: 'respect', amount: 10 },
+        { kind: 'gainXp', amount: 15 }
+      ],
+      choices: [
+        {
+          id: 'c2_vela_sealed_go',
+          text: { es: 'Asentir y prepararte para la noche', en: 'Nod and prepare for the night' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_03'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_vela_admit',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'sargento_vela',
+      text: {
+        es: 'Dejas la carta abierta sobre la mesa y lo dices sin rodeos: la leíste. Vela se queda muy quieta, con esos ojos cansados clavados en los tuyos, durante tres segundos que duran un invierno.\n\n«Rompiste el sello de un capitán de la guardia. Eso, en Petra, se paga con calabozo.» Recoge la carta y la lee. Al terminar, suspira. «Y sin embargo... me lo has dicho a la cara, sabiendo lo que te costaba. ¿Sabes cuánta gente en esta ciudad me ha dicho una verdad incómoda a la cara, en el último año? Ninguna.»\n\nDobla la carta.\n\n«Bren escribió que te dé mi confianza. La confianza no se da: se presta con interés. Considérala prestada. Muelle tres, esta noche. Yo vigilaré desde el agua... y tú y yo hablaremos de sellos rotos cuando esto acabe.»',
+        en: 'You lay the opened letter on the table and say it plainly: you read it. Vela goes very still, those tired eyes fixed on yours for three seconds that last a winter.\n\n"You broke the seal of a guard captain. In Petra, that buys you a cell." She picks up the letter and reads. When she finishes, she sighs. "And yet... you told me to my face, knowing what it might cost you. Do you know how many people in this city have told me an uncomfortable truth to my face this past year? None."\n\nShe folds the letter.\n\n"Bren wrote that I should give you my trust. Trust is not given: it is lent, with interest. Consider it lent. Pier three, tonight. I\'ll watch from the water... and you and I will talk about broken seals when this is over."'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'letter_delivered', value: true },
+        { kind: 'setFlag', key: 'vela_ally', value: true },
+        { kind: 'setFlag', key: 'vela_knows_you_opened', value: true },
+        { kind: 'changeRelationship', target: 'sargento_vela', axis: 'respect', amount: 15 },
+        { kind: 'changeRelationship', target: 'sargento_vela', axis: 'trust', amount: 5 },
+        { kind: 'addNpcMemory', target: 'sargento_vela', value: 'player_admitted_opening_letter' },
+        { kind: 'gainXp', amount: 15 }
+      ],
+      choices: [
+        {
+          id: 'c2_vela_admit_go',
+          text: { es: 'Aceptar el trato y prepararte para la noche', en: 'Accept the deal and prepare for the night' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_03'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_vela_lie',
+      chapterId: 'chapter_02',
+      kind: 'dialogue',
+      speaker: 'sargento_vela',
+      text: {
+        es: 'Le tiendes la carta con gesto neutro. Vela la toma... y sus dedos se detienen en el borde del sello un instante de más. Lo sabías: los ojos que revisan manifiestos de carga doce horas al día no pasan por alto una cera recompuesta.\n\nNo dice nada. Lee la carta, la dobla, y cuando vuelve a mirarte hay una puerta cerrada donde antes había una rendija.\n\n«Dile a Bren que recibí su mensaje.» Su voz es correcta, profesional, helada. «El muelle tres se vigilará esta noche. La guardia agradece la colaboración de los mensajeros... incluso de los que leen el correo ajeno y no lo dicen.»\n\nSientes las orejas arder. Sabe. Ha sabido desde el primer segundo, y tu silencio le ha contado más que la carta.',
+        en: 'You hand her the letter with a neutral expression. Vela takes it... and her fingers pause on the seal\'s edge one instant too long. You knew it: eyes that review cargo manifests twelve hours a day do not miss reassembled wax.\n\nShe says nothing. She reads the letter, folds it, and when she looks at you again there is a closed door where a crack of light used to be.\n\n"Tell Bren I received his message." Her voice is correct, professional, ice-cold. "Pier three will be watched tonight. The guard appreciates the cooperation of messengers... even those who read other people\'s mail and say nothing."\n\nYou feel your ears burn. She knows. She has known since the first second, and your silence told her more than the letter did.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'letter_delivered', value: true },
+        { kind: 'setFlag', key: 'vela_knows_you_opened', value: true },
+        { kind: 'setFlag', key: 'vela_distrusts', value: true },
+        { kind: 'changeRelationship', target: 'sargento_vela', axis: 'trust', amount: -15 },
+        { kind: 'addNpcMemory', target: 'sargento_vela', value: 'player_lied_about_seal' }
+      ],
+      choices: [
+        {
+          id: 'c2_vela_lie_go',
+          text: { es: 'Salir del puesto con la lección aprendida', en: 'Leave the post, lesson learned' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_03'
         }
       ],
       end: false
@@ -113,7 +550,7 @@ export const CHAPTER_02: Chapter = {
       kind: 'dialogue',
       speaker: 'vendedora_lu',
       text: {
-        es: 'Lu finge ordenar sus frascos de especias mientras habla en voz baja.\n\n«El sello de la sierpe pertenece a una compañía de "comerciantes de pieles exóticas". Se hacen llamar la Sierpe. Oficialmente venden cuero y ámbar. Extraoficialmente... capturan criaturas del velo vivas: bestias de niebla, fuegos fatuos, crías de grifo. Hay nobles que pagan fortunas por tener en una jaula lo que no deberían tener ni en sueños.»\n\nDesliza un mapa diminuto entre dos frascos.\n\n«Tienen un almacén junto al canal, muelle tres. Esta noche mueven mercancía. Si vas, no vayas sola... y decide bien a qué vas.»',
+        es: 'Lu finge ordenar sus frascos de especias mientras habla en voz baja.\n\n«El sello de la sierpe pertenece a una compañía de "comerciantes de pieles exóticas". Se hacen llamar la Sierpe. Oficialmente venden cuero y ámbar. Extraoficialmente... capturan criaturas del velo vivas: bestias de niebla, fuegos fatuos, crías de grifo. Hay nobles que pagan fortunas por tener en una jaula lo que no deberían tener ni en sueños.»\n\nDesliza un mapa diminuto entre dos frascos.\n\n«Tienen un almacén junto al canal, muelle tres. Esta noche mueven mercancía. Si vas, no vayas sol{a|o}... y decide bien a qué vas.»',
         en: 'Lu pretends to arrange her spice jars while speaking quietly.\n\n"The serpent seal belongs to a company of \'exotic hide merchants\'. They call themselves the Serpent. Officially they sell leather and amber. Unofficially... they capture veil creatures alive: mist beasts, wisps, griffin cubs. There are nobles who pay fortunes to cage what they shouldn\'t even dream of owning."\n\nShe slides a tiny map between two jars.\n\n"They have a warehouse by the canal, pier three. Tonight they move cargo. If you go, don\'t go alone... and choose well what you go for."'
       },
       onEnter: [{ kind: 'setFlag', key: 'knows_serpent_warehouse', value: true }],
@@ -125,6 +562,14 @@ export const CHAPTER_02: Chapter = {
           visibleWhenLocked: false,
           effects: [],
           goto: 'c2_04'
+        },
+        {
+          id: 'c2_03_stroll_more',
+          text: { es: 'Aprovechar la tarde para conocer mejor la ciudad', en: 'Use the afternoon to know the city better' },
+          conditions: [{ kind: 'flag', key: 'walked_petra', op: 'not' }],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_stroll'
         }
       ],
       end: false
@@ -141,7 +586,7 @@ export const CHAPTER_02: Chapter = {
       choices: [
         {
           id: 'c2_04_stealth',
-          text: { es: '[Sigilo] Rodear el almacén sin ser vista', en: '[Stealth] Circle the warehouse unseen' },
+          text: { es: '[Sigilo] Rodear el almacén sin ser vist{a|o}', en: '[Stealth] Circle the warehouse unseen' },
           conditions: [{ kind: 'skill', key: 'stealth', op: 'has' }],
           visibleWhenLocked: true,
           lockedHint: { es: 'Requiere Sigilo', en: 'Requires Stealth' },
@@ -221,7 +666,7 @@ export const CHAPTER_02: Chapter = {
       chapterId: 'chapter_02',
       kind: 'encounter',
       text: {
-        es: 'Avanzas agachada entre las cajas. Estás a diez pasos cuando una tabla cruje bajo tu pie. Uno de los guardias gira la cabeza — te aplastas contra una pila de redes que huele a pescado viejo y contienes la respiración hasta que el corazón te golpea las costillas. «Ratas», gruñe el guardia al fin. Desde tu escondite ves lo esencial: cuatro jaulas con crías de niebla, y un cuerno que suena a lo lejos anunciando el barco del comprador.\n\nQueda poco tiempo.',
+        es: 'Avanzas agachad{a|o} entre las cajas. Estás a diez pasos cuando una tabla cruje bajo tu pie. Uno de los guardias gira la cabeza — te aplastas contra una pila de redes que huele a pescado viejo y contienes la respiración hasta que el corazón te golpea las costillas. «Ratas», gruñe el guardia al fin. Desde tu escondite ves lo esencial: cuatro jaulas con crías de niebla, y un cuerno que suena a lo lejos anunciando el barco del comprador.\n\nQueda poco tiempo.',
         en: 'You creep forward between the crates. You are ten paces away when a board creaks underfoot. One guard turns his head — you flatten yourself against a pile of nets smelling of old fish and hold your breath until your heart pounds your ribs. "Rats," the guard finally grunts. From your hiding place you see what matters: four cages of mist cubs, and a horn sounding in the distance announcing the buyer\'s ship.\n\nTime is short.'
       },
       onEnter: [{ kind: 'setFlag', key: 'nearly_spotted', value: true }],
@@ -326,8 +771,8 @@ export const CHAPTER_02: Chapter = {
       kind: 'dialogue',
       speaker: 'vendedora_lu',
       text: {
-        es: 'Lu te espera en su puesto cerrado, con dos tazas de té de especias humeando entre las manos. Escucha tu relato en silencio, y al final asiente despacio.\n\n«Sea lo que sea lo que elegiste, elegiste. Eso ya es más de lo que hace la mayoría.» Te tiende una de las tazas. «La Sierpe no olvida, y los que están encima de la Sierpe tampoco. Esto ya no es un asunto de trampas en un bosque, forastera. Es una cuerda que sube muy alto... y tú acabas de tirar de ella.»\n\nEl amanecer tiñe de cobre los tejados de Petra. Tu historia acaba de hacerse más grande.',
-        en: 'Lu waits at her shuttered stall with two cups of spiced tea steaming in her hands. She listens to your account in silence, and at the end nods slowly.\n\n"Whatever you chose, you chose. That is already more than most people do." She hands you one of the cups. "The Serpent does not forget, and those above the Serpent forget even less. This is no longer about traps in a forest, outsider. It is a rope that climbs very high... and you just pulled it."\n\nDawn paints Petra\'s rooftops copper. Your story just got bigger.'
+        es: 'Lu te espera en su puesto cerrado, con dos tazas de té de especias humeando entre las manos. Escucha tu relato en silencio, y al final asiente despacio.\n\n«Sea lo que sea lo que elegiste, elegiste. Eso ya es más de lo que hace la mayoría.» Te tiende una de las tazas. «La Sierpe no olvida, y los que están encima de la Sierpe tampoco. Esto ya no es un asunto de trampas en un bosque, foraster{a|o}. Es una cuerda que sube muy alto... y tú acabas de tirar de ella.»\n\nEl amanecer tiñe de cobre los tejados de Petra. Tu historia acaba de hacerse más grande.\n\n✦ Fin del Capítulo 2. Tus decisiones han quedado grabadas en el mundo. ✦',
+        en: 'Lu waits at her shuttered stall with two cups of spiced tea steaming in her hands. She listens to your account in silence, and at the end nods slowly.\n\n"Whatever you chose, you chose. That is already more than most people do." She hands you one of the cups. "The Serpent does not forget, and those above the Serpent forget even less. This is no longer about traps in a forest, outsider. It is a rope that climbs very high... and you just pulled it."\n\nDawn paints Petra\'s rooftops copper. Your story just got bigger.\n\n✦ End of Chapter 2. Your decisions are engraved in the world. ✦'
       },
       onEnter: [
         { kind: 'completeQuest', key: 'quest_serpent_seal' },

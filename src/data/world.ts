@@ -20,7 +20,9 @@ export const NPCS: NpcDef[] = [
   { id: 'joren', regionId: 'aldea_brumal', profession: 'blacksmith', age: 41, initialRelationships: {} },
   { id: 'pip', regionId: 'aldea_brumal', profession: 'orphan', age: 11, initialRelationships: { friendship: 5 } },
   { id: 'capitan_bren', regionId: 'aldea_brumal', profession: 'guard_captain', age: 47, initialRelationships: { respect: 0 } },
-  { id: 'vendedora_lu', regionId: 'ciudad_petra', profession: 'merchant', age: 33, initialRelationships: {} }
+  { id: 'vendedora_lu', regionId: 'ciudad_petra', profession: 'merchant', age: 33, initialRelationships: {} },
+  { id: 'sargento_vela', regionId: 'ciudad_petra', profession: 'canal_guard', age: 29, initialRelationships: {} },
+  { id: 'cazador_tomas', regionId: 'ciudad_petra', profession: 'hunter', age: 61, initialRelationships: {} }
 ];
 
 export const regionById = (id: string) => {

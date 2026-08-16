@@ -103,6 +103,9 @@ export const en: typeof es = {
   'speaker.capitan_bren': 'Captain Bren',
   'speaker.vendedora_lu': 'Lu',
 
+  'speaker.sargento_vela': 'Sergeant Vela',
+  'speaker.cazador_tomas': 'Tomás',
+
   'skill.analyze': 'Analyze',
   'skill.persuasion': 'Persuasion',
   'skill.intimidation': 'Intimidation',
@@ -152,6 +155,9 @@ export const en: typeof es = {
   'npc.capitan_bren.bio': 'Captain of the guard. Veteran of the War of the Two Crowns: he held Vharen bridge alone until the last refugees crossed — among them his daughter Nara, but not his wife. Nara now studies at the Temple of Dawn and writes to him every new moon. He guards Brumal Village as if it were that bridge.',
   'npc.vendedora_lu.bio': 'Spice seller in Petra\'s market. She arrived from the southern ports a decade ago with a cart, three coins and an infallible ear. She knows everything whispered in the city because nobody suspects the woman selling saffron. She charges for truth, but never sells lies.',
 
+  'npc.sargento_vela.bio': 'Sergeant of Petra\'s canal guard. Daughter of a refugee Bren carried on his back across Vharen bridge. Last year she was one night away from dismantling the Serpent: her superiors reassigned her and the witnesses "forgot". Since then she reviews manifests twelve hours a day, waiting for a second chance.',
+  'npc.cazador_tomas.bio': 'The oldest hunter at "The Broken Anchor". Sixty-one years old, half a century of forest. He remembers when hunters had codes: never hunt mothers with cubs, never sell alive what suffers caged. The Serpent bought his companions; his price was never met. His grandson wants to be a hunter, and it keeps him up at night.',
+
   'rel.remembers_one': 'Remembers something you did.',
   'rel.remembers': 'Remembers {count} things you did.',
   'rel.trust': 'Trust',
@@ -192,6 +198,24 @@ export const en: typeof es = {
   'settings.language': 'Language',
   'settings.about': 'About',
   'settings.version': 'Version',
+
+'lifetree.fabLabel': 'Tree of Life — view your story',
+  'lifetree.title': 'The Tree of Life',
+  'lifetree.subtitle': "The book of {name}'s story",
+  'lifetree.confirmTitle': 'The Tree of Life calls you',
+  'lifetree.confirmBody.f': 'Are you sure you want to teleport to the Tree of Life? You will see the path of your story, exactly as you wrote it... but only as far as you have come. The future remains sealed.',
+  'lifetree.confirmBody.m': 'Are you sure you want to teleport to the Tree of Life? You will see the path of your story, exactly as you wrote it... but only as far as you have come. The future remains sealed.',
+  'lifetree.travel': 'Teleport me',
+  'lifetree.stay': 'Stay',
+  'lifetree.close': 'Close the book',
+  'lifetree.chapters': 'Chapters lived',
+  'lifetree.page': 'Page {num} of {total}',
+  'lifetree.youChose': 'You chose:',
+  'lifetree.youAreHere': 'You are here — the ink is still fresh',
+  'lifetree.prev': 'Previous',
+  'lifetree.next': 'Next',
+  'lifetree.empty': 'Your book is still blank. Live your story, and the Tree will remember it.',
+  'lifetree.sealed': 'The Tree only shows the pages you have already lived. What is to come remains sealed.',
 
   'ui.locked': 'Locked',
   'ui.continue': 'Continue',
