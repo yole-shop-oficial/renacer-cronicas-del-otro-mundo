@@ -5,14 +5,12 @@ import { CLASSES } from '@/data/classes';
 import { GODDESSES } from '@/data/goddesses';
 import { PRIMARY_STATS } from '@/domain/types';
 import { useGameStore } from '@/state/gameStore';
-import { useAppStore } from '@/state/appStore';
 
 /**
  * Creación de personaje (§11): personaje → nombre → clase → Diosa → confirmar.
  */
 export function CharacterCreator() {
   const createNewGame = useGameStore((s) => s.createNewGame);
-  const triggerSync = useAppStore((s) => s.triggerSync);
 
   const [step, setStep] = useState(0);
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -32,7 +30,6 @@ export function CharacterCreator() {
       classId,
       goddessId
     });
-    void triggerSync();
   }
 
   return (

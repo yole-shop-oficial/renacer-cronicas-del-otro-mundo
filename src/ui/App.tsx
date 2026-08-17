@@ -3,7 +3,6 @@ import { t } from '@/i18n';
 import { useAppStore } from '@/state/appStore';
 import { useGameStore } from '@/state/gameStore';
 import { loadLatestGame } from '@/state/persistence';
-import { createLocalGuestSession } from '@/services/auth';
 import { LoadingScreen } from './screens/LoadingScreen';
 import { CharacterCreator } from './screens/CharacterCreator';
 import { StoryScreen } from './screens/StoryScreen';
@@ -28,8 +27,7 @@ const TABS: { id: Tab; icon: IconName; label: string }[] = [
 ];
 
 export function App() {
-  const { connection, banner, init } = useAppStore();
-  const setSession = useAppStore((s) => s.setSession);
+  const { online, banner, init } = useAppStore();
   const save = useGameStore((s) => s.save);
   const loadGame = useGameStore((s) => s.loadGame);
   const [booted, setBooted] = useState(false);
@@ -41,8 +39,6 @@ export function App() {
   useEffect(() => {
     void (async () => {
       await init();
-      // Sin Supabase: el alma vive en este dispositivo (GitHub + Vercel only).
-      setSession(await createLocalGuestSession());
       const existing = await loadLatestGame();
       if (existing) loadGame(existing);
       setBooted(true);
@@ -59,14 +55,8 @@ export function App() {
     );
   }
 
-  const dotClass =
-    connection === 'OFFLINE' ? 'offline' : connection === 'SYNCING' ? 'syncing' : 'online';
-  const statusText =
-    connection === 'OFFLINE'
-      ? t('status.offline')
-      : connection === 'SYNCING'
-        ? t('status.syncing')
-        : t('status.online');
+  const dotClass = online ? 'online' : 'offline';
+  const statusText = online ? t('status.online') : t('status.offline');
 
   return (
     <div className="app-shell">

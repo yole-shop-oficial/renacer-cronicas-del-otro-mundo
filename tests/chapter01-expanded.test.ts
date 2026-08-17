@@ -91,15 +91,23 @@ describe('Capítulo 1 ampliado — vida de aldea', () => {
     expect(rd.world.npcMemory.pip).toContain('player_doubted_pip');
   });
 
-  it('si conociste a Pip, aparece en el camino y ofrece acompañarte', () => {
+  it('el camino lleva al primer combate; tras vencer, Pip aparece si lo conociste', () => {
+    // §102: el primer combate está en el camino al bosque.
     const road = engine.getNode('c1_road');
-    const withPip = engine.availableChoices(
-      road, makeCharacter(), makeWorld({ flags: { met_pip: true } })
-    );
-    expect(withPip.available.map((c) => c.id)).toEqual(['c1_road_pip_appears']);
+    expect(road.choices[0].goto).toBe('c1_wolf');
+    const wolf = engine.getNode('c1_wolf');
+    expect(wolf.combatId).toBe('lobo_famelico');
+    expect(wolf.victoryGoto).toBe('c1_wolf_after');
+    expect(wolf.defeatGoto).toBe('c1_wolf_defeat');
 
-    const withoutPip = engine.availableChoices(road, makeCharacter(), makeWorld());
-    expect(withoutPip.available.map((c) => c.id)).toEqual(['c1_road_alone']);
+    // Tras la victoria: bifurcación según conocer a Pip.
+    const after = engine.getNode('c1_wolf_after');
+    const withPip = engine.availableChoices(
+      after, makeCharacter(), makeWorld({ flags: { met_pip: true } })
+    );
+    expect(withPip.available.map((c) => c.id)).toEqual(['c1_wolfafter_pip']);
+    const withoutPip = engine.availableChoices(after, makeCharacter(), makeWorld());
+    expect(withoutPip.available.map((c) => c.id)).toEqual(['c1_wolfafter_alone']);
   });
 
   it('aceptar a Pip como compañero abre la opción [Pip] en el encuentro', () => {

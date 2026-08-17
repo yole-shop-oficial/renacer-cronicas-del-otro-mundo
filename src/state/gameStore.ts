@@ -14,7 +14,7 @@ import { POIS } from '@/data/pois';
 import { applyEffects } from '@/engine/effects';
 import { bondLevel, combatPower } from '@/domain/power';
 import type { PrimaryStat, EquipmentSlot } from '@/domain/types';
-import { saveGameLocally, queueDecision, queueSnapshot } from './persistence';
+import { saveGameLocally } from './persistence';
 
 /**
  * STORE DEL JUEGO — une motor narrativo, estado y persistencia.
@@ -139,7 +139,6 @@ function buildCharacter(opts: {
 async function persist(save: GameSave): Promise<GameSave> {
   const updated = { ...save, updatedAt: Date.now() };
   await saveGameLocally(updated);
-  await queueSnapshot(updated, 'SAVE_SNAPSHOT');
   return updated;
 }
 
@@ -160,7 +159,6 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     };
     set({ save, narrationLog: [] });
     await saveGameLocally(save);
-    await queueSnapshot(save, 'CREATE_CHARACTER');
     return save;
   },
 
@@ -203,8 +201,6 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     // Evita la carrera en la que un cierre/recarga inmediato pierde la
     // última decisión (integridad del progreso §81 > latencia de ~ms).
     await saveGameLocally(updated);
-    await queueDecision(updated.gameId, decisionId, node.id, choice.id);
-    await queueSnapshot(updated, 'SAVE_SNAPSHOT');
 
     set({ save: updated, narrationLog: [...result.log, ...entered.log] });
   },

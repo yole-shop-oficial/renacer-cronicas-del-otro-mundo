@@ -107,6 +107,7 @@ test('la Diosa importa (§14): Sylvane otorga Analizar y desbloquea narrativa (�
     /Quién eres|Who are you/,
     /cuál será mi historia|what will my story be/,
     /Aceptar la oportunidad|Accept the opportunity/,
+    /Aventura|Adventure/,
     /Despertar en el nuevo mundo|Wake in the new world/
   ];
   for (const pattern of clicks) {
@@ -133,6 +134,7 @@ test('la misma clase con otra Diosa NO tiene Analizar: opción bloqueada visible
     /Quién eres|Who are you/,
     /cuál será mi historia|what will my story be/,
     /Aceptar la oportunidad|Accept the opportunity/,
+    /Aventura|Adventure/,
     /Despertar en el nuevo mundo|Wake in the new world/
   ];
   for (const pattern of clicks) {
@@ -143,4 +145,52 @@ test('la misma clase con otra Diosa NO tiene Analizar: opción bloqueada visible
   const lockedBtn = page.getByRole('button', { name: /Analizar.*Examinar|Analyze.*Examine/ });
   await expect(lockedBtn).toBeDisabled();
   await expect(page.getByText(/Requiere la habilidad Analizar|Requires the Analyze skill/)).toBeVisible();
+});
+
+test('COMBATE (§102): el primer encuentro se juega y se gana con comandos', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+  await createCharacterAndStart(page, /Ferra/);
+
+  // Avanzar el prólogo (incluye la nueva pregunta de la esperanza §29).
+  const clicks = [
+    /Girar la fotografía|Turn the photograph/,
+    /Salir a caminar|Go out and walk/,
+    /Abrir los ojos|Open your eyes/,
+    /Quién eres|Who are you/,
+    /cuál será mi historia|what will my story be/,
+    /Aceptar la oportunidad|Accept the opportunity/,
+    /Aventura|Adventure/,
+    /Despertar en el nuevo mundo|Wake in the new world/
+  ];
+  for (const pattern of clicks) {
+    await page.getByRole('button', { name: pattern }).click();
+  }
+
+  // C1: aldea → Marta → capitán → aceptar misión → camino → LOBO.
+  await page.getByRole('button', { name: /Caminar hacia la aldea|Walk toward the village/ }).click();
+  await page.getByRole('button', { name: /Contarle la verdad|Tell her the truth/ }).click();
+  await page.getByRole('button', { name: /directamente a ver al capitán|straight to see the captain/ }).click();
+  await page.getByRole('button', { name: /Aceptar la misión y partir|Accept the quest and set out/ }).click();
+  await page.getByRole('button', { name: /Seguir adelante|Press on/ }).click();
+
+  // La interfaz cambia al combate (§4).
+  await expect(page.getByText(/Lobo famélico|Starving Wolf/)).toBeVisible({ timeout: 10_000 });
+
+  // Machacar Atacar (y Golpe de poder si está libre) hasta la victoria.
+  for (let i = 0; i < 60; i++) {
+    if (await page.getByText(/✦ Victoria ✦|✦ Victory ✦/).count()) break;
+    const strike = page.getByRole('button', { name: /Golpe de poder|Power Strike/ });
+    const attack = page.getByRole('button', { name: /^Atacar$|^Attack$/ });
+    if ((await strike.count()) && (await strike.isEnabled())) await strike.click().catch(() => {});
+    else if (await attack.isEnabled().catch(() => false)) await attack.click().catch(() => {});
+    // reaccionar si hay ventana
+    const dodge = page.getByRole('button', { name: /Esquivar|Dodge/ });
+    if (await dodge.count()) await dodge.click().catch(() => {});
+    await page.waitForTimeout(400);
+  }
+  await expect(page.getByText(/✦ Victoria ✦|✦ Victory ✦/)).toBeVisible({ timeout: 5_000 });
+
+  // Vuelta a la historia con recompensas (§20).
+  await expect(page.getByText(/huye cojeando|flees limping/)).toBeVisible({ timeout: 10_000 });
 });

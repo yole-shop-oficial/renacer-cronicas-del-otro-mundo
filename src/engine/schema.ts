@@ -87,6 +87,15 @@ export const StoryNodeSchema = z.object({
    * Nunca bloquea: cada jugador puede decidir aunque el otro esté offline.
    */
   coopEventId: z.string().optional(),
+  /**
+   * COMBATE REAL (§4-5): si el nodo es 'encounter' y declara combatId,
+   * la interfaz cambia suavemente al combate táctico. victoryGoto y
+   * defeatGoto continúan la historia según el resultado (§20-21:
+   * la derrota crea historia, no Game Over).
+   */
+  combatId: z.string().optional(),
+  victoryGoto: z.string().optional(),
+  defeatGoto: z.string().optional(),
   /** Nodo terminal de capítulo. */
   end: z.boolean().default(false)
 });

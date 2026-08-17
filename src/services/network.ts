@@ -1,11 +1,11 @@
-import { checkCloudReachable, isSupabaseConfigured } from './supabase';
-
 /**
- * DETECCIÓN DE CONEXIÓN (§26, §42, §75).
- * navigator.onLine es solo una pista: verificamos alcance real del backend.
+ * DETECCIÓN DE CONEXIÓN — Estados independientes (§57 de Instrucciones):
+ * Internet (navigator.onLine) es independiente del enlace de pareja y
+ * del guardado local. Sin backend: la única red que importa al juego
+ * es la del navegador y el enlace directo entre almas.
  */
 
-export type ConnectionState = 'ONLINE' | 'OFFLINE' | 'SYNCING' | 'SYNC_ERROR' | 'SYNC_SUCCESS';
+export type ConnectionState = 'ONLINE' | 'OFFLINE';
 
 type Listener = (online: boolean) => void;
 
@@ -17,13 +17,7 @@ export function onConnectivityChange(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-async function evaluate(): Promise<void> {
-  // Sin backend configurado (modo GitHub+Vercel puro), navigator.onLine manda.
-  const online = navigator.onLine
-    ? isSupabaseConfigured()
-      ? await checkCloudReachable()
-      : true
-    : false;
+function emit(online: boolean): void {
   if (online !== lastKnownOnline) {
     lastKnownOnline = online;
     listeners.forEach((l) => l(online));
@@ -31,19 +25,12 @@ async function evaluate(): Promise<void> {
 }
 
 export function startConnectivityWatch(): () => void {
-  const onOnline = () => void evaluate();
-  const onOffline = () => {
-    // offline del navegador es fiable inmediatamente.
-    if (lastKnownOnline) {
-      lastKnownOnline = false;
-      listeners.forEach((l) => l(false));
-    }
-  };
+  const onOnline = () => emit(true);
+  const onOffline = () => emit(false);
   window.addEventListener('online', onOnline);
   window.addEventListener('offline', onOffline);
-  // Sondeo suave cada 30s: detecta recuperación aunque el evento no dispare (iOS §38).
-  const interval = setInterval(() => void evaluate(), 30_000);
-  void evaluate();
+  // Sondeo suave: iOS a veces no dispara eventos al despertar pestañas.
+  const interval = setInterval(() => emit(navigator.onLine), 30_000);
   return () => {
     window.removeEventListener('online', onOnline);
     window.removeEventListener('offline', onOffline);

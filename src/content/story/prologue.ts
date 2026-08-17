@@ -190,7 +190,7 @@ export const PROLOGUE: Chapter = {
             { kind: 'setFlag', key: 'accepted_rebirth', value: true },
             { kind: 'gainXp', amount: 10 }
           ],
-          goto: 'pro_07'
+          goto: 'pro_hope'
         },
         {
           id: 'pro_06_doubt',
@@ -224,6 +224,89 @@ export const PROLOGUE: Chapter = {
             { kind: 'setFlag', key: 'goddess_saw_your_doubt', value: true },
             { kind: 'gainXp', amount: 15 }
           ],
+          goto: 'pro_hope'
+        }
+      ],
+      end: false
+    },
+    {
+      // §29: la esperanza de la segunda vida — variable narrativa permanente.
+      id: 'pro_hope',
+      chapterId: 'prologue',
+      kind: 'dialogue',
+      speaker: 'goddess',
+      text: {
+        es: 'La Diosa sostiene tu mano de luz un instante más.\n\n«Una última pregunta, alma mía. La más importante de todas. No la respondas para mí: respóndela para ti.»\n\nSu voz se vuelve un susurro que llena el universo entero:\n\n«¿Qué esperas encontrar en tu segunda vida?»',
+        en: 'The Goddess holds your hand of light one instant longer.\n\n"One last question, my soul. The most important of all. Do not answer it for me: answer it for yourself."\n\nHer voice becomes a whisper that fills the entire universe:\n\n"What do you hope to find in your second life?"'
+      },
+      duoText: {
+        es: 'La Diosa os sostiene a ambos un instante más.\n\n«Una última pregunta, almas mías. La más importante. Y cada quien la responde solo, aunque caigáis juntos.»\n\nSu voz se vuelve un susurro que llena el universo entero:\n\n«¿Qué esperas encontrar en tu segunda vida?»',
+        en: 'The Goddess holds you both one instant longer.\n\n"One last question, my souls. The most important. And each answers it alone, though you fall together."\n\nHer voice becomes a whisper filling the whole universe:\n\n"What do you hope to find in your second life?"'
+      },
+      onEnter: [],
+      choices: [
+        {
+          id: 'pro_hope_freedom',
+          text: { es: '«Libertad.»', en: '"Freedom."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'freedom' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_family',
+          text: { es: '«Una familia.»', en: '"A family."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'family' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_power',
+          text: { es: '«Poder.»', en: '"Power."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'power' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_answers',
+          text: { es: '«Respuestas.»', en: '"Answers."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'answers' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_peace',
+          text: { es: '«Paz.»', en: '"Peace."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'peace' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_adventure',
+          text: { es: '«Aventura.»', en: '"Adventure."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'adventure' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_redemption',
+          text: { es: '«Redención.»', en: '"Redemption."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'redemption' }],
+          goto: 'pro_07'
+        },
+        {
+          id: 'pro_hope_second_chance',
+          text: { es: '«Solo una segunda oportunidad.»', en: '"Just a second chance."' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: 'life_hope', value: 'second_chance' }],
           goto: 'pro_07'
         }
       ],

@@ -1,10 +1,9 @@
 /**
  * CIFRADO LOCAL (§28) — Web Crypto API, AES-GCM 256 + PBKDF2.
  * - No inventamos criptografía: solo primitivas estándar del navegador.
- * - No almacenamos contraseñas: la clave se deriva de la sesión del usuario
- *   (su user id + un salt aleatorio persistido) y solo protege datos locales
- *   frente a lectura casual del dispositivo. La seguridad real del progreso
- *   está en Supabase con RLS.
+ * - No almacenamos contraseñas: la clave se deriva del alma local del
+ *   dispositivo + salt aleatorio por escritura. Protege el guardado frente
+ *   a lectura casual del dispositivo o de sus copias de seguridad.
  */
 
 const PBKDF2_ITERATIONS = 150_000;

@@ -1,12 +1,10 @@
 import Dexie, { type Table } from 'dexie';
 import type { GameSave } from '@/domain/types';
-import type { SyncOperation } from '@/sync/operations';
 
 /**
- * BASE DE DATOS LOCAL (§27) — Dexie sobre IndexedDB.
- * Elegido sobre IndexedDB puro (API verbosa y propensa a errores) y RxDB
- * (más pesado; la reactividad la aporta Zustand). Dexie ofrece transacciones,
- * consultas indexadas, y es maduro y estable en Safari iOS.
+ * BASE DE DATOS LOCAL — Dexie sobre IndexedDB.
+ * Transacciones, consultas indexadas, estable en Safari iOS.
+ * Todo el estado del juego vive aquí: LOCAL SAVE primero, siempre.
  */
 export interface SaveRow {
   gameId: string;
@@ -23,14 +21,20 @@ export interface MetaRow {
 
 class RenacerDB extends Dexie {
   saves!: Table<SaveRow, string>;
-  syncQueue!: Table<SyncOperation, string>;
   meta!: Table<MetaRow, string>;
 
   constructor() {
     super('renacer-db');
+    // v2 conserva IndexedDB de versiones anteriores (§95): la tabla
+    // syncQueue queda huérfana pero Dexie la ignora sin destruir datos.
     this.version(1).stores({
       saves: 'gameId, updatedAt',
       syncQueue: 'id, status, createdAt',
+      meta: 'key'
+    });
+    this.version(2).stores({
+      saves: 'gameId, updatedAt',
+      syncQueue: null,
       meta: 'key'
     });
   }

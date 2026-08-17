@@ -1,17 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { t, lt } from '@/i18n';
 import { useGameStore } from '@/state/gameStore';
-import { useAppStore } from '@/state/appStore';
-import {
-  fetchPartnerDecision,
-  watchPartnerDecision,
-  type PartnerDecision
-} from '@/services/coopDecisions';
 import { renderStoryText } from '@/engine/text';
 import { IconLock, IconBond } from '@/ui/icons';
 import { useCoopStore } from '@/state/coopStore';
 import { DiceOfFate } from '@/ui/DiceOfFate';
 import { findSpecialDiscord } from '@/coop/specialDiscords';
+import { CombatScreen } from './CombatScreen';
+import { getEnemy } from '@/data/enemies';
+import { applyEffects } from '@/engine/effects';
+import { saveGameLocally } from '@/state/persistence';
+import { useGameStore as gameStore } from '@/state/gameStore';
 
 /**
  * Pantalla de historia (§40): la narración es el centro.
@@ -23,11 +22,13 @@ export function StoryScreen() {
   const chooseOption = useGameStore((s) => s.chooseOption);
   const currentNode = useGameStore((s) => s.currentNode);
   const choicesFor = useGameStore((s) => s.choicesForCurrentNode);
-  const refreshPending = useAppStore((s) => s.refreshPending);
-  const triggerSync = useAppStore((s) => s.triggerSync);
-  const session = useAppStore((s) => s.session);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [partnerDecision, setPartnerDecision] = useState<PartnerDecision | null>(null);
+  const coopPartner = useCoopStore((s) => s.partner);
+  const inGroup = useCoopStore((s) => s.inGroup);
+  const negotiation = useCoopStore((s) => s.negotiation);
+  const pickChoice = useCoopStore((s) => s.pickChoice);
+  const yieldToPartner = useCoopStore((s) => s.yieldToPartner);
+  const invokeDice = useCoopStore((s) => s.invokeDice);
 
   const node = currentNode();
 
@@ -35,32 +36,50 @@ export function StoryScreen() {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [node?.id]);
 
-  // Evento cooperativo (§35): consultar y vigilar la decisión del compañero.
-  // Nunca bloquea: si no hay coop/red, simplemente no se muestra nada.
-  useEffect(() => {
-    setPartnerDecision(null);
-    if (!node?.coopEventId || !session) return;
-    let cancelled = false;
-    void fetchPartnerDecision(session.userId, node.id).then((d) => {
-      if (!cancelled && d) setPartnerDecision(d);
-    });
-    const unwatch = watchPartnerDecision(session.userId, node.id, (d) => {
-      if (!cancelled) setPartnerDecision(d);
-    });
-    return () => {
-      cancelled = true;
-      unwatch();
-    };
-  }, [node?.id, node?.coopEventId, session]);
 
   if (!save || !node) return <div className="center-screen">{t('ui.loading')}</div>;
 
-  const coopPartner = useCoopStore((s) => s.partner);
-  const inGroup = useCoopStore((s) => s.inGroup);
-  const negotiation = useCoopStore((s) => s.negotiation);
-  const pickChoice = useCoopStore((s) => s.pickChoice);
-  const yieldToPartner = useCoopStore((s) => s.yieldToPartner);
-  const invokeDice = useCoopStore((s) => s.invokeDice);
+  // COMBATE REAL (§4-5): el nodo encounter con combatId cambia la interfaz.
+  if (node.combatId && !save.world.flags[`_combat_done_${node.id}`]) {
+    return (
+      <CombatScreen
+        combatId={node.combatId}
+        onEnd={(result) => {
+          void (async () => {
+            const current = gameStore.getState().save;
+            if (!current) return;
+            const world = structuredClone(current.world);
+            let character = current.character;
+            world.flags[`_combat_done_${node.id}`] = true;
+            world.flags[`combat_${node.combatId}_${result}`] = true;
+            if (result === 'victory') {
+              // Recompensas del enemigo (§20), idempotentes por nodo.
+              const enemy = getEnemy(node.combatId!);
+              const fx = applyEffects(
+                [
+                  { kind: 'gainXp', amount: enemy.rewards.xp },
+                  { kind: 'gainGold', amount: enemy.rewards.gold },
+                  ...(enemy.rewards.items ?? []).map((it) => ({
+                    kind: 'addItem' as const, key: it.itemId, amount: it.qty
+                  }))
+                ],
+                character, world
+              );
+              character = fx.character;
+              Object.assign(world, fx.world);
+            }
+            const nextId = result === 'victory'
+              ? (node.victoryGoto ?? node.choices[0]?.goto ?? current.currentNodeId)
+              : (node.defeatGoto ?? node.victoryGoto ?? current.currentNodeId);
+            const updated = { ...current, character, world, currentNodeId: nextId, updatedAt: Date.now() };
+            await saveGameLocally(updated);
+            gameStore.setState({ save: updated, narrationLog: [] });
+          })();
+        }}
+      />
+    );
+  }
+
   const duoMode = Boolean(coopPartner && inGroup);
   const textCtx = {
     name: save.character.name,
@@ -79,8 +98,6 @@ export function StoryScreen() {
       return;
     }
     await chooseOption(choice);
-    await refreshPending();
-    void triggerSync();
   }
 
   return (
@@ -97,24 +114,6 @@ export function StoryScreen() {
             {narrationLog.map((entry, i) => (
               <div key={i}>{t(entry.key, localizeParams(entry.params))}</div>
             ))}
-          </div>
-        )}
-        {node.coopEventId && (
-          <div className="effect-log coop-banner" aria-live="polite">
-            <div>{t('coop.dualEvent')}</div>
-            {partnerDecision ? (
-              <div style={{ marginTop: 6 }}>
-                {t('coop.partnerChose', {
-                  choice: lt(
-                    node.choices.find((c) => c.id === partnerDecision.choiceId)?.text ?? {
-                      es: partnerDecision.choiceId
-                    }
-                  )
-                })}
-              </div>
-            ) : (
-              <div style={{ marginTop: 6 }}>{t('coop.partnerPending')}</div>
-            )}
           </div>
         )}
         {duoMode && negotiation && negotiation.nodeId === node.id && (

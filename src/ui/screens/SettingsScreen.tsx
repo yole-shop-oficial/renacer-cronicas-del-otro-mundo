@@ -10,8 +10,7 @@ import { GameIcon, IconWave, IconSoul, IconGear } from '@/ui/icons';
  * (iPhone / Android / Windows), estado del dispositivo y almas vinculadas.
  */
 export function SettingsScreen() {
-  const connection = useAppStore((s) => s.connection);
-  const pendingOps = useAppStore((s) => s.pendingOps);
+  const online = useAppStore((s) => s.online);
   const [, force] = useState(0);
   const [view, setView] = useState<'main' | 'souls'>('main');
   const [partner, setPartner] = useState<SoulProfile | null>(null);
@@ -40,7 +39,6 @@ export function SettingsScreen() {
     force((n) => n + 1);
   }
 
-  const online = connection !== 'OFFLINE';
 
   return (
     <div className="panel">
@@ -63,10 +61,7 @@ export function SettingsScreen() {
             <span>{t('settings.connType')}</span>
             <b>{connectionType()}</b>
           </div>
-          <div className="settings-row">
-            <span>{t('settings.pendingChanges')}</span>
-            <b>{pendingOps}</b>
-          </div>
+
         </div>
         <p className="hint-text" style={{ marginTop: 8 }}>{t('settings.offlineFirstNote')}</p>
       </div>

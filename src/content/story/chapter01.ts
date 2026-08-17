@@ -617,20 +617,89 @@ export const CHAPTER_01: Chapter = {
       onEnter: [{ kind: 'travelTo', key: 'bosque_susurros' }],
       choices: [
         {
-          id: 'c1_road_pip_appears',
+          id: 'c1_road_go',
           text: { es: 'Seguir adelante', en: 'Press on' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c1_wolf'
+        }
+      ],
+      end: false
+    },
+    {
+      // PRIMER COMBATE (§102): la historia enseña a combatir sin tutorial.
+      id: 'c1_wolf',
+      chapterId: 'chapter_01',
+      kind: 'encounter',
+      combatId: 'lobo_famelico',
+      victoryGoto: 'c1_wolf_after',
+      defeatGoto: 'c1_wolf_defeat',
+      text: {
+        es: 'El sendero queda completamente en silencio. Ni pájaros, ni viento. Solo tu respiración.\n\nAlgo se mueve entre los helechos: un lobo de costillas marcadas y ojos amarillos te corta el paso. No es la sombra que buscas — es solo un animal hambriento que ha decidido que hoy comes tú o come él.',
+        en: 'The path falls completely silent. No birds, no wind. Only your breathing.\n\nSomething moves among the ferns: a wolf with visible ribs and yellow eyes blocks your way. It is not the shadow you seek — just a starving animal that has decided today either it eats, or you do.'
+      },
+      duoText: {
+        es: 'El sendero queda completamente en silencio. Miras a {partner}: también lo ha notado.\n\nUn lobo de costillas marcadas y ojos amarillos os corta el paso. No es la sombra que buscáis — solo un animal hambriento. Dos contra uno... pero el hambre no sabe contar.',
+        en: 'The path falls completely silent. You glance at {partner}: they have noticed too.\n\nA wolf with visible ribs and yellow eyes blocks your way. It is not the shadow you seek — just a starving animal. Two against one... but hunger cannot count.'
+      },
+      onEnter: [],
+      choices: [],
+      end: false
+    },
+    {
+      id: 'c1_wolf_after',
+      chapterId: 'chapter_01',
+      kind: 'narration',
+      text: {
+        es: 'El lobo huye cojeando hacia la espesura, más asustado que herido. Te quedas un momento recuperando el aliento. Tu primera pelea en este mundo... y sigues respirando. La experiencia del combate se asienta en tus músculos como un idioma nuevo.',
+        en: 'The wolf flees limping into the thicket, more frightened than hurt. You take a moment to catch your breath. Your first fight in this world... and you are still breathing. The experience settles into your muscles like a new language.'
+      },
+      onEnter: [{ kind: 'setFlag', key: 'won_first_combat', value: true }],
+      choices: [
+        {
+          id: 'c1_wolfafter_pip',
+          text: { es: 'Continuar hacia el bosque', en: 'Continue toward the forest' },
           conditions: [{ kind: 'flag', key: 'met_pip', op: 'has' }],
           visibleWhenLocked: false,
           effects: [],
           goto: 'c1_pip_offer'
         },
         {
-          id: 'c1_road_alone',
-          text: { es: 'Adentrarte en el bosque', en: 'Enter the forest' },
+          id: 'c1_wolfafter_alone',
+          text: { es: 'Continuar hacia el bosque', en: 'Continue toward the forest' },
           conditions: [{ kind: 'flag', key: 'met_pip', op: 'not' }],
           visibleWhenLocked: false,
           effects: [],
           goto: 'c1_05'
+        }
+      ],
+      end: false
+    },
+    {
+      // DERROTA ≠ Game Over (§21): crea historia.
+      id: 'c1_wolf_defeat',
+      chapterId: 'chapter_01',
+      kind: 'narration',
+      text: {
+        es: 'El mundo se vuelve borroso... y despiertas en la posada, con vendas que huelen a hierbas amargas. Marta te vela con cara de haber pasado miedo. «Un carbonero te encontró en el sendero. El lobo se llevó tu bolsa de monedas, pero dejó lo importante.» Te duele todo... pero las derrotas también enseñan.',
+        en: 'The world blurs... and you wake at the inn, in bandages smelling of bitter herbs. Marta watches over you with a face that has known fear. "A charcoal burner found you on the path. The wolf took your coin pouch, but left what matters." Everything hurts... but defeats teach too.'
+      },
+      onEnter: [
+        { kind: 'gainGold', amount: -10 },
+        { kind: 'heal', amount: 999 },
+        { kind: 'setFlag', key: 'lost_to_wolf', value: true },
+        { kind: 'changeRelationship', target: 'marta', axis: 'affection', amount: 10 },
+        { kind: 'gainXp', amount: 10 }
+      ],
+      choices: [
+        {
+          id: 'c1_wolfdefeat_retry',
+          text: { es: 'Volver al sendero, más sabi{a|o}', en: 'Return to the path, wiser' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: '_combat_done_c1_wolf', value: false }],
+          goto: 'c1_road'
         }
       ],
       end: false
@@ -896,11 +965,11 @@ export const CHAPTER_01: Chapter = {
       choices: [
         {
           id: 'c1_06at_return',
-          text: { es: 'Volver a la aldea, dolorid{a|o} y pensativ{a|o}', en: 'Return to the village, bruised and thoughtful' },
+          text: { es: 'Perseguir el rastro de gotas oscuras', en: 'Follow the trail of dark droplets' },
           conditions: [],
           visibleWhenLocked: false,
           effects: [{ kind: 'setFlag', key: 'creature_fled_wounded', value: true }],
-          goto: 'c1_07_reported'
+          goto: 'c1_wraith'
         }
       ],
       end: false
@@ -921,6 +990,71 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [],
+          goto: 'c1_07_reported'
+        }
+      ],
+      end: false
+    },
+    {
+      // PRIMER JEFE (§103): el dolor de la criatura herida atrae a un espectro.
+      id: 'c1_wraith',
+      chapterId: 'chapter_01',
+      kind: 'encounter',
+      combatId: 'espectro_velo',
+      victoryGoto: 'c1_wraith_after',
+      defeatGoto: 'c1_wraith_defeat',
+      text: {
+        es: 'El rastro te lleva a una hondonada donde la niebla es tan espesa que se puede masticar. Y entonces la temperatura cae de golpe.\n\nDel suelo se alza una figura de bruma y lamento: un ESPECTRO DEL VELO, atraído por el dolor que tú causaste. Su rostro cambia como el humo, y en él reconoces, por un instante... tu propia cara.',
+        en: 'The trail leads you to a hollow where the mist is thick enough to chew. Then the temperature plummets.\n\nFrom the ground rises a figure of haze and lament: a VEIL WRAITH, drawn by the pain you caused. Its face shifts like smoke, and in it you recognize, for an instant... your own face.'
+      },
+      onEnter: [],
+      choices: [],
+      end: false
+    },
+    {
+      id: 'c1_wraith_after',
+      chapterId: 'chapter_01',
+      kind: 'narration',
+      text: {
+        es: 'El espectro se deshace en jirones de niebla que se disuelven al sol. Donde estuvo, queda solo silencio... y una certeza incómoda: este bosque guarda heridas más viejas que las trampas de la Sierpe. Regresas a la aldea con la victoria pesándote extrañamente en los hombros.',
+        en: 'The wraith unravels into ribbons of mist that dissolve in the sun. Where it stood, only silence remains... and an uncomfortable certainty: this forest keeps wounds older than the Serpent\'s traps. You return to the village, victory weighing strangely on your shoulders.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'defeated_wraith', value: true },
+        { kind: 'grantTitle', key: 'veil_walker' }
+      ],
+      choices: [
+        {
+          id: 'c1_wraithafter_return',
+          text: { es: 'Volver a informar al capitán', en: 'Return and report to the captain' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'travelTo', key: 'aldea_brumal' }],
+          goto: 'c1_08'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c1_wraith_defeat',
+      chapterId: 'chapter_01',
+      kind: 'narration',
+      text: {
+        es: 'El frío te vence. Lo último que ves es la niebla cerrándose... y unos ojos de luna abriéndose paso a través de ella. Despiertas al borde del bosque, cubiert{a|o} de escarcha, con marcas de dientes ENORMES en la manga — no de herida: de arrastre. La criatura a la que atacaste... te sacó del velo. El mundo recuerda incluso lo que no vemos.',
+        en: 'The cold overcomes you. The last thing you see is the mist closing in... and two moon eyes cutting through it. You wake at the forest edge, covered in frost, with ENORMOUS teeth marks on your sleeve — not from a wound: from dragging. The creature you attacked... pulled you out of the veil. The world remembers even what we do not see.'
+      },
+      onEnter: [
+        { kind: 'heal', amount: 999 },
+        { kind: 'setFlag', key: 'saved_by_creature', value: true },
+        { kind: 'gainXp', amount: 20 }
+      ],
+      choices: [
+        {
+          id: 'c1_wraithdefeat_return',
+          text: { es: 'Volver a la aldea con más preguntas que nunca', en: 'Return to the village with more questions than ever' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'travelTo', key: 'aldea_brumal' }],
           goto: 'c1_07_reported'
         }
       ],

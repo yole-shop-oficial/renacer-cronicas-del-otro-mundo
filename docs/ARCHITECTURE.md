@@ -1,5 +1,7 @@
 # Arquitectura — RENACER: Crónicas del Otro Mundo
 
+> **v3 (Instrucciones.txt)**: Supabase eliminado por completo (§1). Cinco motores separados que se comunican por eventos (§86): Story Engine (`engine/`), **Combat Engine** (`combat/`), World/Character (domain + stores), Coop Engine (`coop/`). Conexión de pareja sin tecnología visible: QR + código corto + enlace (`coop/pairing.ts`). Backup con validación (`services/backup.ts`). Docs nuevas: COMBAT_ENGINE.md, COOP.md, OFFLINE.md, SECURITY.md, CONNECTION.md, TECH_DECISIONS.md.
+
 ## 1. Decisión de stack
 
 ### Requisitos que gobernaron la elección

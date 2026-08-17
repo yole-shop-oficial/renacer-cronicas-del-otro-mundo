@@ -23,6 +23,7 @@ export type CoopMessage =
   | { t: 'defy'; nodeId: string }
   | { t: 'node'; nodeId: string }
   | { t: 'region'; regionId: string }
+  | { t: 'combat_action'; actionId: string; element: string }
   | { t: 'leave_group' }
   | { t: 'reunite' }
   | { t: 'ping' };

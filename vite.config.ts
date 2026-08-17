@@ -36,14 +36,7 @@ export default defineConfig({
       workbox: {
         // App shell completo en caché: el juego arranca sin red.
         globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
-        navigateFallback: '/index.html',
-        runtimeCaching: [
-          {
-            // Nunca cachear llamadas a Supabase: la capa de sync decide.
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/,
-            handler: 'NetworkOnly'
-          }
-        ]
+        navigateFallback: '/index.html'
       }
     })
   ],
@@ -56,7 +49,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
-          supabase: ['@supabase/supabase-js'],
           storage: ['dexie', 'zustand', 'zod']
         }
       }

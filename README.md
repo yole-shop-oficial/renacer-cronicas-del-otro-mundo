@@ -8,6 +8,10 @@ Tu personaje no está siguiendo una historia. **Está viviendo una.**
 
 ---
 
+## ⚔ NUEVO: Combate táctico en tiempo real
+
+La lectura fluye al combate sin romper la historia: *"Algo se movió entre los árboles..."* → la interfaz cambia → **BESTIA DE NIEBLA** con barra de HP, telegrafiados con **ventana de reacción** (Esquivar/Bloquear/Interrumpir), hechizos con canalización (Meteoro, 4 s), elementos que interactúan (rayo+empapado = electrocución), estados (quemadura, congelación, silencio...), **jefes con fases** y **combos cooperativos** (Fuego+Viento = Tornado de fuego). Pausa suave para leer. La derrota crea historia, no Game Over.
+
 ## 🎮 El juego
 
 - **Libro interactivo + RPG**: lees, decides, y el mundo **recuerda** cada decisión.
@@ -31,7 +35,7 @@ Tu personaje no está siguiendo una historia. **Está viviendo una.**
 
 ## 🎲 Dos almas en tiempo real (WiFi, sin servidor)
 
-1. En **Ajustes → Almas**: uno **pone el ancla**, el otro **se une** (códigos `ANCLA1`/`UNION1`, WebRTC directo en la misma WiFi — sin Internet).
+1. **Jugar con mi pareja** (§sin tecnología visible): Crear partida → código corto `R7K4Q` + **QR** + botón compartir. El otro escanea o abre el enlace → QR de respuesta → **Conectados ✓**. WebRTC directo en la misma WiFi, sin Internet.
 2. El juego **detecta la conexión** y la historia cambia sola a modo dúo (`duoText`): la Diosa recibe a *dos* almas.
 3. **Decisiones negociadas**: misma elección → acuerdo. Distinta → **discordia**: ceder o invocar los **Dados de los Dioses del Destino** (1d20 puro azar, animación dramática).
 4. La decisión del **ganador** guía la historia de ambos. El perdedor puede **desafiar al destino**: paga un precio caro (mitad del oro, herida, −3 Suerte, la Marca del Destino) y el grupo se separa... hasta reencontrarse.

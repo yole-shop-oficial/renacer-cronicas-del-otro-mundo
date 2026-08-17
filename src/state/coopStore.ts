@@ -41,6 +41,8 @@ interface CoopState {
   /** Separados tras desafiar al destino (pueden reencontrarse). */
   separated: boolean;
   negotiation: NegotiationState | null;
+  /** Última acción de combate del compañero (para combos §67). */
+  lastCombatAction: { actionId: string; element: string; at: number } | null;
   /** Animación de dados activa. */
   showDice: boolean;
   anchorCode: string | null;
@@ -58,6 +60,7 @@ interface CoopState {
   defyFate: () => Promise<void>;
   acceptFate: () => Promise<void>;
   applyResolved: () => Promise<void>;
+  sendCombatAction: (actionId: string, element: string) => void;
   leaveGroup: () => void;
   reunite: () => void;
   clearNegotiation: () => void;
@@ -137,6 +140,9 @@ export const useCoopStore = create<CoopState>((set, get) => {
       case 'region':
         if (s.partner) set({ partner: { ...s.partner, regionId: msg.regionId } });
         break;
+      case 'combat_action':
+        set({ lastCombatAction: { actionId: msg.actionId, element: msg.element, at: Date.now() } });
+        break;
       case 'leave_group':
         set({ inGroup: false });
         break;
@@ -163,6 +169,7 @@ export const useCoopStore = create<CoopState>((set, get) => {
     inGroup: false,
     separated: false,
     negotiation: null,
+    lastCombatAction: null,
     showDice: false,
     anchorCode: null,
     joinAnswer: null,
@@ -286,6 +293,10 @@ export const useCoopStore = create<CoopState>((set, get) => {
       set({ negotiation: null, showDice: false });
       const save = useGameStore.getState().save;
       if (save) coopLink.send({ t: 'node', nodeId: save.currentNodeId });
+    },
+
+    sendCombatAction: (actionId, element) => {
+      coopLink.send({ t: 'combat_action', actionId, element });
     },
 
     leaveGroup: () => {

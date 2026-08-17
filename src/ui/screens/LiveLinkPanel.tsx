@@ -1,12 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { t } from '@/i18n';
 import { useCoopStore } from '@/state/coopStore';
+import {
+  shortCode,
+  encodeInvite,
+  decodeInvite,
+  inviteLink,
+  drawCodeMatrix,
+  readCodeMatrix,
+  type Invite
+} from '@/coop/pairing';
+import { getMeta, setMeta } from '@/services/localdb';
 import { IconWave, IconLink, IconSoul, IconBond } from '@/ui/icons';
 
 /**
- * ENLACE EN TIEMPO REAL POR WIFI (WebRTC local, sin servidor).
- * Host: crea ANCLA → invitado la pega → invitado genera UNIÓN →
- * host la pega → conectados. En la misma WiFi es instantáneo.
+ * JUGAR CON MI PAREJA (§49-54) — sin tecnología visible.
+ * Crear partida → QR + código corto + botón compartir.
+ * Unirse → escanear QR / pegar invitación → QR de respuesta.
+ * El jugador solo ve: código, QR, "Conectando...", "Conectados ✓".
  */
 export function LiveLinkPanel() {
   const {
@@ -16,23 +27,60 @@ export function LiveLinkPanel() {
     leaveGroup, reunite
   } = useCoopStore();
   const [mode, setMode] = useState<'menu' | 'host' | 'join'>('menu');
-  const [pasted, setPasted] = useState('');
+  const [myCode, setMyCode] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
+  const [pasted, setPasted] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [lastPartnerName, setLastPartnerName] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const answerCanvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const scanTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  async function copy(text: string, tag: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(tag);
-      setTimeout(() => setCopied(null), 2000);
-    } catch {
-      setError(t('soul.copyManual'));
+  useEffect(() => {
+    void getMeta('last_partner_name').then((n) => setLastPartnerName(n || null));
+  }, []);
+
+  // Recordar pareja al conectar (§54).
+  useEffect(() => {
+    if (linkState === 'connected' && partner) {
+      void setMeta('last_partner_name', partner.name);
     }
-  }
+  }, [linkState, partner]);
 
-  async function doHost() {
+  // Invitación entrante por enlace (#join=...) (§53).
+  useEffect(() => {
+    if (location.hash.startsWith('#join=')) {
+      const raw = decodeURIComponent(location.hash.slice(6));
+      history.replaceState(null, '', location.pathname);
+      void acceptInviteText(raw);
+      setMode('join');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Dibujar QR del anfitrión cuando el ancla esté lista.
+  useEffect(() => {
+    if (mode === 'host' && anchorCode && canvasRef.current && myCode) {
+      const invite: Invite = { code: myCode, payload: anchorCode, role: 'offer' };
+      drawCodeMatrix(canvasRef.current, encodeInvite(invite));
+    }
+  }, [mode, anchorCode, myCode]);
+
+  // Dibujar QR de respuesta del invitado.
+  useEffect(() => {
+    if (mode === 'join' && joinAnswer && answerCanvasRef.current && myCode) {
+      const invite: Invite = { code: myCode, payload: joinAnswer, role: 'answer' };
+      drawCodeMatrix(answerCanvasRef.current, encodeInvite(invite));
+    }
+  }, [mode, joinAnswer, myCode]);
+
+  useEffect(() => () => stopScan(), []);
+
+  async function createGame() {
     setError(null);
     setMode('host');
+    setMyCode(shortCode());
     try {
       await startHosting();
     } catch {
@@ -40,24 +88,77 @@ export function LiveLinkPanel() {
     }
   }
 
-  async function doJoinPaste() {
-    setError(null);
+  async function acceptInviteText(text: string): Promise<boolean> {
     try {
-      await joinWithAnchor(pasted);
-      setPasted('');
+      const invite = decodeInvite(text);
+      if (invite.role === 'offer') {
+        setMyCode(invite.code); // el mismo código verifica ambas pantallas
+        await joinWithAnchor(invite.payload);
+        return true;
+      }
+      if (invite.role === 'answer') {
+        await completeWithAnswer(invite.payload);
+        return true;
+      }
     } catch {
       setError(t('link.errorCode'));
     }
+    return false;
   }
 
-  async function doCompletePaste() {
+  function startScan() {
     setError(null);
-    try {
-      await completeWithAnswer(pasted);
-      setPasted('');
-    } catch {
-      setError(t('link.errorCode'));
+    setScanning(true);
+    void navigator.mediaDevices
+      ?.getUserMedia({ video: { facingMode: 'environment' } })
+      .then((stream) => {
+        if (!videoRef.current) return;
+        videoRef.current.srcObject = stream;
+        void videoRef.current.play();
+        const canvas = document.createElement('canvas');
+        scanTimer.current = setInterval(() => {
+          const video = videoRef.current;
+          if (!video || video.videoWidth === 0) return;
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(video, 0, 0);
+          const text = readCodeMatrix(ctx.getImageData(0, 0, canvas.width, canvas.height));
+          if (text) {
+            void acceptInviteText(text).then((ok) => {
+              if (ok) stopScan();
+            });
+          }
+        }, 500);
+      })
+      .catch(() => {
+        setScanning(false);
+        setError(t('link.errorCamera'));
+      });
+  }
+
+  function stopScan() {
+    if (scanTimer.current) clearInterval(scanTimer.current);
+    scanTimer.current = null;
+    const stream = videoRef.current?.srcObject as MediaStream | null;
+    stream?.getTracks().forEach((t) => t.stop());
+    if (videoRef.current) videoRef.current.srcObject = null;
+    setScanning(false);
+  }
+
+  async function shareInvite() {
+    if (!anchorCode || !myCode) return;
+    const link = inviteLink({ code: myCode, payload: anchorCode, role: 'offer' });
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'RENACER', text: t('link.shareText', { code: myCode }), url: link });
+        return;
+      } catch { /* cancelado */ }
     }
+    try {
+      await navigator.clipboard.writeText(link);
+      setError(null);
+    } catch { /* sin clipboard */ }
   }
 
   // ── CONECTADOS ──
@@ -65,6 +166,7 @@ export function LiveLinkPanel() {
     return (
       <div className="card link-connected">
         <h3 className="with-icon">
+          <span className="link-dot green" aria-hidden />
           <IconWave size={18} className="ico-teal" /> {t('link.connected')}
         </h3>
         <div className="link-partner-row">
@@ -77,7 +179,6 @@ export function LiveLinkPanel() {
             {inGroup ? t('link.inGroup') : separated ? t('link.separated') : t('link.notGrouped')}
           </span>
         </div>
-        <p className="hint-text">{inGroup ? t('link.groupHint') : t('link.separatedHint')}</p>
         <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
           {inGroup ? (
             <button className="btn-secondary" onClick={leaveGroup}>
@@ -94,7 +195,21 @@ export function LiveLinkPanel() {
     );
   }
 
-  // ── HOST: mostrar ancla y esperar unión ──
+  // ── RECONECTANDO ──
+  if (linkState === 'lost') {
+    return (
+      <div className="card">
+        <h3 className="with-icon"><span className="link-dot yellow" aria-hidden /> {t('link.reconnecting')}</h3>
+        <p className="hint-text">{t('link.partnerLeft')}</p>
+        <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+          <button className="btn-primary" onClick={() => { disconnect(); void createGame(); }}>{t('link.host')}</button>
+          <button className="btn-secondary" onClick={disconnect}>{t('link.continueSolo')}</button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── ANFITRIÓN ──
   if (mode === 'host') {
     return (
       <div className="card">
@@ -103,68 +218,86 @@ export function LiveLinkPanel() {
           <p className="hint-text">{t('link.generating')}</p>
         ) : (
           <>
-            <p className="hint-text">{t('link.step1Host')}</p>
-            <div className="soul-code-box">
-              <code className="soul-code">{anchorCode.slice(0, 26)}…</code>
-              <button className="btn-primary soul-copy-btn" onClick={() => void copy(anchorCode, 'anchor')}>
-                {copied === 'anchor' ? t('soul.copied') : t('soul.copy')}
+            <div className="pair-code" aria-label={t('link.yourCode')}>{myCode}</div>
+            <canvas ref={canvasRef} className="pair-qr" aria-label="QR" />
+            <p className="hint-text" style={{ textAlign: 'center' }}>{t('link.hostHint')}</p>
+            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => void shareInvite()}>
+                {t('link.share')}
+              </button>
+              <button className="btn-primary" style={{ flex: 1 }} onClick={startScan}>
+                {t('link.scanAnswer')}
               </button>
             </div>
-            <p className="hint-text" style={{ marginTop: 10 }}>{t('link.step2Host')}</p>
-            <textarea
-              className="soul-input" rows={3}
-              placeholder="UNION1..." value={pasted}
-              onChange={(e) => setPasted(e.target.value)}
-              aria-label="UNION1..."
-            />
-            <button className="btn-primary" style={{ width: '100%', marginTop: 8 }}
-              disabled={!pasted.trim()} onClick={() => void doCompletePaste()}>
-              {t('link.complete')}
-            </button>
+            {scanning && (
+              <div className="pair-scanner">
+                <video ref={videoRef} muted playsInline />
+                <button className="btn-secondary" onClick={stopScan}>{t('link.stopScan')}</button>
+              </div>
+            )}
+            <details className="pair-manual">
+              <summary>{t('link.manualFallback')}</summary>
+              <textarea
+                className="soul-input" rows={2} placeholder={t('link.pasteHere')}
+                value={pasted} onChange={(e) => setPasted(e.target.value)}
+              />
+              <button className="btn-secondary" style={{ marginTop: 6, width: '100%' }}
+                disabled={!pasted.trim()}
+                onClick={() => void acceptInviteText(pasted).then((ok) => ok && setPasted(''))}>
+                {t('link.confirm')}
+              </button>
+            </details>
           </>
         )}
-        {linkState === 'connecting' && <p className="hint-text">{t('link.connecting')}</p>}
+        {linkState === 'connecting' && <p className="hint-text link-connecting">{t('link.connecting')}</p>}
         {error && <p className="error-text">{error}</p>}
-        <button className="btn-secondary" style={{ marginTop: 8 }} onClick={() => setMode('menu')}>
+        <button className="btn-secondary" style={{ marginTop: 8 }} onClick={() => { stopScan(); setMode('menu'); }}>
           ← {t('creator.back')}
         </button>
       </div>
     );
   }
 
-  // ── GUEST: pegar ancla, mostrar unión ──
+  // ── INVITADO ──
   if (mode === 'join') {
     return (
       <div className="card">
         <h3 className="with-icon"><IconLink size={18} className="ico-arcane" /> {t('link.joinTitle')}</h3>
         {!joinAnswer ? (
           <>
-            <p className="hint-text">{t('link.step1Guest')}</p>
-            <textarea
-              className="soul-input" rows={3}
-              placeholder="ANCLA1..." value={pasted}
-              onChange={(e) => setPasted(e.target.value)}
-              aria-label="ANCLA1..."
-            />
-            <button className="btn-primary" style={{ width: '100%', marginTop: 8 }}
-              disabled={!pasted.trim()} onClick={() => void doJoinPaste()}>
-              {t('link.accept')}
+            <p className="hint-text">{t('link.joinHint')}</p>
+            <button className="btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={startScan}>
+              {t('link.scanQr')}
             </button>
+            {scanning && (
+              <div className="pair-scanner">
+                <video ref={videoRef} muted playsInline />
+                <button className="btn-secondary" onClick={stopScan}>{t('link.stopScan')}</button>
+              </div>
+            )}
+            <details className="pair-manual">
+              <summary>{t('link.manualFallback')}</summary>
+              <textarea
+                className="soul-input" rows={2} placeholder={t('link.pasteHere')}
+                value={pasted} onChange={(e) => setPasted(e.target.value)}
+              />
+              <button className="btn-secondary" style={{ marginTop: 6, width: '100%' }}
+                disabled={!pasted.trim()}
+                onClick={() => void acceptInviteText(pasted).then((ok) => ok && setPasted(''))}>
+                {t('link.confirm')}
+              </button>
+            </details>
           </>
         ) : (
           <>
-            <p className="hint-text">{t('link.step2Guest')}</p>
-            <div className="soul-code-box">
-              <code className="soul-code">{joinAnswer.slice(0, 26)}…</code>
-              <button className="btn-primary soul-copy-btn" onClick={() => void copy(joinAnswer, 'answer')}>
-                {copied === 'answer' ? t('soul.copied') : t('soul.copy')}
-              </button>
-            </div>
-            <p className="hint-text" style={{ marginTop: 8 }}>{t('link.waitingHost')}</p>
+            <div className="pair-code">{myCode}</div>
+            <canvas ref={answerCanvasRef} className="pair-qr" aria-label="QR" />
+            <p className="hint-text" style={{ textAlign: 'center' }}>{t('link.answerHint')}</p>
           </>
         )}
+        {linkState === 'connecting' && <p className="hint-text link-connecting">{t('link.connecting')}</p>}
         {error && <p className="error-text">{error}</p>}
-        <button className="btn-secondary" style={{ marginTop: 8 }} onClick={() => setMode('menu')}>
+        <button className="btn-secondary" style={{ marginTop: 8 }} onClick={() => { stopScan(); setMode('menu'); }}>
           ← {t('creator.back')}
         </button>
       </div>
@@ -176,8 +309,13 @@ export function LiveLinkPanel() {
     <div className="card">
       <h3 className="with-icon"><IconWave size={18} className="ico-teal" /> {t('link.title')}</h3>
       <p className="hint-text">{t('link.explain')}</p>
+      {lastPartnerName && (
+        <button className="btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={() => void createGame()}>
+          {t('link.continueWith', { name: lastPartnerName })}
+        </button>
+      )}
       <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-        <button className="btn-primary" style={{ flex: 1 }} onClick={() => void doHost()}>
+        <button className={lastPartnerName ? 'btn-secondary' : 'btn-primary'} style={{ flex: 1 }} onClick={() => void createGame()}>
           {t('link.host')}
         </button>
         <button className="btn-secondary" style={{ flex: 1 }} onClick={() => setMode('join')}>
