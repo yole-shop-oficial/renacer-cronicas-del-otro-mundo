@@ -11,6 +11,7 @@ import { NPCS } from '@/data/world';
 import { COMBO_WINDOW_MS } from '@/combat/combos';
 import { TRAIT_COMBAT_UNLOCKS, traitValue } from '@/domain/personality';
 import { sfx } from '@/services/audio';
+import { Portrait } from '@/ui/portraits';
 import { GameIcon, IconSword, IconShield, IconRune, IconPotion, IconMystery, IconHeart, IconDrop, IconSpark } from '@/ui/icons';
 
 /**
@@ -165,6 +166,7 @@ export function CombatScreen({ combatId, onEnd }: Props) {
       {/* ── ENEMIGO ── */}
       <div className="combat-enemy">
         <div className="combat-enemy-head">
+          <span className="combat-enemy-portrait"><Portrait id={enemy.id} size={44} /></span>
           <span className="combat-enemy-name">{t(`enemy.${enemy.id}`)}</span>
           {combat.currentPhase > 0 && <span className="combat-phase">{t('combat.phase', { n: combat.currentPhase + 1 })}</span>}
           <button className="combat-pause" onClick={() => setPaused(!paused)} aria-label={t(paused ? 'combat.resume' : 'combat.pause')}>

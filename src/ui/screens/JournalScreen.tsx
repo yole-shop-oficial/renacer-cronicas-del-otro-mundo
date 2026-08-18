@@ -8,6 +8,7 @@ import { RELATIONSHIP_AXES } from '@/domain/types';
 import { dominantTrait, TRAITS, traitValue } from '@/domain/personality';
 import { getMeta, setMeta } from '@/services/localdb';
 import { GameIcon, IconBook, IconBond, IconMap as IconMapIco, IconScroll, IconMystery, IconStar, IconSoul } from '@/ui/icons';
+import { Portrait, hasPortrait } from '@/ui/portraits';
 
 /**
  * DIARIO (§36): Personas · Lugares · Misiones · Rumores · Decisiones ·
@@ -111,8 +112,13 @@ export function JournalScreen() {
           {knownNpcs.length === 0 && <p className="hint-text">{t('ui.empty')}</p>}
           {knownNpcs.map((n) => (
             <div className="card" key={n.id}>
-              <h3>{t(`speaker.${n.id}`)}</h3>
-              <p className="hint-text">{t(`region.${n.regionId}`)}</p>
+              <div className="npc-card-head">
+                {hasPortrait(n.id) && <Portrait id={n.id} size={52} className="npc-portrait" />}
+                <div>
+                  <h3>{t(`speaker.${n.id}`)}</h3>
+                  <p className="hint-text">{t(`region.${n.regionId}`)}</p>
+                </div>
+              </div>
               <p>{t(`npc.${n.id}.bio`)}</p>
             </div>
           ))}

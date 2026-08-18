@@ -8,6 +8,7 @@ import { DiceOfFate } from '@/ui/DiceOfFate';
 import { findSpecialDiscord } from '@/coop/specialDiscords';
 import { CombatScreen } from './CombatScreen';
 import { sfx } from '@/services/audio';
+import { Portrait, hasPortrait } from '@/ui/portraits';
 import { getEnemy } from '@/data/enemies';
 import { applyEffects } from '@/engine/effects';
 import { saveGameLocally } from '@/state/persistence';
@@ -107,7 +108,14 @@ export function StoryScreen() {
       <div className="story-scroll" ref={scrollRef}>
         <p className="chapter-title">{node.chapterId === 'prologue' ? '✦ ✦ ✦' : '❖ ❖ ❖'}</p>
         <div className="parchment">
-          {node.speaker && <span className="speaker-tag">{t(`speaker.${node.speaker}`)}</span>}
+          {node.speaker && (
+            <span className="speaker-row">
+              {hasPortrait(node.speaker) && (
+                <span className="speaker-portrait"><Portrait id={node.speaker} size={46} /></span>
+              )}
+              <span className="speaker-tag">{t(`speaker.${node.speaker}`)}</span>
+            </span>
+          )}
           {node.speaker && <br />}
           {renderStoryText(lt(duoMode && node.duoText ? node.duoText : node.text), textCtx)}
         </div>

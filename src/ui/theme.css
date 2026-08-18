@@ -1335,3 +1335,11 @@ body {
   border: 1px solid rgba(216,111,168,0.5);
   animation: pulse 2.2s infinite;
 }
+
+/* ── RETRATOS (§79) ── */
+.speaker-row { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.speaker-portrait { display: inline-flex; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); animation: riseIn 0.3s ease; }
+.combat-enemy-portrait { display: inline-flex; margin-right: 4px; filter: drop-shadow(0 0 10px rgba(216,111,111,0.35)); }
+.npc-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.npc-portrait { flex-shrink: 0; }
+.npc-card-head h3 { margin: 0; }

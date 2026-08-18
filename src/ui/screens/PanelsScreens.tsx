@@ -5,6 +5,7 @@ import { NPCS } from '@/data/world';
 import { RELATIONSHIP_AXES } from '@/domain/types';
 import { bondLevel, bondScore } from '@/domain/power';
 import { IconScroll, IconLock, IconSpark } from '@/ui/icons';
+import { Portrait, hasPortrait } from '@/ui/portraits';
 
 /** Habilidades (§16): cada una lista sus usos narrativos. */
 export function SkillsScreen() {
@@ -75,12 +76,15 @@ export function RelationsScreen() {
         const quests = availableNpcQuests(npcId);
         return (
           <div className="card" key={npcId}>
-            <h3>
-              {t(`speaker.${npcId}`)}
-              <span className="bond-badge">
-                {t('bond.level', { level })}
-              </span>
-            </h3>
+            <div className="npc-card-head">
+              {hasPortrait(npcId) && <Portrait id={npcId} size={52} className="npc-portrait" />}
+              <h3>
+                {t(`speaker.${npcId}`)}
+                <span className="bond-badge">
+                  {t('bond.level', { level })}
+                </span>
+              </h3>
+            </div>
             {npc && (
               <p className="hint-text" style={{ marginBottom: 6 }}>
                 {t(`region.${npc.regionId}`)} · {npc.age} ⌛

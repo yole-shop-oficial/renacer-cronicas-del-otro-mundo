@@ -677,11 +677,83 @@ export const CHAPTER_02: Chapter = {
       choices: [
         {
           id: 'c2_05d_go',
+          text: { es: 'Avanzar hacia las jaulas', en: 'Move toward the cages' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_poacher'
+        }
+      ],
+      end: false
+    },
+    {
+      // COMBATE: la ruta directa tiene precio — un furtivo te corta el paso.
+      id: 'c2_poacher',
+      chapterId: 'chapter_02',
+      kind: 'encounter',
+      combatId: 'furtivo_sierpe',
+      victoryGoto: 'c2_poacher_after',
+      defeatGoto: 'c2_poacher_defeat',
+      text: {
+        es: 'Dos pasos más... y una tabla cede del todo. El guardia de la cicatriz se gira, y esta vez no hay redes que te escondan.\n\n«Vaya, vaya. La rata del muelle.» Desenvaina un cuchillo de desollar con el sello de la sierpe en el mango. «El jefe paga extra por los curiosos. Enteros... o a trozos.»',
+        en: 'Two more steps... and a plank gives way completely. The scarred guard turns, and this time no nets hide you.\n\n"Well, well. The pier rat." He draws a skinning knife with the serpent seal on its handle. "The boss pays extra for the curious. Whole... or in pieces."'
+      },
+      duoText: {
+        es: 'Dos pasos más... y una tabla cede del todo. El guardia de la cicatriz se gira — y os ve a los dos.\n\n«Dos ratas por el precio de una.» Desenvaina un cuchillo de desollar con el sello de la sierpe. «El jefe paga extra por los curiosos.» A tu lado, {partner} ya está en guardia.',
+        en: 'Two more steps... and a plank gives way completely. The scarred guard turns — and sees you both.\n\n"Two rats for the price of one." He draws a skinning knife bearing the serpent seal. "The boss pays extra for the curious." At your side, {partner} is already on guard.'
+      },
+      onEnter: [],
+      choices: [],
+      end: false
+    },
+    {
+      id: 'c2_poacher_after',
+      chapterId: 'chapter_02',
+      kind: 'narration',
+      text: {
+        es: 'El furtivo cae de rodillas... y, fiel a su calaña, se arrastra hacia las sombras y huye cojeando. Mercenario al fin: nadie le paga lo suficiente para morir.\n\nSu cuchillo con el sello de la sierpe queda en el suelo: una prueba más. El camino hacia las jaulas está libre... y el cuerno del barco suena ya en el canal.',
+        en: 'The poacher drops to his knees... and, true to his kind, crawls into the shadows and flees limping. A mercenary to the end: nobody pays him enough to die.\n\nHis serpent-sealed knife lies on the ground: one more piece of proof. The way to the cages is clear... and the ship horn already sounds in the canal.'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'defeated_poacher', value: true },
+        { kind: 'setFlag', key: 'has_serpent_knife', value: true }
+      ],
+      choices: [
+        {
+          id: 'c2_poacherafter_go',
           text: { es: 'Es el momento de decidir', en: 'It is time to decide' },
           conditions: [],
           visibleWhenLocked: false,
           effects: [],
           goto: 'c2_06'
+        }
+      ],
+      end: false
+    },
+    {
+      id: 'c2_poacher_defeat',
+      chapterId: 'chapter_02',
+      kind: 'narration',
+      text: {
+        es: 'El mango del cuchillo te encuentra la sien... y el mundo se apaga.\n\nDespiertas al alba, atad{a|o} entre redes que huelen a pescado, con la cabeza latiendo. El barco ya no está. Las crías tampoco. Alguien te dejó una jarra de agua al alcance: los cazadores de Tomás, que no delatan... pero tampoco pelean contra la Sierpe.\n\nEsta noche perdiste. Pero sigues respirando, y ahora saben tu cara: lo que venga será más difícil... y más personal.',
+        en: 'The knife handle finds your temple... and the world goes dark.\n\nYou wake at dawn, tied among nets that smell of fish, head pounding. The ship is gone. So are the cubs. Someone left a jug of water within reach: Tomás hunters, who do not snitch... but do not fight the Serpent either.\n\nTonight you lost. But you still breathe, and now they know your face: what comes next will be harder... and more personal.'
+      },
+      onEnter: [
+        { kind: 'heal', amount: 999 },
+        { kind: 'gainGold', amount: -8 },
+        { kind: 'setFlag', key: 'lost_to_poacher', value: true },
+        { kind: 'setFlag', key: 'cubs_shipped_away', value: true },
+        { kind: 'setFlag', key: 'coop_c2_followed_leader', value: false },
+        { kind: 'gainXp', amount: 15 }
+      ],
+      choices: [
+        {
+          id: 'c2_poacherdefeat_lu',
+          text: { es: 'Volver con Lu antes del amanecer', en: 'Return to Lu before dawn' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'c2_08'
         }
       ],
       end: false
