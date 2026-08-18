@@ -1392,3 +1392,40 @@ html[data-textscale='xlarge'] { --reading-scale: 1.3; }
 /* §48: vínculo entre jugadores */
 .player-bond { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(201,138,75,0.35); }
 .player-bond-title { display: block; font-size: 12px; font-weight: 700; color: var(--caramel); margin-bottom: 6px; }
+
+/* ── TAREAS DIVIDIDAS (§45) ── */
+.split-pick { gap: 12px; }
+.split-role-card { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; width: 100%; }
+.split-role-card h3 { margin: 0; }
+.ritual-screen {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px; padding: 24px; position: relative;
+}
+.ritual-progress { display: flex; gap: 10px; }
+.ritual-step {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(139,111,216,0.5); background: transparent;
+  transition: all 0.2s ease;
+}
+.ritual-step.done { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px rgba(212,169,78,0.6); }
+.ritual-target {
+  position: relative; width: 170px; height: 170px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #2e2650, #1a1428);
+  border: 2px solid rgba(139,111,216,0.5); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.ritual-target:active { transform: scale(0.97); }
+.ritual-core { color: var(--arcane-soft); position: relative; z-index: 2; }
+.ritual-ring {
+  position: absolute; inset: -30px; border-radius: 50%;
+  border: 3px solid var(--gold);
+  animation-name: ritualClose; animation-timing-function: linear; animation-fill-mode: forwards;
+  pointer-events: none;
+}
+@keyframes ritualClose {
+  0% { transform: scale(1.6); opacity: 0.25; border-color: var(--arcane-soft); }
+  64% { border-color: var(--arcane-soft); }
+  66% { border-color: var(--gold); opacity: 1; }
+  100% { transform: scale(0.88); opacity: 1; border-color: var(--gold); }
+}
+.ritual-misses { font-size: 13px; color: var(--text-dim); }

@@ -5,6 +5,7 @@ import { CHAPTER_01 } from './chapter01';
 import { CHAPTER_02 } from './chapter02';
 import { CHAPTER_03 } from './chapter03';
 import { CHAPTER_04 } from './chapter04';
+import { CHAPTER_05 } from './chapter05';
 
 /**
  * Registro de contenido narrativo.
@@ -17,6 +18,7 @@ export function createStoryEngine(): StoryEngine {
   engine.registerChapter(validateChapter(CHAPTER_02));
   engine.registerChapter(validateChapter(CHAPTER_03));
   engine.registerChapter(validateChapter(CHAPTER_04));
+  engine.registerChapter(validateChapter(CHAPTER_05));
   return engine;
 }
 

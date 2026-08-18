@@ -7,6 +7,7 @@ export const REGIONS: RegionDef[] = [
   { id: 'ciudad_petra', kind: 'city', connectedTo: ['bosque_susurros', 'ruinas_veloran', 'templo_alba'], discoveredByDefault: false },
   { id: 'ruinas_veloran', kind: 'ruins', connectedTo: ['ciudad_petra'], discoveredByDefault: false },
   { id: 'templo_alba', kind: 'temple', connectedTo: ['ciudad_petra'], discoveredByDefault: false },
+  { id: 'puerto_zafir', kind: 'city', connectedTo: ['ciudad_petra'], discoveredByDefault: false },
   { id: 'tierras_ignotas', kind: 'unknown', connectedTo: [], discoveredByDefault: false }
 ];
 

@@ -236,6 +236,60 @@ export const POIS: PoiDef[] = [
       }
     ]
   },
+  // ── PUERTO DE ZAFIR ──
+  {
+    id: 'poi_muelle_especias',
+    regionId: 'puerto_zafir',
+    icon: 'coin',
+    x: 36,
+    y: 44,
+    actions: [
+      {
+        id: 'act_zafir_pepper',
+        requiresFlag: 'southern_arc_open',
+        effects: [
+          { kind: 'gainXp', amount: 15 },
+          { kind: 'setFlag', key: 'found_lu_mother_stall', value: true },
+          { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'affection', amount: 10 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'poi_faro_zafir',
+    regionId: 'puerto_zafir',
+    icon: 'spark',
+    x: 74,
+    y: 22,
+    actions: [
+      {
+        id: 'act_zafir_lighthouse',
+        requiredLevel: 6,
+        effects: [
+          { kind: 'gainXp', amount: 20 },
+          { kind: 'setFlag', key: 'watched_southern_sea', value: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'poi_cantina_marea',
+    regionId: 'puerto_zafir',
+    icon: 'potion',
+    x: 52,
+    y: 66,
+    actions: [
+      {
+        id: 'act_zafir_cantina',
+        requiresFlag: 'southern_arc_open',
+        effects: [
+          { kind: 'heal', amount: 30 },
+          { kind: 'gainXp', amount: 10 },
+          { kind: 'setFlag', key: 'heard_vell_route', value: true }
+        ]
+      }
+    ]
+  },
   // ── RUINAS DE VELORAN ──
   {
     id: 'poi_arco_caido',

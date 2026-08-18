@@ -144,6 +144,55 @@ export const ENEMIES: EnemyDef[] = [
 ];
 
 /**
+ * EL CORSARIO DE ZAFIR — guardián del cabrestante (Capítulo 5, §45).
+ * Rápido, sucio, marinero: pelea con sable y garfio de abordaje.
+ */
+export const CORSAIR: EnemyDef = {
+  id: 'corsario_zafir',
+  maxHp: 150,
+  weaknesses: ['lightning'],
+  resistances: ['water'],
+  paceMs: 4200,
+  moves: [
+    {
+      id: 'cz_sable',
+      telegraph: { es: 'El corsario baila hacia atrás y su sable dibuja un ocho...', en: 'The corsair dances back and his saber traces a figure eight...' },
+      impact: { es: 'El filo salado te encuentra.', en: 'The salted edge finds you.' },
+      element: 'physical',
+      power: 13,
+      windowMs: 2900,
+      counters: ['dodge', 'defend'],
+      applies: { effect: 'bleed', chance: 0.4, durationMs: 5000, power: 3 }
+    },
+    {
+      id: 'cz_hook',
+      telegraph: { es: 'Hace girar el garfio de abordaje sobre su cabeza...', en: 'He whirls the boarding hook above his head...' },
+      impact: { es: 'El garfio te arrastra contra las cuerdas.', en: 'The hook drags you against the ropes.' },
+      element: 'physical',
+      power: 11,
+      windowMs: 3200,
+      counters: ['dodge', 'interrupt'],
+      applies: { effect: 'stun', chance: 0.3, durationMs: 2000, power: 1 }
+    },
+    {
+      id: 'cz_wave',
+      telegraph: { es: 'Corta una cuerda de sujeción: una ola de carga se te viene encima...', en: 'He cuts a mooring rope: a wave of cargo comes crashing toward you...' },
+      impact: { es: 'Los barriles ruedan sobre ti con estruendo.', en: 'Barrels thunder over you.' },
+      element: 'water',
+      power: 16,
+      windowMs: 3400,
+      counters: ['dodge'],
+      applies: { effect: 'wet', chance: 0.8, durationMs: 6000, power: 1 }
+    }
+  ],
+  analyzeReveals: [
+    { es: 'Capitán corsario a sueldo de Vell. Pelea sucio pero con código: no remata a los caídos.', en: 'A corsair captain in Vell\'s pay. Fights dirty but by a code: never finishes the fallen.' },
+    { es: 'Debilidad: rayo — está empapado de mar de la cabeza a las botas. Y su ola te moja a ti: cuidado con su propio truco.', en: 'Weakness: lightning — he is soaked in sea from head to boot. And his wave wets YOU: beware his own trick.' }
+  ],
+  rewards: { xp: 80, gold: 30, items: [{ itemId: 'mana_flower', qty: 1 }] }
+};
+
+/**
  * EL DESOLLADOR — jefe del Capítulo 4 (§14: fases que cambian decisiones).
  * Fase 1: el látigo paciente. Fase 2: la red de acero (<60%).
  * Fase 3: desesperación — rápido, salvaje, se hiere a sí mismo (<25%).
@@ -322,6 +371,7 @@ export const TWIN_SENTINEL: EnemyDef = {
 export function getEnemy(id: string): EnemyDef {
   if (id === TWIN_SENTINEL.id) return TWIN_SENTINEL;
   if (id === FLAYER.id) return FLAYER;
+  if (id === CORSAIR.id) return CORSAIR;
   const e = ENEMIES.find((e) => e.id === id);
   if (!e) throw new Error(`Enemigo desconocido: ${id}`);
   return e;

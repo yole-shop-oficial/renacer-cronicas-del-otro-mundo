@@ -97,6 +97,8 @@ export const StoryNodeSchema = z.object({
   combatId: z.string().optional(),
   victoryGoto: z.string().optional(),
   defeatGoto: z.string().optional(),
+  /** TAREAS DIVIDIDAS (§45): dos tareas simultáneas cuyos resultados se funden. */
+  splitTaskId: z.string().optional(),
   /** Nodo terminal de capítulo. */
   end: z.boolean().default(false)
 });

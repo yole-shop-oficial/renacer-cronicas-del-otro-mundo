@@ -321,7 +321,16 @@ export const CHAPTER_04: Chapter = {
         { kind: 'changeReputation', key: 'ciudad_petra', amount: 15 },
         { kind: 'setFlag', key: 'southern_arc_open', value: true }
       ],
-      choices: [],
+      choices: [
+        {
+          id: 'c4_end_continue',
+          text: { es: 'Capítulo 5 — El puerto de Zafir', en: 'Chapter 5 — The Port of Zafir' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'chapter:chapter_05'
+        }
+      ],
       end: true
     }
   ]

@@ -47,6 +47,8 @@ interface CoopState {
   partnerVitals: { hp: number; maxHp: number; status: string[] } | null;
   /** VÍNCULO ENTRE JUGADORES (§48): acumulado local de la relación. */
   playerBond: { trust: number; cooperation: number; rivalry: number; complicity: number };
+  /** TAREAS DIVIDIDAS (§45): rol reclamado por el compañero y su resultado. */
+  partnerSplit: { taskId: string; role: 'combat' | 'ritual'; won?: boolean } | null;
   /** Animación de dados activa. */
   showDice: boolean;
   anchorCode: string | null;
@@ -68,6 +70,9 @@ interface CoopState {
   sendCombatVitals: (hp: number, maxHp: number, status: string[]) => void;
   /** Registra un pulso de vínculo (acuerdos, discordias, combos...). */
   pulseBond: (kind: 'agreement' | 'discord' | 'yield' | 'combo' | 'reunion') => void;
+  claimSplitRole: (taskId: string, role: 'combat' | 'ritual') => void;
+  reportSplitResult: (taskId: string, role: 'combat' | 'ritual', won: boolean) => void;
+  clearSplit: () => void;
   leaveGroup: () => void;
   reunite: () => void;
   clearNegotiation: () => void;
@@ -168,6 +173,14 @@ export const useCoopStore = create<CoopState>((set, get) => {
       case 'bond_pulse':
         get().pulseBond(msg.kind);
         break;
+      case 'split_claim':
+        set({ partnerSplit: { taskId: msg.taskId, role: msg.role } });
+        break;
+      case 'split_result': {
+        const cur = get().partnerSplit;
+        set({ partnerSplit: { taskId: msg.taskId, role: msg.role, won: msg.won, ...(cur?.taskId === msg.taskId ? {} : {}) } });
+        break;
+      }
       case 'leave_group':
         set({ inGroup: false });
         break;
@@ -197,6 +210,7 @@ export const useCoopStore = create<CoopState>((set, get) => {
     lastCombatAction: null,
     partnerVitals: null,
     playerBond: loadBond(),
+    partnerSplit: null,
     showDice: false,
     anchorCode: null,
     joinAnswer: null,
@@ -337,6 +351,16 @@ export const useCoopStore = create<CoopState>((set, get) => {
     sendCombatVitals: (hp, maxHp, status) => {
       coopLink.send({ t: 'combat_vitals', hp, maxHp, status });
     },
+
+    claimSplitRole: (taskId, role) => {
+      coopLink.send({ t: 'split_claim', taskId, role });
+    },
+
+    reportSplitResult: (taskId, role, won) => {
+      coopLink.send({ t: 'split_result', taskId, role, won });
+    },
+
+    clearSplit: () => set({ partnerSplit: null }),
 
     pulseBond: (kind) => {
       // §48: el vínculo entre jugadores crece con lo vivido juntos.

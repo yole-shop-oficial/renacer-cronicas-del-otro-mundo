@@ -25,7 +25,7 @@ Fecha: última iteración. Veredicto por sección (✅ completo · 🟡 parcial 
 |---|---|---|---|
 | 40-43 | Coop completo, combate coop, asimetría | ✅ | Explorar/decidir/combatir/dividirse/reunirse; acciones por clase |
 | 44 | Escalera de desacuerdo | ✅ | Acuerdo→ceder→dados→desafío→separación→reencuentro |
-| 45 | División de tareas simultáneas | 🟡 | Separación/reencuentro sí; tareas paralelas cronometradas: previsto para el arco del sur |
+| 45 | División de tareas simultáneas | ✅ | Capítulo 5: combate + ritual de pulsos EN PARALELO (coop por roles reclamados, solo en secuencia), 4 resoluciones fundidas |
 | 46-47 | Hilos paralelos + memoria compartida | ✅ | Reencuentros por región (2 POVs); decisiones/flags compartidos |
 | 48 | Vínculo entre jugadores | ✅ | trust/cooperation/rivalry/complicity con pulsos automáticos, visible en el panel |
 | 49-55 | Conexión sin tecnología visible | ✅ | Código corto+QR+share; fallback pegar; reconexión "Continuar con {nombre}" |
@@ -55,7 +55,6 @@ Fecha: última iteración. Veredicto por sección (✅ completo · 🟡 parcial 
 | 99-117 | Sin funciones falsas, contenido real, primera partida | ✅ | Prólogo+4 capítulos+epílogo; primer combate temprano; jefe con fases; QR; 320px |
 
 ## Pendientes honestos (los únicos)
-1. **§45 tareas divididas cronometradas** — la infraestructura (separación, mensajes, reencuentro) existe; falta un evento de contenido que la use. Planificado para el arco del sur.
-2. **§56 relay TURN** — imposible sin servidor por requisito del proyecto; documentado como límite consciente.
-3. **§71 guardado a mitad de combate** — decisión de diseño: reintentar el encuentro es más justo que restaurar un estado a medias; recompensas nunca se duplican.
-4. **§84 cuenta en la nube** — reemplazada por diseño local-first puro + backup portable (requisito "sin Supabase/backend").
+1. **§56 relay TURN** — imposible sin servidor por requisito del proyecto; documentado como límite consciente.
+2. **§71 guardado a mitad de combate** — decisión de diseño: reintentar el encuentro es más justo que restaurar un estado a medias; recompensas nunca se duplican.
+3. **§84 cuenta en la nube** — reemplazada por diseño local-first puro + backup portable (requisito "sin Supabase/backend").

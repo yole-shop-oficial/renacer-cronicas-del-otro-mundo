@@ -7,6 +7,7 @@ import { useCoopStore } from '@/state/coopStore';
 import { DiceOfFate } from '@/ui/DiceOfFate';
 import { findSpecialDiscord } from '@/coop/specialDiscords';
 import { CombatScreen } from './CombatScreen';
+import { SplitTaskScreen } from './SplitTaskScreen';
 import { sfx } from '@/services/audio';
 import { Portrait, hasPortrait } from '@/ui/portraits';
 import { getEnemy } from '@/data/enemies';
@@ -40,6 +41,34 @@ export function StoryScreen() {
 
 
   if (!save || !node) return <div className="center-screen">{t('ui.loading')}</div>;
+
+  // TAREAS DIVIDIDAS (§45): dos tareas simultáneas, resultados fundidos.
+  if (node.splitTaskId && !save.world.flags[`_split_done_${node.id}`]) {
+    return (
+      <SplitTaskScreen
+        taskId={node.splitTaskId}
+        onResolve={(outcomeNodeId, bothWon) => {
+          void (async () => {
+            const current = gameStore.getState().save;
+            if (!current) return;
+            const world = structuredClone(current.world);
+            let character = current.character;
+            world.flags[`_split_done_${node.id}`] = true;
+            if (bothWon) {
+              const { splitTaskById } = await import('@/coop/splitTasks');
+              const def = splitTaskById(node.splitTaskId!);
+              const fx = applyEffects(def.bothWinEffects, character, world);
+              character = fx.character;
+              Object.assign(world, fx.world);
+            }
+            const updated = { ...current, character, world, currentNodeId: outcomeNodeId, updatedAt: Date.now() };
+            await saveGameLocally(updated);
+            gameStore.setState({ save: updated, narrationLog: [] });
+          })();
+        }}
+      />
+    );
+  }
 
   // COMBATE REAL (§4-5): el nodo encounter con combatId cambia la interfaz.
   if (node.combatId && !save.world.flags[`_combat_done_${node.id}`]) {

@@ -26,6 +26,8 @@ export type CoopMessage =
   | { t: 'combat_action'; actionId: string; element: string }
   | { t: 'combat_vitals'; hp: number; maxHp: number; status: string[] }
   | { t: 'bond_pulse'; kind: 'agreement' | 'discord' | 'yield' | 'combo' | 'reunion' }
+  | { t: 'split_claim'; taskId: string; role: 'combat' | 'ritual' }
+  | { t: 'split_result'; taskId: string; role: 'combat' | 'ritual'; won: boolean }
   | { t: 'leave_group' }
   | { t: 'reunite' }
   | { t: 'ping' };
