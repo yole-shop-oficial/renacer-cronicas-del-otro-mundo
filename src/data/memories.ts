@@ -26,7 +26,13 @@ export const MEMORIES: MemoryDef[] = [
   { id: 'mem_fair_contract', flag: 'c3_took_contract', icon: 'scroll' },
   { id: 'mem_fair_cub', flag: 'c3_saved_cub', icon: 'heart' },
   { id: 'mem_defied_fate', flag: 'marca_del_destino', icon: 'star' },
-  { id: 'mem_reunited', flag: 'grupo_reunido', icon: 'bond' }
+  { id: 'mem_reunited', flag: 'grupo_reunido', icon: 'bond' },
+  { id: 'mem_sentinel', flag: 'defeated_twin_sentinel', icon: 'ruins' },
+  { id: 'mem_tribunal', flag: 'vell_exposed_tribunal', icon: 'scroll' },
+  { id: 'mem_estate_freed', flag: 'estate_creatures_freed', icon: 'forest' },
+  { id: 'mem_mist_call', flag: 'mist_answered_call', icon: 'spark' },
+  { id: 'mem_flayer', flag: 'defeated_desollador', icon: 'sword' },
+  { id: 'mem_captured', flag: 'captured_by_vell', icon: 'lock' }
 ];
 
 export function earnedMemories(flags: Record<string, unknown>): MemoryDef[] {

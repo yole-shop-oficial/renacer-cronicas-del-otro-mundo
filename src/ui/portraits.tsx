@@ -257,6 +257,28 @@ export const PortraitSentinel = (p: P) => (
   </svg>
 );
 
+export const PortraitFlayer = (p: P) => (
+  <svg {...frame(p)}>
+    <Medallion bg="#26201c">
+      {/* capucha de cuero */}
+      <path d="M20 30c0-10 5-17 12-17s12 7 12 17v8h-4v-8c0-7-3-12-8-12s-8 5-8 12v8h-4v-8Z" fill="#3d3226" />
+      {/* máscara pálida SIN boca */}
+      <path d="M25 24c0-4 3-7 7-7s7 3 7 7v10c0 5-3 8-7 8s-7-3-7-8V24Z" fill="#ded8cc" />
+      {/* ranuras oscuras en vez de ojos */}
+      <path d="M28 27h2.5M33.5 27h2.5" stroke="#1a1512" strokeWidth="2.4" strokeLinecap="round" />
+      {/* grieta fina en la máscara */}
+      <path d="M35 18l-1.5 5 2 4" stroke="#a89f8e" strokeWidth="0.9" fill="none" />
+      {/* delantal de cuero con correas */}
+      <path d="M17 54c2-8 7-12 15-12s13 4 15 12H17Z" fill="#4a3826" />
+      <path d="M26 44v9M38 44v9M23 48h18" stroke="#2c2014" strokeWidth="1.6" />
+      {/* látigo enrollado al costado */}
+      <circle cx="45" cy="47" r="4.5" fill="none" stroke="#6a5138" strokeWidth="2" />
+      <circle cx="45" cy="47" r="1.8" fill="none" stroke="#6a5138" strokeWidth="1.2" />
+      <path d="M41 44l-2-2" stroke="#8a8578" strokeWidth="1.4" strokeLinecap="round" />
+    </Medallion>
+  </svg>
+);
+
 /* ── REGISTRO ── */
 
 const PORTRAITS = {
@@ -271,7 +293,8 @@ const PORTRAITS = {
   lobo_famelico: PortraitWolf,
   furtivo_sierpe: PortraitPoacher,
   espectro_velo: PortraitWraith,
-  centinela_gemelo: PortraitSentinel
+  centinela_gemelo: PortraitSentinel,
+  desollador: PortraitFlayer
 } as const;
 
 export type PortraitId = keyof typeof PORTRAITS;

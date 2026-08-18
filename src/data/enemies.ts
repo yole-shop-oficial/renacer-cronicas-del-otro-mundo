@@ -144,6 +144,99 @@ export const ENEMIES: EnemyDef[] = [
 ];
 
 /**
+ * EL DESOLLADOR — jefe del Capítulo 4 (§14: fases que cambian decisiones).
+ * Fase 1: el látigo paciente. Fase 2: la red de acero (<60%).
+ * Fase 3: desesperación — rápido, salvaje, se hiere a sí mismo (<25%).
+ */
+export const FLAYER: EnemyDef = {
+  id: 'desollador',
+  maxHp: 210,
+  weaknesses: ['fire'],
+  resistances: ['poison'],
+  paceMs: 4400,
+  moves: [
+    {
+      id: 'ds_whip',
+      telegraph: { es: 'El látigo de espinas se arrastra por el suelo, saboreando...', en: 'The thorned whip drags along the ground, savoring...' },
+      impact: { es: 'Las espinas de acero te muerden y se retiran despacio.', en: 'The steel thorns bite you and withdraw slowly.' },
+      element: 'physical',
+      power: 14,
+      windowMs: 3100,
+      counters: ['dodge'],
+      applies: { effect: 'bleed', chance: 0.5, durationMs: 6000, power: 4 }
+    },
+    {
+      id: 'ds_measure',
+      telegraph: { es: 'Ladea la máscara pálida: te está midiendo como a una pieza...', en: 'He tilts the pale mask: measuring you like a hide...' },
+      impact: { es: 'Su mirada sin ojos te encuentra el punto débil.', en: 'His eyeless gaze finds your weak point.' },
+      element: 'dark',
+      power: 9,
+      windowMs: 3600,
+      counters: ['interrupt', 'defend'],
+      applies: { effect: 'weaken', chance: 0.6, durationMs: 5000, power: 2 }
+    }
+  ],
+  phases: [
+    {
+      hpBelow: 0.6,
+      paceMs: 4000,
+      entryText: {
+        es: 'El Desollador arroja el látigo y descuelga del cinto una RED DE ACERO con pesas. «Las piezas que corren», dice, «se atrapan primero.»',
+        en: 'The Flayer discards the whip and unhooks a weighted STEEL NET from his belt. "Hides that run," he says, "are caught first."'
+      },
+      moves: [
+        {
+          id: 'ds_net',
+          telegraph: { es: 'La red de acero gira sobre su cabeza, cada vez más rápido...', en: 'The steel net spins above his head, faster and faster...' },
+          impact: { es: 'La red te envuelve y las pesas golpean como puños.', en: 'The net wraps you and the weights strike like fists.' },
+          element: 'physical',
+          power: 16,
+          windowMs: 2900,
+          counters: ['dodge', 'interrupt'],
+          applies: { effect: 'stun', chance: 0.35, durationMs: 2200, power: 1 }
+        },
+        {
+          id: 'ds_hooks',
+          telegraph: { es: 'Saca dos garfios de despiece y cruza los brazos...', en: 'He draws two flensing hooks and crosses his arms...' },
+          impact: { es: 'Los garfios trazan una X de dolor.', en: 'The hooks carve an X of pain.' },
+          element: 'physical',
+          power: 18,
+          windowMs: 2700,
+          counters: ['defend'],
+          applies: { effect: 'bleed', chance: 0.45, durationMs: 5000, power: 4 }
+        }
+      ]
+    },
+    {
+      hpBelow: 0.25,
+      paceMs: 3200,
+      entryText: {
+        es: 'La máscara pálida se agrieta y cae. Debajo no hay monstruo: hay un hombre sudando MIEDO por primera vez en veinte años. Y los hombres asustados son los más peligrosos.',
+        en: 'The pale mask cracks and falls. Beneath is no monster: just a man sweating FEAR for the first time in twenty years. And frightened men are the most dangerous kind.'
+      },
+      moves: [
+        {
+          id: 'ds_frenzy',
+          telegraph: { es: '«¡NO!» Se lanza en un torbellino de garfios, sin guardia, sin cálculo...', en: '"NO!" He hurls himself in a whirlwind of hooks, no guard, no calculation...' },
+          impact: { es: 'El torbellino desesperado os alcanza a ambos... y a él mismo.', en: 'The desperate whirlwind strikes you... and himself.' },
+          element: 'physical',
+          power: 22,
+          windowMs: 2400,
+          counters: ['dodge', 'defend'],
+          applies: { effect: 'bleed', chance: 0.3, durationMs: 4000, power: 3 }
+        }
+      ]
+    }
+  ],
+  analyzeReveals: [
+    { es: 'El ejecutor de Vell. No disfruta: COBRA. Veinte años de oficio sin una sola cicatriz propia... hasta hoy.', en: 'Vell\'s executioner. He does not enjoy it: he CHARGES. Twenty years of trade without a single scar of his own... until today.' },
+    { es: 'Debilidad: fuego — el cuero seco de su delantal y sus correas arde bien. Resiste venenos: los conoce todos.', en: 'Weakness: fire — the dry leather of his apron and straps burns well. Resists poisons: he knows them all.' },
+    { es: 'Cuando pierda la máscara, retrocede y deja que su desesperación lo desgaste: cada torbellino le cuesta más a él que a ti.', en: 'When the mask falls, step back and let his desperation bleed him: each whirlwind costs him more than it costs you.' }
+  ],
+  rewards: { xp: 130, gold: 45, items: [{ itemId: 'old_locket', qty: 1 }] }
+};
+
+/**
  * ENCUENTRO DISEÑADO PARA DOS (§104): el Centinela Gemelo.
  * Mecánica asimétrica: alterna ESCUDO DE PIEDRA (resiste físico → toca
  * magia) y ESCUDO DE ESPEJO (resiste magia → toca acero). Un jugador solo
@@ -228,6 +321,7 @@ export const TWIN_SENTINEL: EnemyDef = {
 
 export function getEnemy(id: string): EnemyDef {
   if (id === TWIN_SENTINEL.id) return TWIN_SENTINEL;
+  if (id === FLAYER.id) return FLAYER;
   const e = ENEMIES.find((e) => e.id === id);
   if (!e) throw new Error(`Enemigo desconocido: ${id}`);
   return e;

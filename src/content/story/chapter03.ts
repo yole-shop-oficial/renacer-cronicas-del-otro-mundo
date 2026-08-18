@@ -352,6 +352,14 @@ export const CHAPTER_03: Chapter = {
       ],
       choices: [
         {
+          id: 'c3_07_continue',
+          text: { es: 'Capítulo 4 — La caza de Servan Vell', en: 'Chapter 4 — The Hunt for Servan Vell' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [],
+          goto: 'chapter:chapter_04'
+        },
+        {
           id: 'c3_07_ruins',
           text: { es: 'Epílogo — Seguir la pista del oro imperial a las Ruinas de Veloran', en: 'Epilogue — Follow the imperial gold trail to the Ruins of Veloran' },
           conditions: [],
@@ -395,7 +403,16 @@ export const CHAPTER_03: Chapter = {
         { kind: 'grantTitle', key: 'sentinel_bane' },
         { kind: 'setFlag', key: 'read_veloran_fresco', value: true }
       ],
-      choices: [],
+      choices: [
+        {
+          id: 'c3_ruinsafter_c4',
+          text: { es: 'Capítulo 4 — La caza de Servan Vell', en: 'Chapter 4 — The Hunt for Servan Vell' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'travelTo', key: 'ciudad_petra' }],
+          goto: 'chapter:chapter_04'
+        }
+      ],
       end: true
     },
     {
