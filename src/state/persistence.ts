@@ -1,6 +1,7 @@
 import type { GameSave } from '@/domain/types';
 import { putSave, getLatestSave, serializeSave, deserializeSave, getMeta } from '@/services/localdb';
 import { encryptText, decryptText } from '@/services/crypto';
+import { DEMO_GAME_ID } from '@/services/demo';
 
 /**
  * PERSISTENCIA (§85): LOCAL SAVE, siempre y primero.
@@ -16,6 +17,8 @@ async function localSecret(): Promise<string | null> {
 }
 
 export async function saveGameLocally(save: GameSave): Promise<void> {
+  // MODO DEMO (§97): la partida de prueba jamás toca el disco.
+  if (save.gameId === DEMO_GAME_ID) return;
   const secret = await localSecret();
   const raw = serializeSave(save);
   if (secret) {

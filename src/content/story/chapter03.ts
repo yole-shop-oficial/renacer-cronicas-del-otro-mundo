@@ -350,8 +350,78 @@ export const CHAPTER_03: Chapter = {
         { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'friendship', amount: 10 },
         { kind: 'setFlag', key: 'vell_knows_you_exist', value: true }
       ],
+      choices: [
+        {
+          id: 'c3_07_ruins',
+          text: { es: 'Epílogo — Seguir la pista del oro imperial a las Ruinas de Veloran', en: 'Epilogue — Follow the imperial gold trail to the Ruins of Veloran' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'travelTo', key: 'ruinas_veloran' }, { kind: 'discoverRegion', key: 'templo_alba' }],
+          goto: 'c3_ruins'
+        }
+      ],
+      end: true
+    },
+    {
+      // ENCUENTRO DISEÑADO PARA DOS (§104): roles asimétricos + combos.
+      id: 'c3_ruins',
+      chapterId: 'chapter_03',
+      kind: 'encounter',
+      combatId: 'centinela_gemelo',
+      victoryGoto: 'c3_ruins_after',
+      defeatGoto: 'c3_ruins_defeat',
+      text: {
+        es: 'Las Ruinas de Veloran duermen bajo la luna cuando encuentras la cámara del oro... vacía, salvo por su guardián. Una estatua de dos rostros se despierta con un crujido de siglos: el CENTINELA GEMELO, tallado para detener ejércitos.\n\nSus dos escudos alternan: cuando la piedra resiste el acero, la magia muerde; cuando el cristal refleja la magia, solo el filo entra. Fue hecho para ser vencido por dos... pero tú estás aquí, y no piensas retroceder.',
+        en: 'The Ruins of Veloran sleep under the moon when you find the gold chamber... empty, save for its guardian. A two-faced statue wakes with a creak of centuries: the TWIN SENTINEL, carved to stop armies.\n\nIts two shields alternate: when stone resists steel, magic bites; when crystal reflects magic, only the edge cuts. It was made to be beaten by two... but you are here, and you will not step back.'
+      },
+      duoText: {
+        es: 'Las Ruinas de Veloran duermen bajo la luna cuando {partner} y tú encontráis la cámara del oro... vacía, salvo por su guardián. Una estatua de dos rostros se despierta: el CENTINELA GEMELO, tallado para detener ejércitos.\n\nDos rostros, dos escudos, dos debilidades. Fue hecho para enfrentarse a dos... y por primera vez en mil años, tiene delante exactamente a dos. Uno debe morder con acero cuando la piedra ceda; el otro, quemar con magia cuando el cristal se alce. Y cuando se agriete... vuestros COMBOS decidirán.',
+        en: 'The Ruins of Veloran sleep under the moon when you and {partner} find the gold chamber... empty, save for its guardian. A two-faced statue wakes: the TWIN SENTINEL, carved to stop armies.\n\nTwo faces, two shields, two weaknesses. It was made to face two... and for the first time in a thousand years, exactly two stand before it. One must bite with steel when the stone yields; the other, burn with magic when the crystal rises. And when it cracks... your COMBOS will decide.'
+      },
+      onEnter: [],
+      choices: [],
+      end: false
+    },
+    {
+      id: 'c3_ruins_after',
+      chapterId: 'chapter_03',
+      kind: 'narration',
+      text: {
+        es: 'El Centinela Gemelo cae de rodillas... y se inclina. No como quien es destruido: como quien SALUDA. De su pecho agrietado rueda una gema que late con luz propia: una Lágrima de la Diosa.\n\nEn la pared, tras el guardián, hay un fresco tallado hace mil años: dos figuras luchando espalda contra espalda contra una marea de sombras. Debajo, en lengua antigua: «Los que caen juntos, se levantan juntos.»\n\n✦ Fin del epílogo. El arco de Servan Vell continuará. ✦',
+        en: 'The Twin Sentinel falls to its knees... and bows. Not like something destroyed: like something SALUTING. From its cracked chest rolls a gem pulsing with its own light: a Goddess Tear.\n\nOn the wall behind the guardian, a fresco carved a thousand years ago: two figures fighting back to back against a tide of shadows. Beneath, in the ancient tongue: "Those who fall together, rise together."\n\n✦ End of the epilogue. The Servan Vell arc will continue. ✦'
+      },
+      onEnter: [
+        { kind: 'setFlag', key: 'defeated_twin_sentinel', value: true },
+        { kind: 'grantTitle', key: 'sentinel_bane' },
+        { kind: 'setFlag', key: 'read_veloran_fresco', value: true }
+      ],
       choices: [],
       end: true
+    },
+    {
+      id: 'c3_ruins_defeat',
+      chapterId: 'chapter_03',
+      kind: 'narration',
+      text: {
+        es: 'El doble golpe te arroja fuera de la cámara, y las puertas de piedra se cierran con un estruendo definitivo. No estás muert{a|o}: el Centinela no mata a quien no roba. Solo... descarta.\n\nEn el polvo, junto a tu mano, alguien talló hace siglos una advertencia pequeña: «Vuelve con otra mano que sostenga la tuya.»',
+        en: 'The double blow hurls you out of the chamber, and the stone doors close with a final boom. You are not dead: the Sentinel does not kill those who do not steal. It merely... discards.\n\nIn the dust, beside your hand, someone carved a small warning centuries ago: "Return with another hand to hold yours."'
+      },
+      onEnter: [
+        { kind: 'heal', amount: 999 },
+        { kind: 'setFlag', key: 'sentinel_rejected_you', value: true },
+        { kind: 'gainXp', amount: 15 }
+      ],
+      choices: [
+        {
+          id: 'c3_ruinsdefeat_retry',
+          text: { es: 'Reunir fuerzas y volver a intentarlo', en: 'Gather strength and try again' },
+          conditions: [],
+          visibleWhenLocked: false,
+          effects: [{ kind: 'setFlag', key: '_combat_done_c3_ruins', value: false }],
+          goto: 'c3_ruins'
+        }
+      ],
+      end: false
     }
   ]
 };

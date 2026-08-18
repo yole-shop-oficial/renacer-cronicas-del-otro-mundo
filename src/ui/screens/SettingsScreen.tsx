@@ -7,6 +7,8 @@ import { GameIcon, IconWave, IconSoul, IconGear, IconSpark, IconScroll } from '@
 import { isSoundOn, setSoundOn, isHapticsOn, setHapticsOn, sfx } from '@/services/audio';
 import { getDifficulty, setDifficulty, type Difficulty } from '@/combat/difficulty';
 import { downloadBackup, importSave } from '@/services/backup';
+import { createDemoSave, isDemoSave } from '@/services/demo';
+import { loadLatestGame } from '@/state/persistence';
 import { useGameStore } from '@/state/gameStore';
 import { saveGameLocally } from '@/state/persistence';
 
@@ -138,6 +140,38 @@ export function SettingsScreen() {
             <b className={isHapticsOn() ? 'text-ok' : 'text-bad'}>{isHapticsOn() ? t('settings.yes') : t('settings.no')}</b>
           </button>
         </div>
+      </div>
+
+      {/* MODO DEMO (§97) */}
+      <div className="card">
+        <h3 className="with-icon"><GameIcon name="star" size={18} className="ico-gold" /> {t('settings.demo')}</h3>
+        {isDemoSave(save) ? (
+          <>
+            <p className="hint-text">{t('settings.demoActive')}</p>
+            <button
+              className="btn-primary" style={{ width: '100%', marginTop: 8 }}
+              onClick={() => {
+                void (async () => {
+                  const real = await loadLatestGame();
+                  if (real) loadGame(real);
+                  else location.reload();
+                })();
+              }}
+            >
+              {t('settings.demoExit')}
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="hint-text">{t('settings.demoHint')}</p>
+            <button
+              className="btn-secondary" style={{ width: '100%', marginTop: 8 }}
+              onClick={() => loadGame(createDemoSave())}
+            >
+              {t('settings.demoStart')}
+            </button>
+          </>
+        )}
       </div>
 
       {/* BACKUP (§96) */}

@@ -9,6 +9,7 @@ import { StoryScreen } from './screens/StoryScreen';
 import { CharacterScreen } from './screens/CharacterScreen';
 import { SkillsScreen, RelationsScreen } from './screens/PanelsScreens';
 import { JournalScreen } from './screens/JournalScreen';
+import { isDemoSave } from '@/services/demo';
 import { InventoryScreen } from './screens/InventoryScreen';
 import { SkillTreeScreen } from './screens/SkillTreeScreen';
 import { WorldMapScreen } from './screens/WorldMapScreen';
@@ -66,6 +67,7 @@ export function App() {
           <span className={`status-dot ${dotClass}`} aria-hidden />
           {statusText}
         </span>
+        {isDemoSave(save) && <span className="demo-badge">{t('settings.demo')}</span>}
         {banner && <span className="status-banner">{t(banner)}</span>}
       </div>
 

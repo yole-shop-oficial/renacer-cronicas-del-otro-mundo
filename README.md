@@ -12,6 +12,12 @@ Tu personaje no está siguiendo una historia. **Está viviendo una.**
 
 La lectura fluye al combate sin romper la historia: *"Algo se movió entre los árboles..."* → la interfaz cambia → **BESTIA DE NIEBLA** con barra de HP, telegrafiados con **ventana de reacción** (Esquivar/Bloquear/Interrumpir), hechizos con canalización (Meteoro, 4 s), elementos que interactúan (rayo+empapado = electrocución), estados (quemadura, congelación, silencio...), **jefes con fases** y **combos cooperativos** (Fuego+Viento = Tornado de fuego). Pausa suave para leer. La derrota crea historia, no Game Over.
 
+## 🗿 Encuentro para dos: el Centinela Gemelo (§104)
+Epílogo del Capítulo 3 en las Ruinas de Veloran: un jefe **tallado para ser vencido por dos** — escudos alternantes (piedra teme magia, cristal teme acero), roles asimétricos, fase final de COMBOS. En solitario es un desafío brutal; en pareja, una danza.
+
+## 🧪 Modo de prueba (§97)
+En Ajustes: juega con una heroína veterana (nivel 6, Meteoro, oro, vínculos) para probar combate y sistemas **sin tocar tu partida real** — nada se guarda.
+
 ## 🎮 El juego
 
 - **Libro interactivo + RPG**: lees, decides, y el mundo **recuerda** cada decisión.

@@ -143,7 +143,91 @@ export const ENEMIES: EnemyDef[] = [
   }
 ];
 
+/**
+ * ENCUENTRO DISEÑADO PARA DOS (§104): el Centinela Gemelo.
+ * Mecánica asimétrica: alterna ESCUDO DE PIEDRA (resiste físico → toca
+ * magia) y ESCUDO DE ESPEJO (resiste magia → toca acero). Un jugador solo
+ * puede vencerlo, pero dos roles distintos lo funden — y los combos
+ * elementales (§67) rompen ambos escudos a la vez.
+ */
+export const TWIN_SENTINEL: EnemyDef = {
+  id: 'centinela_gemelo',
+  maxHp: 240,
+  weaknesses: ['lightning'],
+  resistances: ['physical'],
+  paceMs: 4600,
+  moves: [
+    {
+      id: 'cg_slam',
+      telegraph: { es: 'El centinela alza sus dos brazos de piedra a la vez...', en: 'The sentinel raises both stone arms at once...' },
+      impact: { es: 'El doble golpe sacude el suelo bajo tus pies.', en: 'The double blow shakes the ground beneath you.' },
+      element: 'earth',
+      power: 15,
+      windowMs: 3000,
+      counters: ['dodge', 'defend']
+    },
+    {
+      id: 'cg_beam',
+      telegraph: { es: 'Sus dos rostros giran hacia ti: un rayo gemelo se carga...', en: 'Both its faces turn to you: a twin beam charges...' },
+      impact: { es: 'La luz gemela te atraviesa.', en: 'The twin light pierces through you.' },
+      element: 'light',
+      power: 17,
+      windowMs: 3400,
+      counters: ['interrupt', 'counterspell'],
+      applies: { effect: 'blind', chance: 0.35, durationMs: 3500, power: 1 }
+    }
+  ],
+  phases: [
+    {
+      hpBelow: 0.66,
+      paceMs: 4200,
+      entryText: {
+        es: 'ESCUDO DE ESPEJO: la piedra se vuelve cristal. Ahora la magia rebota... y solo el acero muerde.',
+        en: 'MIRROR SHIELD: the stone turns to crystal. Now magic bounces... and only steel bites.'
+      },
+      moves: [
+        {
+          id: 'cg_reflect',
+          telegraph: { es: 'El cristal acumula la luz robada...', en: 'The crystal gathers the stolen light...' },
+          impact: { es: 'Tu propia magia vuelve contra ti.', en: 'Your own magic returns against you.' },
+          element: 'light',
+          power: 16,
+          windowMs: 3200,
+          counters: ['dodge', 'defend']
+        }
+      ]
+    },
+    {
+      hpBelow: 0.33,
+      paceMs: 3600,
+      entryText: {
+        es: 'El centinela se agrieta por la mitad: dos medios cuerpos luchan por separado. ¡Es el momento de los COMBOS!',
+        en: 'The sentinel cracks down the middle: two half-bodies fight separately. Now is the time for COMBOS!'
+      },
+      moves: [
+        {
+          id: 'cg_frenzy',
+          telegraph: { es: 'Ambas mitades atacan desde flancos opuestos...', en: 'Both halves attack from opposite flanks...' },
+          impact: { es: 'Los golpes llegan de dos direcciones a la vez.', en: 'Blows land from two directions at once.' },
+          element: 'physical',
+          power: 20,
+          windowMs: 2700,
+          counters: ['defend'],
+          applies: { effect: 'weaken', chance: 0.4, durationMs: 4000, power: 2 }
+        }
+      ]
+    }
+  ],
+  analyzeReveals: [
+    { es: 'Un guardián de Veloran hecho para detener EJÉRCITOS. Fue tallado para dos: dos rostros, dos escudos, dos debilidades.', en: 'A Veloran guardian built to stop ARMIES. It was carved for two: two faces, two shields, two weaknesses.' },
+    { es: 'Sus escudos alternan: la piedra teme a la magia, el cristal teme al acero. Dos manos distintas lo funden.', en: 'Its shields alternate: stone fears magic, crystal fears steel. Two different hands melt it down.' },
+    { es: 'Cuando se agriete en dos, los COMBOS elementales golpean ambas mitades a la vez.', en: 'When it cracks in two, elemental COMBOS strike both halves at once.' }
+  ],
+  rewards: { xp: 120, gold: 35, items: [{ itemId: 'goddess_tear', qty: 1 }] }
+};
+
 export function getEnemy(id: string): EnemyDef {
+  if (id === TWIN_SENTINEL.id) return TWIN_SENTINEL;
   const e = ENEMIES.find((e) => e.id === id);
   if (!e) throw new Error(`Enemigo desconocido: ${id}`);
   return e;
