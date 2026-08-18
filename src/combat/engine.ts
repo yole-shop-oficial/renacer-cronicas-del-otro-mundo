@@ -10,6 +10,7 @@ import type {
 } from './types';
 import { getEnemy } from '@/data/enemies';
 import { COMBO_RULES } from './combos';
+import { enemyDamageMult, reactionWindowMult } from './difficulty';
 
 /**
  * COMBAT ENGINE (§6-22) — reductor puro por ticks.
@@ -361,7 +362,7 @@ export function tick(
         // Barrera reduce daño
         const barrier = s.playerStatuses.find((st) => st.effect === 'barrier');
         const reduction = barrier ? barrier.power / 100 : 0;
-        const damage = Math.max(1, Math.round(move.power * (1 - reduction)));
+        const damage = Math.max(1, Math.round(move.power * enemyDamageMult() * (1 - reduction)));
         s.playerHp = Math.max(0, s.playerHp - damage);
         s.log.push({ text: move.impact, amount: -damage, tone: 'enemy', at: Date.now() });
         if (move.applies && rng() < move.applies.chance) {
@@ -375,7 +376,7 @@ export function tick(
     if (eacc >= paceMs && moves.length > 0) {
       (s as unknown as { _enemyAcc: number })._enemyAcc = 0;
       const move = moves[Math.floor(rng() * moves.length)];
-      s.incoming = { moveId: move.id, remainingMs: move.windowMs };
+      s.incoming = { moveId: move.id, remainingMs: Math.round(move.windowMs * reactionWindowMult()) };
       s.log.push({ text: move.telegraph, tone: 'enemy', at: Date.now() });
     }
   }

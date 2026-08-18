@@ -15,7 +15,7 @@ function makeCharacter(overrides: Partial<CharacterState> = {}): CharacterState 
     goddessId: 'aurelia',
     level: 1,
     xp: 0,
-    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {},
+    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {}, personality: {},
     stats: { strength: 3, intelligence: 10, agility: 5, vitality: 4, luck: 5, willpower: 6, charisma: 5 },
     currentHp: 100,
     currentMp: 50,

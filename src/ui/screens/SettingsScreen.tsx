@@ -3,7 +3,12 @@ import { getLocale, setLocale, t, type Locale } from '@/i18n';
 import { useAppStore } from '@/state/appStore';
 import { detectDevice, connectionType, loadPartnerSoul, type SoulProfile } from '@/services/souls';
 import { SoulScreen } from './SoulScreen';
-import { GameIcon, IconWave, IconSoul, IconGear } from '@/ui/icons';
+import { GameIcon, IconWave, IconSoul, IconGear, IconSpark, IconScroll } from '@/ui/icons';
+import { isSoundOn, setSoundOn, isHapticsOn, setHapticsOn, sfx } from '@/services/audio';
+import { getDifficulty, setDifficulty, type Difficulty } from '@/combat/difficulty';
+import { downloadBackup, importSave } from '@/services/backup';
+import { useGameStore } from '@/state/gameStore';
+import { saveGameLocally } from '@/state/persistence';
 
 /**
  * AJUSTES: idioma, conexión y sincronización entre los dos teléfonos
@@ -12,6 +17,10 @@ import { GameIcon, IconWave, IconSoul, IconGear } from '@/ui/icons';
 export function SettingsScreen() {
   const online = useAppStore((s) => s.online);
   const [, force] = useState(0);
+  const save = useGameStore((st) => st.save);
+  const loadGame = useGameStore((st) => st.loadGame);
+  const [importText, setImportText] = useState('');
+  const [importMsg, setImportMsg] = useState<string | null>(null);
   const [view, setView] = useState<'main' | 'souls'>('main');
   const [partner, setPartner] = useState<SoulProfile | null>(null);
   const device = detectDevice();
@@ -102,6 +111,72 @@ export function SettingsScreen() {
           <GameIcon name="arrow" size={18} />
         </span>
       </button>
+
+      {/* JUEGO: dificultad, sonido, haptics (§106-108) */}
+      <div className="card">
+        <h3 className="with-icon"><IconSpark size={18} className="ico-gold" /> {t('settings.game')}</h3>
+        <p className="hint-text">{t('settings.difficulty')}</p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+          {(['story', 'normal', 'hard'] as Difficulty[]).map((d) => (
+            <button
+              key={d}
+              className={getDifficulty() === d ? 'btn-primary' : 'btn-secondary'}
+              style={{ flex: 1, minHeight: 40, fontSize: 12.5 }}
+              onClick={() => { setDifficulty(d); force((n) => n + 1); }}
+            >
+              {t(`difficulty.${d}`)}
+            </button>
+          ))}
+        </div>
+        <div className="settings-rows" style={{ marginTop: 10 }}>
+          <button className="settings-row settings-toggle" onClick={() => { setSoundOn(!isSoundOn()); sfx('ui'); force((n) => n + 1); }}>
+            <span>{t('settings.sound')}</span>
+            <b className={isSoundOn() ? 'text-ok' : 'text-bad'}>{isSoundOn() ? t('settings.yes') : t('settings.no')}</b>
+          </button>
+          <button className="settings-row settings-toggle" onClick={() => { setHapticsOn(!isHapticsOn()); force((n) => n + 1); }}>
+            <span>{t('settings.haptics')}</span>
+            <b className={isHapticsOn() ? 'text-ok' : 'text-bad'}>{isHapticsOn() ? t('settings.yes') : t('settings.no')}</b>
+          </button>
+        </div>
+      </div>
+
+      {/* BACKUP (§96) */}
+      <div className="card">
+        <h3 className="with-icon"><IconScroll size={18} className="ico-arcane" /> {t('settings.backup')}</h3>
+        <p className="hint-text">{t('settings.backupHint')}</p>
+        {save && (
+          <button className="btn-primary" style={{ width: '100%', marginTop: 8 }} onClick={() => downloadBackup(save)}>
+            {t('settings.exportSave')}
+          </button>
+        )}
+        <textarea
+          className="soul-input" rows={2}
+          placeholder="RENACER1..."
+          value={importText}
+          onChange={(e) => setImportText(e.target.value)}
+          aria-label="RENACER1..."
+        />
+        <button
+          className="btn-secondary" style={{ width: '100%', marginTop: 6 }}
+          disabled={!importText.trim()}
+          onClick={() => {
+            void (async () => {
+              try {
+                const imported = importSave(importText);
+                await saveGameLocally(imported);
+                loadGame(imported);
+                setImportMsg(`✓ ${t('settings.importOk')}`);
+                setImportText('');
+              } catch {
+                setImportMsg(t('settings.importBad'));
+              }
+            })();
+          }}
+        >
+          {t('settings.importSave')}
+        </button>
+        {importMsg && <p className="hint-text" style={{ marginTop: 6 }}>{importMsg}</p>}
+      </div>
 
       {/* IDIOMA */}
       <div className="card">

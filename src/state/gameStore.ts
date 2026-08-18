@@ -131,7 +131,8 @@ function buildCharacter(opts: {
     equipment,
     gold: 0,
     titles: [],
-    reputation: {}
+    reputation: {},
+    personality: {}
   };
 }
 
@@ -364,7 +365,8 @@ function migrateSave(save: GameSave): GameSave {
       unspentPoints: c.unspentPoints ?? Math.max(0, (c.level - 1) * 10),
       skillPoints: c.skillPoints ?? Math.max(0, c.level - 1),
       treeNodes: c.treeNodes ?? [],
-      equipment: c.equipment ?? {}
+      equipment: c.equipment ?? {},
+      personality: c.personality ?? {}
     },
     schemaVersion: SCHEMA_VERSION
   };

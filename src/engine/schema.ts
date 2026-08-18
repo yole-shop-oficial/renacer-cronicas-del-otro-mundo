@@ -39,7 +39,8 @@ export const EffectSchema = z.object({
     'damage',
     'addNpcMemory',
     'grantTitle',
-    'changeReputation'
+    'changeReputation',
+    'changeTrait'
   ]),
   key: z.string().optional(),
   amount: z.number().optional(),

@@ -43,6 +43,11 @@ export const COMBAT_ACTIONS: CombatAction[] = [
   // ── Aventurero ──
   { id: 'improvise', kind: 'skill', element: 'physical', mpCost: 3, staminaCost: 7, cooldownMs: 6000, castMs: 0, basePower: 16 },
   { id: 'lucky_break', kind: 'skill', element: 'physical', mpCost: 5, staminaCost: 5, cooldownMs: 11000, castMs: 0, basePower: 12, applies: { effect: 'stun', chance: 0.3, durationMs: 2000, power: 1 }, interrupts: true },
+  // ── Acciones por PERSONALIDAD (§28): desbloqueadas por rasgos ──
+  { id: 'furia', kind: 'skill', element: 'physical', mpCost: 0, staminaCost: 16, cooldownMs: 18000, castMs: 0, basePower: 38, selfApplies: { effect: 'weaken', durationMs: 5000, power: 1 } },
+  { id: 'perfect_defense', kind: 'defend', element: 'physical', mpCost: 0, staminaCost: 10, cooldownMs: 15000, castMs: 0, basePower: 0, selfApplies: { effect: 'barrier', durationMs: 4000, power: 95 } },
+  { id: 'advanced_analysis', kind: 'analyze', element: 'physical', mpCost: 4, staminaCost: 0, cooldownMs: 6000, castMs: 0, basePower: 0 },
+  { id: 'spare_life', kind: 'skill', element: 'light', mpCost: 0, staminaCost: 8, cooldownMs: 30000, castMs: 0, basePower: 0 },
   // ── Reacciones contextuales (§64) ──
   { id: 'dodge', kind: 'dodge', element: 'physical', mpCost: 0, staminaCost: 8, cooldownMs: 2000, castMs: 0, basePower: 0, reactionOnly: true },
   { id: 'counterspell', kind: 'reaction', element: 'light', mpCost: 6, staminaCost: 0, cooldownMs: 6000, castMs: 0, basePower: 0, reactionOnly: true, interrupts: true }
@@ -52,10 +57,12 @@ export function actionById(id: string): CombatAction | undefined {
   return COMBAT_ACTIONS.find((a) => a.id === id);
 }
 
-/** Acciones disponibles para un personaje (universales + sus habilidades). */
-export function actionsForCharacter(skills: string[]): CombatAction[] {
+/** Acciones disponibles para un personaje (universales + habilidades + personalidad §28). */
+export function actionsForCharacter(skills: string[], personalityUnlocks: string[] = []): CombatAction[] {
   const universal = ['basic_attack', 'defend', 'analyze_combat', 'use_potion'];
   return COMBAT_ACTIONS.filter(
-    (a) => !a.reactionOnly && (universal.includes(a.id) || skills.includes(a.id))
+    (a) =>
+      !a.reactionOnly &&
+      (universal.includes(a.id) || skills.includes(a.id) || personalityUnlocks.includes(a.id))
   );
 }

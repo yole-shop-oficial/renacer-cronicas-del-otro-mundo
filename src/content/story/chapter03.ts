@@ -264,6 +264,7 @@ export const CHAPTER_03: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'ambition', amount: 2 },
             { kind: 'setFlag', key: 'c3_took_contract', value: true },
             { kind: 'gainXp', amount: 35 },
             { kind: 'changeReputation', key: 'ciudad_petra', amount: 10 }
@@ -276,6 +277,7 @@ export const CHAPTER_03: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 2 },
             { kind: 'setFlag', key: 'c3_saved_cub', value: true },
             { kind: 'gainXp', amount: 35 },
             { kind: 'changeReputation', key: 'aldea_brumal', amount: 10 }

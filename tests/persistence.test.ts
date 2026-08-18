@@ -12,7 +12,7 @@ function makeSave(gameId: string, updatedAt: number): GameSave {
     character: {
       id: 'c-1', templateId: 'liria', name: 'Test', gender: 'f', classId: 'mage', goddessId: 'aurelia',
       level: 1, xp: 0,
-    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {},
+    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {}, personality: {},
       stats: { strength: 3, intelligence: 10, agility: 5, vitality: 4, luck: 5, willpower: 6, charisma: 5 },
       currentHp: 90, currentMp: 80, skills: ['analyze'], inventory: [], gold: 0, titles: [], reputation: {}
     },

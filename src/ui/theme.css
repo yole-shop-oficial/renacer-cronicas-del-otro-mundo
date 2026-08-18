@@ -1302,3 +1302,27 @@ body {
 .link-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(127,201,143,0.8); }
 .link-dot.yellow { background: var(--gold); animation: pulse 1s infinite; }
 .link-connecting { text-align: center; animation: pulse 1.4s infinite; }
+
+/* ── DIARIO, RECUERDOS, RUMORES, PERSONALIDAD ── */
+.away-card {
+  border-color: rgba(212,169,78,0.55);
+  background: linear-gradient(150deg, rgba(212,169,78,0.1), var(--bg-card));
+  animation: riseIn 0.35s ease;
+}
+.memory-card { display: flex; gap: 12px; align-items: flex-start; }
+.memory-icon {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, rgba(212,169,78,0.25), rgba(139,111,216,0.15));
+  border: 1px solid rgba(212,169,78,0.45); color: var(--gold-soft);
+}
+.rumor-card.rumor-true { border-color: rgba(127,201,143,0.5); }
+.rumor-card.rumor-false { border-color: rgba(216,111,111,0.5); }
+.rumor-card.rumor-partial { border-color: rgba(224,169,78,0.5); }
+.journal-decision { padding: 10px 14px; }
+.trait-bar {
+  flex: 1; height: 8px; border-radius: 5px; margin: 0 10px;
+  background: rgba(255,255,255,0.08); overflow: hidden;
+}
+.trait-bar > div { height: 100%; background: linear-gradient(90deg, var(--arcane), var(--pink)); }
+.settings-toggle { cursor: pointer; border: none; width: 100%; font-family: var(--font-ui); font-size: 13.5px; color: var(--text); text-align: left; }

@@ -83,6 +83,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'loyalty', amount: 1 },
             { kind: 'changeRelationship', target: 'marta', axis: 'trust', amount: 15 },
             { kind: 'addNpcMemory', target: 'marta', value: 'player_told_truth_about_rebirth' }
           ],
@@ -94,6 +95,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'distrust', amount: 1 },
             { kind: 'changeRelationship', target: 'marta', axis: 'trust', amount: 5 },
             { kind: 'addNpcMemory', target: 'marta', value: 'player_hid_origin' }
           ],
@@ -134,7 +136,8 @@ export const CHAPTER_01: Chapter = {
           text: { es: '«¿Quién es ese capitán Bren?»', en: '"Who is this Captain Bren?"' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [{ kind: 'setFlag', key: 'asked_about_bren', value: true }, { kind: 'gainXp', amount: 5 }],
+          effects: [
+            { kind: 'changeTrait', key: 'curiosity', amount: 1 },{ kind: 'setFlag', key: 'asked_about_bren', value: true }, { kind: 'gainXp', amount: 5 }],
           goto: 'c1_03b_bren'
         },
         {
@@ -404,6 +407,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 1 },
             { kind: 'changeRelationship', target: 'pip', axis: 'trust', amount: 15 },
             { kind: 'addNpcMemory', target: 'pip', value: 'player_believed_pip' },
             { kind: 'gainXp', amount: 10 }
@@ -416,6 +420,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'distrust', amount: 1 },
             { kind: 'changeRelationship', target: 'pip', axis: 'trust', amount: -5 },
             { kind: 'addNpcMemory', target: 'pip', value: 'player_doubted_pip' }
           ],
@@ -721,6 +726,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'courage', amount: 1 },
             { kind: 'setFlag', key: 'pip_companion', value: true },
             { kind: 'changeRelationship', target: 'pip', axis: 'friendship', amount: 15 },
             { kind: 'changeRelationship', target: 'pip', axis: 'trust', amount: 10 },
@@ -735,6 +741,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'prudence', amount: 1 },
             { kind: 'setFlag', key: 'went_alone', value: true },
             { kind: 'changeRelationship', target: 'pip', axis: 'respect', amount: 10 },
             { kind: 'addNpcMemory', target: 'pip', value: 'player_protected_pip' }
@@ -803,6 +810,7 @@ export const CHAPTER_01: Chapter = {
           visibleWhenLocked: true,
           lockedHint: { es: 'Requiere Analizar', en: 'Requires Analyze' },
           effects: [
+            { kind: 'changeTrait', key: 'curiosity', amount: 1 },
             { kind: 'setFlag', key: 'knows_creature_wounded', value: true },
             { kind: 'gainXp', amount: 10 }
           ],
@@ -825,7 +833,8 @@ export const CHAPTER_01: Chapter = {
           text: { es: 'Atacar antes de que reaccione', en: 'Attack before it reacts' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [{ kind: 'setFlag', key: 'attacked_mist_creature', value: true }],
+          effects: [
+            { kind: 'changeTrait', key: 'courage', amount: 1 },{ kind: 'setFlag', key: 'attacked_mist_creature', value: true }],
           goto: 'c1_06_attacked'
         },
         {
@@ -833,7 +842,8 @@ export const CHAPTER_01: Chapter = {
           text: { es: 'Hablarle con voz suave', en: 'Speak to it softly' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 1 },],
           goto: 'c1_06_talked'
         },
         {
@@ -841,7 +851,8 @@ export const CHAPTER_01: Chapter = {
           text: { es: 'Retroceder lentamente', en: 'Back away slowly' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'prudence', amount: 1 },],
           goto: 'c1_06_fled'
         }
       ],
@@ -899,6 +910,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 2 },
             { kind: 'setFlag', key: 'freed_mist_creature', value: true },
             { kind: 'gainXp', amount: 25 },
             { kind: 'addItem', key: 'moonlit_mushroom', amount: 1 },
@@ -934,6 +946,7 @@ export const CHAPTER_01: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 2 },
             { kind: 'setFlag', key: 'freed_mist_creature', value: true },
             { kind: 'gainXp', amount: 25 },
             { kind: 'addItem', key: 'moonlit_mushroom', amount: 1 },

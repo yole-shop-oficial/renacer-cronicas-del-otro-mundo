@@ -71,7 +71,8 @@ export const CHAPTER_02: Chapter = {
           text: { es: '«¿Y tú quién eres, Lu? Cuéntame de ti.»', en: '"And who are you, Lu? Tell me about yourself."' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'curiosity', amount: 1 },],
           goto: 'c2_lu_story'
         },
         {
@@ -210,7 +211,8 @@ export const CHAPTER_02: Chapter = {
             { kind: 'flag', key: 'letter_delivered', op: 'not' }
           ],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'curiosity', amount: 1 },],
           goto: 'c2_letter'
         },
         {
@@ -433,7 +435,8 @@ export const CHAPTER_02: Chapter = {
             { kind: 'flag', key: 'letter_delivered', op: 'not' }
           ],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'loyalty', amount: 2 },],
           goto: 'c2_vela_admit'
         },
         {
@@ -444,7 +447,8 @@ export const CHAPTER_02: Chapter = {
             { kind: 'flag', key: 'letter_delivered', op: 'not' }
           ],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'distrust', amount: 1 },],
           goto: 'c2_vela_lie'
         },
         {
@@ -699,6 +703,7 @@ export const CHAPTER_02: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 2 },
             { kind: 'setFlag', key: 'coop_c2_freed_cubs', value: true },
             { kind: 'gainXp', amount: 30 },
             { kind: 'grantTitle', key: 'cub_guardian' },
@@ -713,6 +718,7 @@ export const CHAPTER_02: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'ambition', amount: 2 },
             { kind: 'setFlag', key: 'coop_c2_followed_leader', value: true },
             { kind: 'gainXp', amount: 30 },
             { kind: 'setFlag', key: 'knows_serpent_buyer', value: true },

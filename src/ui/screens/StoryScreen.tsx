@@ -7,6 +7,7 @@ import { useCoopStore } from '@/state/coopStore';
 import { DiceOfFate } from '@/ui/DiceOfFate';
 import { findSpecialDiscord } from '@/coop/specialDiscords';
 import { CombatScreen } from './CombatScreen';
+import { sfx } from '@/services/audio';
 import { getEnemy } from '@/data/enemies';
 import { applyEffects } from '@/engine/effects';
 import { saveGameLocally } from '@/state/persistence';
@@ -92,6 +93,7 @@ export function StoryScreen() {
   async function handleChoice(choiceId: string) {
     const choice = available.find((c) => c.id === choiceId);
     if (!choice || !node) return;
+    sfx('page');
     if (duoMode) {
       // Modo dúo: la elección es una PROPUESTA; se negocia con el alma compañera.
       pickChoice(node.id, choiceId);

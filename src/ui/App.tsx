@@ -7,7 +7,8 @@ import { LoadingScreen } from './screens/LoadingScreen';
 import { CharacterCreator } from './screens/CharacterCreator';
 import { StoryScreen } from './screens/StoryScreen';
 import { CharacterScreen } from './screens/CharacterScreen';
-import { SkillsScreen, QuestsScreen, RelationsScreen } from './screens/PanelsScreens';
+import { SkillsScreen, RelationsScreen } from './screens/PanelsScreens';
+import { JournalScreen } from './screens/JournalScreen';
 import { InventoryScreen } from './screens/InventoryScreen';
 import { SkillTreeScreen } from './screens/SkillTreeScreen';
 import { WorldMapScreen } from './screens/WorldMapScreen';
@@ -15,13 +16,13 @@ import { SettingsScreen } from './screens/SettingsScreen';
 import { LifeTreeButton } from './LifeTreeButton';
 import { GameIcon, type IconName } from './icons';
 
-type Tab = 'story' | 'character' | 'inventory' | 'quests' | 'world' | 'settings';
+type Tab = 'story' | 'character' | 'inventory' | 'journal' | 'world' | 'settings';
 
 const TABS: { id: Tab; icon: IconName; label: string }[] = [
   { id: 'story', icon: 'book', label: 'nav.story' },
   { id: 'character', icon: 'helm', label: 'nav.character' },
   { id: 'inventory', icon: 'bag', label: 'nav.inventory' },
-  { id: 'quests', icon: 'scroll', label: 'nav.quests' },
+  { id: 'journal', icon: 'scroll', label: 'nav.journal' },
   { id: 'world', icon: 'map', label: 'nav.world' },
   { id: 'settings', icon: 'gear', label: 'nav.settings' }
 ];
@@ -93,7 +94,7 @@ export function App() {
             </>
           )}
           {tab === 'inventory' && <InventoryScreen />}
-          {tab === 'quests' && <QuestsScreen />}
+          {tab === 'journal' && <JournalScreen />}
           {tab === 'world' && <WorldMapScreen />}
           {tab === 'settings' && <SettingsScreen />}
 

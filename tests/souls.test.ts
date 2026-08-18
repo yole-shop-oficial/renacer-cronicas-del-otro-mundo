@@ -10,7 +10,7 @@ function makeSave(): GameSave {
     character: {
       id: 'soul-abc', templateId: 'liria', name: 'Alba', gender: 'f',
       classId: 'mage', goddessId: 'aurelia', level: 4, xp: 120,
-      unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {},
+      unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {}, personality: {},
       stats: { strength: 3, intelligence: 12, agility: 5, vitality: 4, luck: 5, willpower: 8, charisma: 5 },
       currentHp: 90, currentMp: 70, skills: ['analyze'],
       inventory: [], gold: 25, titles: ['friend_of_the_mist'], reputation: {}

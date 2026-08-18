@@ -166,6 +166,8 @@ export interface CharacterState {
   gold: number;
   titles: string[];
   reputation: Record<string, number>;
+  /** Rasgos de personalidad (§27): las decisiones los moldean. */
+  personality: import('./personality').Personality;
 }
 
 /** Estado vivo del mundo: flags globales + memoria de decisiones (§64-65). */

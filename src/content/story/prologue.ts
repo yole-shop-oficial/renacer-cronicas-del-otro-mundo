@@ -25,7 +25,8 @@ export const PROLOGUE: Chapter = {
           text: { es: 'Girar la fotografía', en: 'Turn the photograph over' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [{ kind: 'setFlag', key: 'looked_at_photo', value: true }],
+          effects: [
+            { kind: 'changeTrait', key: 'compassion', amount: 1 },{ kind: 'setFlag', key: 'looked_at_photo', value: true }],
           goto: 'pro_02_photo'
         },
         {
@@ -126,7 +127,8 @@ export const PROLOGUE: Chapter = {
           text: { es: '«¿Quién eres?»', en: '"Who are you?"' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [],
+          effects: [
+            { kind: 'changeTrait', key: 'curiosity', amount: 1 },],
           goto: 'pro_05'
         },
         {
@@ -187,6 +189,7 @@ export const PROLOGUE: Chapter = {
           conditions: [],
           visibleWhenLocked: false,
           effects: [
+            { kind: 'changeTrait', key: 'courage', amount: 1 },
             { kind: 'setFlag', key: 'accepted_rebirth', value: true },
             { kind: 'gainXp', amount: 10 }
           ],
@@ -197,7 +200,8 @@ export const PROLOGUE: Chapter = {
           text: { es: '«¿Y si vuelvo a fallar?»', en: '"What if I fail again?"' },
           conditions: [],
           visibleWhenLocked: false,
-          effects: [{ kind: 'setFlag', key: 'confessed_doubt', value: true }],
+          effects: [
+            { kind: 'changeTrait', key: 'prudence', amount: 1 },{ kind: 'setFlag', key: 'confessed_doubt', value: true }],
           goto: 'pro_06b'
         }
       ],

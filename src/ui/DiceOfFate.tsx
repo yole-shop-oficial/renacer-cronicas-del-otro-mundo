@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { t } from '@/i18n';
 import { useCoopStore } from '@/state/coopStore';
 import { useGameStore } from '@/state/gameStore';
+import { sfx } from '@/services/audio';
 
 /**
  * LOS DADOS DE LOS DIOSES DEL DESTINO — animación dramática.
@@ -73,7 +74,7 @@ export function DiceOfFate() {
             <span className="dice-soul-name">{myName}</span>
             <DivineD20 spinning={rolling && negotiation.myRoll === undefined} value={negotiation.myRoll} />
             {rolling && negotiation.myRoll === undefined && (
-              <button className="btn-primary dice-roll-btn" onClick={rollMyDice}>
+              <button className="btn-primary dice-roll-btn" onClick={() => { sfx('dice'); rollMyDice(); }}>
                 {t('dice.roll')}
               </button>
             )}

@@ -1,6 +1,7 @@
 import type { Effect } from './schema';
 import type { CharacterState, WorldState, RelationshipAxis, PrimaryStat, RelationshipBlock } from '@/domain/types';
 import { applyXp, deriveStats } from '@/domain/stats';
+import { addTrait, type TraitId } from '@/domain/personality';
 
 export interface EffectResult {
   character: CharacterState;
@@ -150,6 +151,12 @@ export function applyEffect(effect: Effect, character: CharacterState, world: Wo
     case 'changeReputation': {
       const target = effect.key ?? 'global';
       c.reputation[target] = (c.reputation[target] ?? 0) + (effect.amount ?? 0);
+      break;
+    }
+    case 'changeTrait': {
+      // §27: las acciones moldean la personalidad.
+      c.personality = addTrait(c.personality, effect.key as TraitId, effect.amount ?? 1);
+      log.push({ key: 'log.traitChanged', params: { trait: effect.key ?? '', amount: effect.amount ?? 1 } });
       break;
     }
   }

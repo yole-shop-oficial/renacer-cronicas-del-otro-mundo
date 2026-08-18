@@ -8,7 +8,7 @@ function makeCharacter(overrides: Partial<CharacterState> = {}): CharacterState 
   return {
     id: 'c', templateId: 'thessa', name: 'Alba', gender: 'f', classId: 'knight', goddessId: 'aurelia',
     level: 4, xp: 0,
-    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {},
+    unspentPoints: 0, skillPoints: 0, treeNodes: [], equipment: {}, personality: {},
     stats: { strength: 8, intelligence: 6, agility: 7, vitality: 9, luck: 5, willpower: 8, charisma: 7 },
     currentHp: 150, currentMp: 60,
     skills: ['shield_guard', 'persuasion', 'analyze'],

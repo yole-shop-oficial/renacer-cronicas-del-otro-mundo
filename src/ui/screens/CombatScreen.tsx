@@ -9,6 +9,8 @@ import { getEnemy } from '@/data/enemies';
 import { effectiveDerived } from '@/domain/power';
 import { NPCS } from '@/data/world';
 import { COMBO_WINDOW_MS } from '@/combat/combos';
+import { TRAIT_COMBAT_UNLOCKS, traitValue } from '@/domain/personality';
+import { sfx } from '@/services/audio';
 import { GameIcon, IconSword, IconShield, IconRune, IconPotion, IconMystery, IconHeart, IconDrop, IconSpark } from '@/ui/icons';
 
 /**
@@ -40,7 +42,12 @@ export function CombatScreen({ combatId, onEnd }: Props) {
 
   const attackStat = derived ? Math.round(derived.attack / 2) : 5;
   const magicStat = derived ? Math.round(derived.magicPower / 2) : 5;
-  const allActions = save ? actionsForCharacter(save.character.skills) : [];
+  const personalityUnlocks = save
+    ? TRAIT_COMBAT_UNLOCKS.filter(
+        (u) => traitValue(save.character.personality, u.trait) >= u.min
+      ).map((u) => u.actionId)
+    : [];
+  const allActions = save ? actionsForCharacter(save.character.skills, personalityUnlocks) : [];
 
   // Inicializar combate
   useEffect(() => {
@@ -76,9 +83,18 @@ export function CombatScreen({ combatId, onEnd }: Props) {
     if (!combat || endedRef.current) return;
     if (combat.phase === 'victory' || combat.phase === 'defeat' || combat.phase === 'fled') {
       endedRef.current = true;
+      sfx(combat.phase === 'victory' ? 'victory' : 'defeat');
       setTimeout(() => onEnd(combat.phase as 'victory' | 'defeat' | 'fled'), 1400);
     }
   }, [combat, onEnd]);
+
+  // Sonido de alerta al abrirse una ventana de reacción (§64)
+  const hadIncoming = useRef(false);
+  useEffect(() => {
+    const has = Boolean(combat?.incoming);
+    if (has && !hadIncoming.current) sfx('alert');
+    hadIncoming.current = has;
+  }, [combat?.incoming]);
 
   // Autoscroll del registro
   useEffect(() => {
@@ -98,6 +114,24 @@ export function CombatScreen({ combatId, onEnd }: Props) {
   const locale = getLocale();
 
   function doAction(action: CombatAction) {
+    // §28: Salvar — perdonar la vida termina el combate si el enemigo está débil.
+    if (action.id === 'spare_life') {
+      setCombat((prev) => {
+        if (!prev || prev.enemyHp > prev.enemyMaxHp * 0.3) return prev;
+        const s2 = structuredClone(prev);
+        s2.phase = 'victory';
+        s2.log.push({
+          text: {
+            es: 'Bajas el arma. La criatura te mira... y comprende. Hay victorias que no necesitan sangre.',
+            en: 'You lower your weapon. The creature looks at you... and understands. Some victories need no blood.'
+          },
+          tone: 'combo',
+          at: Date.now()
+        });
+        return s2;
+      });
+      return;
+    }
     setCombat((prev) => {
       if (!prev) return prev;
       let { state } = act(prev, action, attackStat, magicStat);
@@ -110,10 +144,12 @@ export function CombatScreen({ combatId, onEnd }: Props) {
       }
       return state;
     });
+    sfx(action.kind === 'spell' ? 'spell' : action.kind === 'attack' || action.kind === 'skill' ? 'hit' : 'ui');
     if (inGroup) sendCombatAction(action.id, action.element);
   }
 
   function doReaction(reaction: 'defend' | 'dodge' | 'interrupt' | 'counterspell') {
+    sfx('ui');
     setCombat((prev) => (prev ? react(prev, reaction).state : prev));
   }
 
