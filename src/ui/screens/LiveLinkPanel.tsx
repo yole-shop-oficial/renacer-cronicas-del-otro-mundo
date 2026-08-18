@@ -22,7 +22,7 @@ import { IconWave, IconLink, IconSoul, IconBond } from '@/ui/icons';
 export function LiveLinkPanel() {
   const {
     linkState, partner, inGroup, separated,
-    anchorCode, joinAnswer,
+    anchorCode, joinAnswer, playerBond,
     startHosting, joinWithAnchor, completeWithAnswer, disconnect,
     leaveGroup, reunite
   } = useCoopStore();
@@ -179,6 +179,26 @@ export function LiveLinkPanel() {
             {inGroup ? t('link.inGroup') : separated ? t('link.separated') : t('link.notGrouped')}
           </span>
         </div>
+        {/* §48: el vínculo entre las dos almas jugadoras */}
+        {(playerBond.trust > 0 || playerBond.cooperation > 0 || playerBond.rivalry > 0 || playerBond.complicity > 0) && (
+          <div className="player-bond">
+            <span className="player-bond-title">{t('pbond.title')}</span>
+            <div className="stat-grid">
+              {playerBond.trust > 0 && (
+                <div className="stat-row"><span>{t('pbond.trust')}</span><b>+{playerBond.trust}</b></div>
+              )}
+              {playerBond.cooperation > 0 && (
+                <div className="stat-row"><span>{t('pbond.cooperation')}</span><b>+{playerBond.cooperation}</b></div>
+              )}
+              {playerBond.complicity > 0 && (
+                <div className="stat-row"><span>{t('pbond.complicity')}</span><b>+{playerBond.complicity}</b></div>
+              )}
+              {playerBond.rivalry > 0 && (
+                <div className="stat-row"><span>{t('pbond.rivalry')}</span><b>+{playerBond.rivalry}</b></div>
+              )}
+            </div>
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
           {inGroup ? (
             <button className="btn-secondary" onClick={leaveGroup}>

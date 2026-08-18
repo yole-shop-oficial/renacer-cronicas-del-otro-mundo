@@ -130,6 +130,24 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
+        <p className="hint-text" style={{ marginTop: 10 }}>{t('settings.textSize')}</p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+          {(['normal', 'large', 'xlarge'] as const).map((sc) => (
+            <button
+              key={sc}
+              className={(document.documentElement.dataset.textscale ?? 'normal') === sc ? 'btn-primary' : 'btn-secondary'}
+              style={{ flex: 1, minHeight: 40, fontSize: sc === 'normal' ? 13 : sc === 'large' ? 15 : 17 }}
+              onClick={() => {
+                if (sc === 'normal') delete document.documentElement.dataset.textscale;
+                else document.documentElement.dataset.textscale = sc;
+                localStorage.setItem('textscale', sc);
+                force((n) => n + 1);
+              }}
+            >
+              Aa
+            </button>
+          ))}
+        </div>
         <div className="settings-rows" style={{ marginTop: 10 }}>
           <button className="settings-row settings-toggle" onClick={() => { setSoundOn(!isSoundOn()); sfx('ui'); force((n) => n + 1); }}>
             <span>{t('settings.sound')}</span>

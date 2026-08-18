@@ -24,6 +24,8 @@ export type CoopMessage =
   | { t: 'node'; nodeId: string }
   | { t: 'region'; regionId: string }
   | { t: 'combat_action'; actionId: string; element: string }
+  | { t: 'combat_vitals'; hp: number; maxHp: number; status: string[] }
+  | { t: 'bond_pulse'; kind: 'agreement' | 'discord' | 'yield' | 'combo' | 'reunion' }
   | { t: 'leave_group' }
   | { t: 'reunite' }
   | { t: 'ping' };

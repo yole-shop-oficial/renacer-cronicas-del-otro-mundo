@@ -33,6 +33,10 @@ export function CombatScreen({ combatId, onEnd }: Props) {
   const inGroup = useCoopStore((s) => s.inGroup);
   const lastPartnerAction = useCoopStore((s) => s.lastCombatAction);
   const sendCombatAction = useCoopStore((s) => s.sendCombatAction);
+  const sendCombatVitals = useCoopStore((s) => s.sendCombatVitals);
+  const partnerVitals = useCoopStore((s) => s.partnerVitals);
+  const linkState = useCoopStore((s) => s.linkState);
+  const pulseBond = useCoopStore((s) => s.pulseBond);
 
   const derived = save ? effectiveDerived(save.character, NPCS, save.world) : null;
   const [combat, setCombat] = useState<CombatState | null>(null);
@@ -97,6 +101,33 @@ export function CombatScreen({ combatId, onEnd }: Props) {
     hadIncoming.current = has;
   }, [combat?.incoming]);
 
+  // §66: compartir mi estado vital con el compañero (HP + estados).
+  useEffect(() => {
+    if (!inGroup || !combat) return;
+    sendCombatVitals(
+      Math.ceil(combat.playerHp),
+      combat.playerMaxHp,
+      combat.playerStatuses.map((st) => st.effect)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [combat?.playerHp, combat?.playerStatuses.length, inGroup]);
+
+  // §70: si el enlace se pierde en combate, pausa breve automática y aviso.
+  const [linkPaused, setLinkPaused] = useState(false);
+  useEffect(() => {
+    if (inGroup && linkState === 'lost' && combat?.phase === 'active') {
+      setLinkPaused(true);
+      setPaused(true);
+      const timer = setTimeout(() => {
+        // §70: tras la pausa breve, el otro puede continuar en solitario.
+        setLinkPaused(false);
+        setPaused(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkState]);
+
   // Autoscroll del registro
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: 'smooth' });
@@ -141,7 +172,11 @@ export function CombatScreen({ combatId, onEnd }: Props) {
       if (inGroup && pe && Date.now() - pe.at < COMBO_WINDOW_MS && action.basePower > 0) {
         const r = tryCoopCombo(state, action.element, pe.element as never);
         state = r.state;
-        if (r.comboId) partnerElementRef.current = null;
+        if (r.comboId) {
+          partnerElementRef.current = null;
+          sfx('combo');
+          pulseBond('combo');
+        }
       }
       return state;
     });
@@ -230,12 +265,29 @@ export function CombatScreen({ combatId, onEnd }: Props) {
         </div>
       )}
 
-      {/* ── COMPAÑERO (§66) ── */}
+      {/* ── COMPAÑERO (§66): HP, estados y acción actual ── */}
       {inGroup && partner && (
         <div className="combat-partner">
           <GameIcon name="soul" size={14} className="ico-gold" />
           <span>{partner.name}</span>
-          {lastPartnerAction && <em>· {t(`skill.${lastPartnerAction.actionId}`) || lastPartnerAction.actionId}</em>}
+          {partnerVitals && (
+            <span className="partner-vitals">
+              <span className="combat-hpbar partner-hp" role="progressbar"
+                aria-valuenow={partnerVitals.hp} aria-valuemax={partnerVitals.maxHp}>
+                <span style={{ width: `${Math.max(0, (partnerVitals.hp / partnerVitals.maxHp) * 100)}%` }} />
+              </span>
+              <b>{partnerVitals.hp}</b>
+            </span>
+          )}
+          {partnerVitals?.status.slice(0, 2).map((st) => (
+            <span key={st} className={`status-chip st-${st}`}>{t(`status.${st}`)}</span>
+          ))}
+          {lastPartnerAction && <em>· {t(`combat.action.${lastPartnerAction.actionId}`)}</em>}
+        </div>
+      )}
+      {linkPaused && (
+        <div className="combat-linklost" role="alert">
+          {t('combat.partnerLost')}
         </div>
       )}
 

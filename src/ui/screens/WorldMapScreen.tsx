@@ -34,6 +34,7 @@ export function WorldMapScreen() {
   const save = useGameStore((s) => s.save);
   const performPoiAction = useGameStore((s) => s.performPoiAction);
   const [openRegion, setOpenRegion] = useState<string | null>(null);
+  const [listView, setListView] = useState(localStorage.getItem('map_view') === 'list');
   const [openPoi, setOpenPoi] = useState<PoiDef | null>(null);
   const [partner, setPartner] = useState<SoulProfile | null>(null);
   const livePartner = useCoopStore((s) => s.partner);
@@ -173,7 +174,19 @@ export function WorldMapScreen() {
   // ── Vista general de regiones ──
   return (
     <div className="panel">
-      <h2 className="section-title">{t('nav.world')}</h2>
+      <div className="map-head-row">
+        <h2 className="section-title">{t('nav.world')}</h2>
+        <button
+          className="btn-secondary map-view-toggle"
+          onClick={() => {
+            const next = !listView;
+            setListView(next);
+            localStorage.setItem('map_view', next ? 'list' : 'map');
+          }}
+        >
+          {listView ? t('map.viewMap') : t('map.viewList')}
+        </button>
+      </div>
       <p className="hint-text">{t('map.hint')}</p>
       {separated && partnerRegion && partnerRegion === currentRegionId && (
         <button className="card reunion-banner" onClick={() => setOpenRegion(currentRegionId)}>
@@ -181,6 +194,33 @@ export function WorldMapScreen() {
           <span>{t('reunion.nearby', { name: partnerName ?? '' })}</span>
         </button>
       )}
+      {listView ? (
+        <div className="region-list">
+          {REGIONS.map((r) => {
+            const discovered = discoveredRegions.includes(r.id);
+            const isHere = r.id === currentRegionId;
+            return (
+              <button
+                key={r.id}
+                className={`region-list-row ${isHere ? 'current' : ''} ${discovered ? '' : 'undiscovered'}`}
+                disabled={!discovered}
+                onClick={() => setOpenRegion(r.id)}
+              >
+                <GameIcon name={discovered ? REGION_ICON[r.kind] : 'mystery'} size={20} />
+                <span className="region-list-name">
+                  {discovered ? t(`region.${r.id}`) : t('region.unknown')}
+                </span>
+                {isHere && <span className="region-tile-here">{t('map.youAreHere')}</span>}
+                {discovered && (
+                  <span className="region-list-pois">
+                    <IconPoi size={12} /> {poisForRegion(r.id).length}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
       <div className="region-grid2">
         {REGIONS.map((r) => {
           const discovered = discoveredRegions.includes(r.id);
@@ -214,6 +254,7 @@ export function WorldMapScreen() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

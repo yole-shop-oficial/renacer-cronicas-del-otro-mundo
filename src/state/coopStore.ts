@@ -43,6 +43,10 @@ interface CoopState {
   negotiation: NegotiationState | null;
   /** Última acción de combate del compañero (para combos §67). */
   lastCombatAction: { actionId: string; element: string; at: number } | null;
+  /** Estado vital del compañero en combate (§66). */
+  partnerVitals: { hp: number; maxHp: number; status: string[] } | null;
+  /** VÍNCULO ENTRE JUGADORES (§48): acumulado local de la relación. */
+  playerBond: { trust: number; cooperation: number; rivalry: number; complicity: number };
   /** Animación de dados activa. */
   showDice: boolean;
   anchorCode: string | null;
@@ -61,6 +65,9 @@ interface CoopState {
   acceptFate: () => Promise<void>;
   applyResolved: () => Promise<void>;
   sendCombatAction: (actionId: string, element: string) => void;
+  sendCombatVitals: (hp: number, maxHp: number, status: string[]) => void;
+  /** Registra un pulso de vínculo (acuerdos, discordias, combos...). */
+  pulseBond: (kind: 'agreement' | 'discord' | 'yield' | 'combo' | 'reunion') => void;
   leaveGroup: () => void;
   reunite: () => void;
   clearNegotiation: () => void;
@@ -82,6 +89,18 @@ function sendHello(): void {
       regionId: save.world.currentRegionId
     }
   });
+}
+
+function loadBond() {
+  try {
+    const raw = localStorage.getItem('player_bond');
+    if (raw) return JSON.parse(raw) as { trust: number; cooperation: number; rivalry: number; complicity: number };
+  } catch { /* corrupto */ }
+  return { trust: 0, cooperation: 0, rivalry: 0, complicity: 0 };
+}
+
+function saveBond(b: { trust: number; cooperation: number; rivalry: number; complicity: number }) {
+  try { localStorage.setItem('player_bond', JSON.stringify(b)); } catch { /* lleno */ }
 }
 
 export const useCoopStore = create<CoopState>((set, get) => {
@@ -143,6 +162,12 @@ export const useCoopStore = create<CoopState>((set, get) => {
       case 'combat_action':
         set({ lastCombatAction: { actionId: msg.actionId, element: msg.element, at: Date.now() } });
         break;
+      case 'combat_vitals':
+        set({ partnerVitals: { hp: msg.hp, maxHp: msg.maxHp, status: msg.status } });
+        break;
+      case 'bond_pulse':
+        get().pulseBond(msg.kind);
+        break;
       case 'leave_group':
         set({ inGroup: false });
         break;
@@ -170,6 +195,8 @@ export const useCoopStore = create<CoopState>((set, get) => {
     separated: false,
     negotiation: null,
     lastCombatAction: null,
+    partnerVitals: null,
+    playerBond: loadBond(),
     showDice: false,
     anchorCode: null,
     joinAnswer: null,
@@ -199,7 +226,13 @@ export const useCoopStore = create<CoopState>((set, get) => {
       const next = reduceNegotiation(neg, { type: 'my_pick', choiceId });
       set({ negotiation: next });
       coopLink.send({ t: 'pick', nodeId, choiceId });
-      if (next.phase === 'agreed') void get().applyResolved();
+      if (next.phase === 'agreed') {
+        get().pulseBond('agreement');
+        coopLink.send({ t: 'bond_pulse', kind: 'agreement' });
+        void get().applyResolved();
+      } else if (next.phase === 'discord') {
+        get().pulseBond('discord');
+      }
     },
 
     yieldToPartner: () => {
@@ -207,7 +240,9 @@ export const useCoopStore = create<CoopState>((set, get) => {
       if (!s.negotiation) return;
       const next = reduceNegotiation(s.negotiation, { type: 'i_yield' });
       set({ negotiation: next });
+      get().pulseBond('yield');
       coopLink.send({ t: 'yield', nodeId: s.negotiation.nodeId });
+      coopLink.send({ t: 'bond_pulse', kind: 'yield' });
       void get().applyResolved();
     },
 
@@ -299,12 +334,29 @@ export const useCoopStore = create<CoopState>((set, get) => {
       coopLink.send({ t: 'combat_action', actionId, element });
     },
 
+    sendCombatVitals: (hp, maxHp, status) => {
+      coopLink.send({ t: 'combat_vitals', hp, maxHp, status });
+    },
+
+    pulseBond: (kind) => {
+      // §48: el vínculo entre jugadores crece con lo vivido juntos.
+      const b = { ...get().playerBond };
+      if (kind === 'agreement') { b.trust += 1; b.cooperation += 1; }
+      if (kind === 'discord') { b.rivalry += 1; }
+      if (kind === 'yield') { b.trust += 2; b.complicity += 1; }
+      if (kind === 'combo') { b.cooperation += 2; b.complicity += 1; }
+      if (kind === 'reunion') { b.trust += 3; b.complicity += 2; b.rivalry = Math.max(0, b.rivalry - 2); }
+      saveBond(b);
+      set({ playerBond: b });
+    },
+
     leaveGroup: () => {
       coopLink.send({ t: 'leave_group' });
       set({ inGroup: false });
     },
 
     reunite: () => {
+      get().pulseBond('reunion');
       coopLink.send({ t: 'reunite' });
       set({ inGroup: true, separated: false });
       const save = useGameStore.getState().save;

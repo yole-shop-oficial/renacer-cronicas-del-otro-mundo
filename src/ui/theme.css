@@ -1343,3 +1343,52 @@ body {
 .npc-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .npc-portrait { flex-shrink: 0; }
 .npc-card-head h3 { margin: 0; }
+
+/* §66: vitals del compañero + §70 reconexión en combate */
+.partner-vitals { display: inline-flex; align-items: center; gap: 6px; flex: 1; min-width: 70px; }
+.combat-hpbar.partner-hp { height: 7px; flex: 1; margin: 0; display: inline-block; }
+.combat-hpbar.partner-hp > span { display: block; height: 100%; background: linear-gradient(90deg, #c9a84b, #e8c795); }
+.partner-vitals b { font-size: 10.5px; color: var(--caramel); }
+.combat-linklost {
+  padding: 8px 16px; font-size: 12px; text-align: center;
+  color: var(--gold-soft); background: rgba(224,169,78,0.1);
+  border-top: 1px solid rgba(224,169,78,0.4);
+  animation: pulse 1.2s infinite;
+}
+
+/* §78: vista LISTA del mapa (móviles pequeños) */
+.map-head-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.map-view-toggle { min-height: 36px; padding: 6px 12px; font-size: 12px; flex-shrink: 0; }
+.region-list { display: flex; flex-direction: column; gap: 8px; }
+.region-list-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  border: 1px solid rgba(139,111,216,0.35);
+  background: var(--bg-card); color: var(--text);
+  font-family: var(--font-ui); font-size: 14px; min-height: 50px;
+}
+.region-list-row.current { border-color: var(--teal); }
+.region-list-row.undiscovered { opacity: 0.45; cursor: not-allowed; }
+.region-list-name { flex: 1; text-align: left; font-weight: 600; }
+.region-list-pois { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gold-soft); }
+
+/* §81: respeto a reduced motion — sin animaciones para quien las evita */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* §81: texto escalable — tres tamaños de lectura */
+:root { --reading-scale: 1; }
+html[data-textscale='large'] { --reading-scale: 1.15; }
+html[data-textscale='xlarge'] { --reading-scale: 1.3; }
+.parchment { font-size: calc(17px * var(--reading-scale)); }
+.combat-line { font-size: calc(14px * var(--reading-scale)); }
+.choice-btn { font-size: calc(15.5px * var(--reading-scale)); }
+
+/* §48: vínculo entre jugadores */
+.player-bond { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(201,138,75,0.35); }
+.player-bond-title { display: block; font-size: 12px; font-weight: 700; color: var(--caramel); margin-bottom: 6px; }
