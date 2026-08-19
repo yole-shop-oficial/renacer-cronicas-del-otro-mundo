@@ -84,7 +84,7 @@ test('navegación: personaje, inventario y mundo reflejan el estado', async ({ p
   await page.getByRole('button', { name: /Personaje|Character/ }).last().click();
   await expect(page.getByRole('heading', { name: 'Alba' })).toBeVisible();
 
-  // Inventario: objetos iniciales de la clase Maga.
+  // Inventario: subtab dentro de Personaje.
   await page.getByRole('button', { name: /Inventario|Inventory/ }).click();
   await expect(page.getByText(/Bastón de aprendiz|Apprentice Staff/)).toBeVisible();
 

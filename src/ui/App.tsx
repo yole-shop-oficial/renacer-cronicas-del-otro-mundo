@@ -14,18 +14,31 @@ import { InventoryScreen } from './screens/InventoryScreen';
 import { SkillTreeScreen } from './screens/SkillTreeScreen';
 import { WorldMapScreen } from './screens/WorldMapScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
-import { LifeTreeButton } from './LifeTreeButton';
+import { QuestLogScreen } from './screens/QuestLogScreen';
+import { LifeTreeScreen } from './screens/LifeTreeScreen';
+import { SoulScreen } from './screens/SoulScreen';
+import { InstallPrompt } from './InstallPrompt';
 import { GameIcon, type IconName } from './icons';
 
-type Tab = 'story' | 'character' | 'inventory' | 'journal' | 'world' | 'settings';
+/**
+ * NAVEGACIÓN NATIVA — 4 pestañas:
+ *  Campaña  → Historia · Misiones (el diario de misiones activas)
+ *  Personaje→ Ficha · Habilidades · Árbol · Inventario · Vínculos
+ *  Mundo    → mapa y zonas (explorar vive aquí)
+ *  Menú     → Diario · Almas/Pareja · Árbol de la Vida · Ajustes
+ * Sin scroll de página: solo las áreas internas se desplazan.
+ */
+
+type Tab = 'campaign' | 'character' | 'world' | 'menu';
+type CampSub = 'story' | 'quests';
+type CharSub = 'sheet' | 'skills' | 'tree' | 'inventory' | 'relations';
+type MenuSub = 'journal' | 'souls' | 'lifetree' | 'settings';
 
 const TABS: { id: Tab; icon: IconName; label: string }[] = [
-  { id: 'story', icon: 'book', label: 'nav.story' },
+  { id: 'campaign', icon: 'book', label: 'nav.campaign' },
   { id: 'character', icon: 'helm', label: 'nav.character' },
-  { id: 'inventory', icon: 'bag', label: 'nav.inventory' },
-  { id: 'journal', icon: 'scroll', label: 'nav.journal' },
   { id: 'world', icon: 'map', label: 'nav.world' },
-  { id: 'settings', icon: 'gear', label: 'nav.settings' }
+  { id: 'menu', icon: 'gear', label: 'nav.menu' }
 ];
 
 export function App() {
@@ -34,10 +47,12 @@ export function App() {
   const loadGame = useGameStore((s) => s.loadGame);
   const [booted, setBooted] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [tab, setTab] = useState<Tab>('story');
-  const [subTab, setSubTab] = useState<'character' | 'skills' | 'tree' | 'relations'>('character');
+  const [tab, setTab] = useState<Tab>('campaign');
+  const [campSub, setCampSub] = useState<CampSub>('story');
+  const [charSub, setCharSub] = useState<CharSub>('sheet');
+  const [menuSub, setMenuSub] = useState<MenuSub>('journal');
+  const [lifeTreeOpen, setLifeTreeOpen] = useState(false);
 
-  // Arranque (§44): datos locales → alma local → juego. Sin nube obligatoria.
   useEffect(() => {
     void (async () => {
       await init();
@@ -48,7 +63,6 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Pantalla de carga (~6s): precachea el juego para el modo offline.
   if (!loaded || !booted) {
     return (
       <div className="app-shell">
@@ -61,7 +75,7 @@ export function App() {
   const statusText = online ? t('status.online') : t('status.offline');
 
   return (
-    <div className="app-shell">
+    <div className="app-shell native">
       <div className="status-bar" role="status" aria-live="polite">
         <span className="status-label">
           <span className={`status-dot ${dotClass}`} aria-hidden />
@@ -75,34 +89,97 @@ export function App() {
         <CharacterCreator />
       ) : (
         <>
-          {tab === 'story' && <StoryScreen />}
-          {tab === 'character' && (
-            <>
+          {/* ── CAMPAÑA ── */}
+          {tab === 'campaign' && (
+            <div className="tab-body">
               <div className="subtabs">
-                {(['character', 'skills', 'tree', 'relations'] as const).map((st) => (
-                  <button
-                    key={st}
-                    className={`subtab ${subTab === st ? 'active' : ''}`}
-                    onClick={() => setSubTab(st)}
-                  >
-                    {t(`nav.${st === 'tree' ? 'skilltree' : st}`)}
+                <button className={`subtab ${campSub === 'story' ? 'active' : ''}`} onClick={() => setCampSub('story')}>
+                  <GameIcon name="book" size={14} /> {t('camp.story')}
+                </button>
+                <button className={`subtab ${campSub === 'quests' ? 'active' : ''}`} onClick={() => setCampSub('quests')}>
+                  <GameIcon name="scroll" size={14} /> {t('camp.quests')}
+                </button>
+              </div>
+              <div className="tab-content">
+                {campSub === 'story' && <StoryScreen />}
+                {campSub === 'quests' && <QuestLogScreen />}
+              </div>
+            </div>
+          )}
+
+          {/* ── PERSONAJE ── */}
+          {tab === 'character' && (
+            <div className="tab-body">
+              <div className="subtabs">
+                {(
+                  [
+                    ['sheet', 'nav.character'],
+                    ['skills', 'nav.skills'],
+                    ['tree', 'nav.skilltree'],
+                    ['inventory', 'nav.inventory'],
+                    ['relations', 'nav.relations']
+                  ] as [CharSub, string][]
+                ).map(([id, label]) => (
+                  <button key={id} className={`subtab ${charSub === id ? 'active' : ''}`} onClick={() => setCharSub(id)}>
+                    {t(label)}
                   </button>
                 ))}
               </div>
-              {subTab === 'character' && <CharacterScreen />}
-              {subTab === 'skills' && <SkillsScreen />}
-              {subTab === 'tree' && <SkillTreeScreen />}
-              {subTab === 'relations' && <RelationsScreen />}
-            </>
+              <div className="tab-content">
+                {charSub === 'sheet' && <CharacterScreen />}
+                {charSub === 'skills' && <SkillsScreen />}
+                {charSub === 'tree' && <SkillTreeScreen />}
+                {charSub === 'inventory' && <InventoryScreen />}
+                {charSub === 'relations' && <RelationsScreen />}
+              </div>
+            </div>
           )}
-          {tab === 'inventory' && <InventoryScreen />}
-          {tab === 'journal' && <JournalScreen />}
-          {tab === 'world' && <WorldMapScreen />}
-          {tab === 'settings' && <SettingsScreen />}
 
-          <LifeTreeButton />
+          {/* ── MUNDO ── */}
+          {tab === 'world' && (
+            <div className="tab-body">
+              <div className="tab-content">
+                <WorldMapScreen />
+              </div>
+            </div>
+          )}
 
-          <nav className="bottom-nav" aria-label="Navegación principal">
+          {/* ── MENÚ ── */}
+          {tab === 'menu' && (
+            <div className="tab-body">
+              <div className="subtabs">
+                {(
+                  [
+                    ['journal', 'nav.journal'],
+                    ['souls', 'soul.title'],
+                    ['lifetree', 'menu.lifetree'],
+                    ['settings', 'nav.settings']
+                  ] as [MenuSub, string][]
+                ).map(([id, label]) => (
+                  <button
+                    key={id}
+                    className={`subtab ${menuSub === id ? 'active' : ''}`}
+                    onClick={() => {
+                      if (id === 'lifetree') setLifeTreeOpen(true);
+                      else setMenuSub(id);
+                    }}
+                  >
+                    {t(label)}
+                  </button>
+                ))}
+              </div>
+              <div className="tab-content">
+                {menuSub === 'journal' && <JournalScreen />}
+                {menuSub === 'souls' && <SoulScreen />}
+                {menuSub === 'settings' && <SettingsScreen />}
+              </div>
+            </div>
+          )}
+
+          {lifeTreeOpen && <LifeTreeScreen onClose={() => setLifeTreeOpen(false)} />}
+          <InstallPrompt />
+
+          <nav className="bottom-nav four" aria-label="Navegación principal">
             {TABS.map(({ id, icon, label }) => (
               <button
                 key={id}
@@ -111,7 +188,7 @@ export function App() {
                 aria-current={tab === id ? 'page' : undefined}
               >
                 <span className="nav-icon">
-                  <GameIcon name={icon} size={21} />
+                  <GameIcon name={icon} size={22} />
                 </span>
                 {t(label)}
               </button>
