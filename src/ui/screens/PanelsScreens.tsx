@@ -4,6 +4,8 @@ import { skillById } from '@/data/skills';
 import { NPCS } from '@/data/world';
 import { RELATIONSHIP_AXES } from '@/domain/types';
 import { bondLevel, bondScore } from '@/domain/power';
+import { activeStageIndex, isDelivered, objectiveProgress, stageComplete, readyToDeliver } from '@/state/npcQuestState';
+import { npcQuestById } from '@/data/npcQuests';
 import { IconScroll, IconLock, IconSpark } from '@/ui/icons';
 import { Portrait, hasPortrait } from '@/ui/portraits';
 
@@ -57,7 +59,9 @@ export function QuestsScreen() {
 export function RelationsScreen() {
   const save = useGameStore((s) => s.save);
   const availableNpcQuests = useGameStore((s) => s.availableNpcQuests);
-  const completeNpcQuest = useGameStore((s) => s.completeNpcQuest);
+  const acceptNpcQuest = useGameStore((s) => s.acceptNpcQuest);
+  const advanceNpcQuestStage = useGameStore((s) => s.advanceNpcQuestStage);
+  const deliverNpcQuest = useGameStore((s) => s.deliverNpcQuest);
   if (!save) return null;
   const rels = save.world.npcRelationships;
   const known = Object.entries(rels).filter(([, r]) =>
@@ -113,34 +117,78 @@ export function RelationsScreen() {
               ))}
             </div>
 
-            {/* MISIONES DEL NPC */}
+            {/* MISIONES DEL NPC — ciclo real: aceptar → objetivos → entregar */}
             {quests.length > 0 && (
               <div className="npc-quests">
                 <h4 className="with-icon-inline"><IconScroll size={15} className="ico-gold" /> {t('bond.quests')}</h4>
-                {quests.map(({ quest, ok, reason }) => (
-                  <div className={`npc-quest ${ok ? '' : 'locked'}`} key={quest.id}>
-                    <div className="npc-quest-info">
-                      <span className="npc-quest-name">{t(`nq.${quest.id}`)}</span>
-                      <span className="npc-quest-desc hint-text">{t(`nq.${quest.id}.desc`)}</span>
-                      <span className="npc-quest-req hint-text">
-                        {t('bond.reqLevel', { level: quest.requiredLevel })}
-                        {quest.requiredPower > 0 && ` · ⚔ ${quest.requiredPower}`}
-                        {quest.requiredBondLevel > 0 && ` · 💞 ${quest.requiredBondLevel}`}
-                      </span>
+                {quests.map(({ quest, ok, reason }) => {
+                  const q = npcQuestById(quest.id);
+                  const stageIdx = activeStageIndex(save, q.id);
+                  const active = stageIdx !== null;
+                  const delivered = isDelivered(save, q.id);
+                  if (delivered) return null;
+                  return (
+                    <div className={`npc-quest ${active ? 'inprogress' : ok ? '' : 'locked'} ${q.kind === 'long' ? 'long' : ''}`} key={q.id}>
+                      <div className="npc-quest-info">
+                        <span className="npc-quest-name">
+                          {q.kind === 'long' && <em className="quest-long-tag">{t('nq.longTag')}</em>}
+                          {t(`nq.${q.id}`)}
+                        </span>
+                        <span className="npc-quest-desc hint-text">
+                          {active ? t(`nq.${q.id}.stage${stageIdx! + 1}`) : t(`nq.${q.id}.desc`)}
+                        </span>
+                        {!active && (
+                          <span className="npc-quest-req hint-text">
+                            {t('bond.reqLevel', { level: q.requiredLevel })}
+                            {q.requiredPower > 0 && ` · ⚔ ${q.requiredPower}`}
+                            {q.requiredBondLevel > 0 && ` · 💞 ${q.requiredBondLevel}`}
+                          </span>
+                        )}
+                        {active && (
+                          <div className="quest-objectives">
+                            {q.stages[stageIdx!].objectives.map((obj, i) => {
+                              const prog = objectiveProgress(save, q, obj);
+                              const done = prog >= obj.amount;
+                              return (
+                                <span key={i} className={`quest-obj ${done ? 'done' : ''}`}>
+                                  {done ? '✓' : '◈'} {t(`obj.${obj.kind}`, {
+                                    target: t(obj.kind === 'kill' ? `enemy.${obj.target}` : obj.kind === 'collect' ? `item.${obj.target}` : `region.${obj.target}`),
+                                    n: prog, total: obj.amount
+                                  })}
+                                </span>
+                              );
+                            })}
+                            {q.stages.length > 1 && (
+                              <span className="hint-text">{t('nq.stageOf', { s: stageIdx! + 1, total: q.stages.length })}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {!active && ok && (
+                        <button className="btn-primary npc-quest-btn" onClick={() => void acceptNpcQuest(q.id)}>
+                          {t('bond.accept')}
+                        </button>
+                      )}
+                      {!active && !ok && (
+                        <span className="npc-quest-lock">
+                          <IconLock size={13} className="inline-ico" /> {reason === 'level' && t('bond.lockLevel')}
+                          {reason === 'power' && t('bond.lockPower')}
+                          {reason === 'bond' && t('bond.lockBond')}
+                        </span>
+                      )}
+                      {active && stageIdx! < q.stages.length - 1 && stageComplete(save, q, stageIdx!) && (
+                        <button className="btn-primary npc-quest-btn" onClick={() => void advanceNpcQuestStage(q.id)}>
+                          {t('bond.nextStage')}
+                        </button>
+                      )}
+                      {active && readyToDeliver(save, q) && (
+                        <button className="btn-primary npc-quest-btn deliver" onClick={() => void deliverNpcQuest(q.id)}>
+                          {t('bond.deliver')}
+                        </button>
+                      )}
                     </div>
-                    {ok ? (
-                      <button className="btn-primary npc-quest-btn" onClick={() => void completeNpcQuest(quest.id)}>
-                        {t('bond.doQuest')}
-                      </button>
-                    ) : (
-                      <span className="npc-quest-lock">
-                        <IconLock size={13} className="inline-ico" /> {reason === 'level' && t('bond.lockLevel')}
-                        {reason === 'power' && t('bond.lockPower')}
-                        {reason === 'bond' && t('bond.lockBond')}
-                      </span>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 

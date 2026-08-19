@@ -368,10 +368,82 @@ export const TWIN_SENTINEL: EnemyDef = {
   rewards: { xp: 120, gold: 35, items: [{ itemId: 'goddess_tear', qty: 1 }] }
 };
 
+/** Enemigos de zona (exploración). */
+export const ZONE_ENEMIES: EnemyDef[] = [
+  {
+    id: 'jabali_bravo',
+    maxHp: 70,
+    weaknesses: ['physical'],
+    resistances: [],
+    paceMs: 4800,
+    moves: [
+      {
+        id: 'jb_charge',
+        telegraph: { es: 'El jabalí escarba el suelo y baja la testuz...', en: 'The boar paws the ground and lowers its head...' },
+        impact: { es: 'La embestida te levanta del suelo.', en: 'The charge lifts you off your feet.' },
+        element: 'physical',
+        power: 12,
+        windowMs: 3000,
+        counters: ['dodge'],
+        applies: { effect: 'stun', chance: 0.25, durationMs: 1800, power: 1 }
+      },
+      {
+        id: 'jb_gore',
+        telegraph: { es: 'Sacude los colmillos amarillos de lado a lado...', en: 'It swings its yellow tusks side to side...' },
+        impact: { es: 'Los colmillos te rasgan la pierna.', en: 'The tusks tear at your leg.' },
+        element: 'physical',
+        power: 9,
+        windowMs: 2800,
+        counters: ['defend', 'dodge'],
+        applies: { effect: 'bleed', chance: 0.4, durationMs: 4000, power: 3 }
+      }
+    ],
+    analyzeReveals: [
+      { es: 'Un jabalí territorial. No busca comerte: busca que TE VAYAS.', en: 'A territorial boar. It does not want to eat you: it wants you GONE.' },
+      { es: 'Tras cada embestida queda expuesto un instante: castígalo entonces.', en: 'After each charge it is exposed for an instant: punish it then.' }
+    ],
+    rewards: { xp: 22, gold: 3, items: [{ itemId: 'healing_herb', qty: 1 }] }
+  },
+  {
+    id: 'sombra_menor',
+    maxHp: 55,
+    weaknesses: ['light'],
+    resistances: ['physical', 'dark'],
+    paceMs: 4200,
+    moves: [
+      {
+        id: 'sm_claw',
+        telegraph: { es: 'La sombra se estira hacia ti como tinta derramada...', en: 'The shadow stretches toward you like spilled ink...' },
+        impact: { es: 'Un frío antiguo te atraviesa.', en: 'An ancient cold passes through you.' },
+        element: 'dark',
+        power: 10,
+        windowMs: 3000,
+        counters: ['dodge', 'counterspell']
+      },
+      {
+        id: 'sm_wail',
+        telegraph: { es: 'Su silueta tiembla: va a gemir...', en: 'Its silhouette trembles: it is about to wail...' },
+        impact: { es: 'El gemido te nubla la vista.', en: 'The wail clouds your sight.' },
+        element: 'dark',
+        power: 6,
+        windowMs: 3200,
+        counters: ['interrupt'],
+        applies: { effect: 'blind', chance: 0.4, durationMs: 3000, power: 1 }
+      }
+    ],
+    analyzeReveals: [
+      { es: 'Un jirón desprendido de algo mayor que ronda las ruinas. La luz lo deshace.', en: 'A shred torn from something greater that haunts the ruins. Light unmakes it.' }
+    ],
+    rewards: { xp: 26, gold: 6 }
+  }
+];
+
 export function getEnemy(id: string): EnemyDef {
   if (id === TWIN_SENTINEL.id) return TWIN_SENTINEL;
   if (id === FLAYER.id) return FLAYER;
   if (id === CORSAIR.id) return CORSAIR;
+  const zoneEnemy = ZONE_ENEMIES.find((e) => e.id === id);
+  if (zoneEnemy) return zoneEnemy;
   const e = ENEMIES.find((e) => e.id === id);
   if (!e) throw new Error(`Enemigo desconocido: ${id}`);
   return e;

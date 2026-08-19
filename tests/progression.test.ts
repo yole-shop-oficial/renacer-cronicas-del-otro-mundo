@@ -94,7 +94,10 @@ describe('Misiones de NPC', () => {
   it('hay misiones con requisitos de nivel, poder y vínculo escalonados', () => {
     expect(NPC_QUESTS.some((q) => q.requiredPower === 0)).toBe(true);
     expect(NPC_QUESTS.some((q) => q.requiredPower >= 200)).toBe(true);
-    expect(NPC_QUESTS.some((q) => q.requiredBondLevel >= 2)).toBe(true);
+    expect(NPC_QUESTS.some((q) => q.requiredBondLevel >= 1)).toBe(true);
+    // y ambos tipos: cortas y largas multi-etapa (§ misiones reales)
+    expect(NPC_QUESTS.some((q) => q.kind === 'short')).toBe(true);
+    expect(NPC_QUESTS.some((q) => q.kind === 'long' && q.stages.length > 1)).toBe(true);
   });
 });
 

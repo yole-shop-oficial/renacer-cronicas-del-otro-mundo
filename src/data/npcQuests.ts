@@ -1,180 +1,181 @@
 import type { Effect } from '@/engine/schema';
 
 /**
- * MISIONES DE NPC — misiones cortas fuera del arco principal.
- * Hablar con un NPC (pestaña Vínculos) muestra sus misiones disponibles.
- * Requisitos: nivel, poder de combate y/o nivel de vínculo.
- * Recompensas: XP, oro, objetos y — sobre todo — vínculo (que da poder).
+ * MISIONES DE NPC REALES — nada de "tocar Hacer y ya".
+ * Al ACEPTAR se activa la misión; hay que cumplir OBJETIVOS de verdad:
+ *  - kill:    matar N enemigos concretos (explorando zonas)
+ *  - collect: reunir N objetos (recolección/botín de monstruos)
+ *  - explore: explorar N puntos de una zona
+ *  - visit:   descubrir/pisar una región
+ * Al completar todos, vuelves con el NPC y ENTREGAS (la recompensa
+ * solo llega al entregar). Dos tipos: cortas (caza/recolección) y
+ * largas multi-ETAPA con historia propia.
  */
+
+export type ObjectiveKind = 'kill' | 'collect' | 'explore' | 'visit';
+
+export interface QuestObjective {
+  kind: ObjectiveKind;
+  /** kill: enemyId · collect: itemId · explore: zoneId · visit: regionId */
+  target: string;
+  amount: number;
+}
+
+export interface QuestStage {
+  id: string;
+  objectives: QuestObjective[];
+}
 
 export interface NpcQuestDef {
   id: string;
   npcId: string;
-  /** Requisitos para aceptarla. */
+  kind: 'short' | 'long';
   requiredLevel: number;
   requiredPower: number;
   requiredBondLevel: number;
-  /** Flag que la desbloquea (opcional, para atarlas a la historia). */
   requiresFlag?: string;
-  /** Efectos al completarla (reutiliza el motor de efectos). */
+  /** Etapas en orden (las cortas tienen 1; las largas varias). */
+  stages: QuestStage[];
+  /** collect: los objetos se consumen al entregar. */
+  consumesItems: boolean;
   rewards: Effect[];
-  /** Se resuelve al instante (conversación/entrega) en esta versión. */
-  kind: 'talk' | 'delivery' | 'training';
 }
 
 export const NPC_QUESTS: NpcQuestDef[] = [
-  // ── Marta (vitalidad) ──
-  {
-    id: 'nq_marta_recipes',
-    npcId: 'marta',
-    requiredLevel: 1,
-    requiredPower: 0,
-    requiredBondLevel: 0,
-    kind: 'talk',
-    rewards: [
-      { kind: 'changeRelationship', target: 'marta', axis: 'friendship', amount: 10 },
-      { kind: 'gainXp', amount: 10 }
-    ]
-  },
+  // ── CORTAS: caza y recolección ──
   {
     id: 'nq_marta_herbs',
     npcId: 'marta',
-    requiredLevel: 2,
-    requiredPower: 120,
-    requiredBondLevel: 1,
-    kind: 'delivery',
+    kind: 'short',
+    requiredLevel: 1,
+    requiredPower: 0,
+    requiredBondLevel: 0,
+    consumesItems: true,
+    stages: [{ id: 's1', objectives: [{ kind: 'collect', target: 'healing_herb', amount: 3 }] }],
     rewards: [
-      { kind: 'changeRelationship', target: 'marta', axis: 'trust', amount: 15 },
-      { kind: 'addItem', key: 'healing_herb', amount: 3 },
+      { kind: 'changeRelationship', target: 'marta', axis: 'trust', amount: 12 },
+      { kind: 'gainGold', amount: 8 },
       { kind: 'gainXp', amount: 20 }
     ]
   },
-  // ── Joren (fuerza) ──
   {
-    id: 'nq_joren_bellows',
-    npcId: 'joren',
+    id: 'nq_bren_wolves',
+    npcId: 'capitan_bren',
+    kind: 'short',
     requiredLevel: 2,
-    requiredPower: 100,
+    requiredPower: 120,
     requiredBondLevel: 0,
-    kind: 'training',
+    consumesItems: false,
+    stages: [{ id: 's1', objectives: [{ kind: 'kill', target: 'lobo_famelico', amount: 3 }] }],
     rewards: [
-      { kind: 'changeRelationship', target: 'joren', axis: 'respect', amount: 15 },
-      { kind: 'gainXp', amount: 15 },
-      { kind: 'gainGold', amount: 5 }
+      { kind: 'changeRelationship', target: 'capitan_bren', axis: 'respect', amount: 12 },
+      { kind: 'gainGold', amount: 12 },
+      { kind: 'gainXp', amount: 30 }
     ]
   },
   {
     id: 'nq_joren_ore',
     npcId: 'joren',
+    kind: 'short',
     requiredLevel: 3,
-    requiredPower: 180,
-    requiredBondLevel: 2,
-    kind: 'delivery',
+    requiredPower: 160,
+    requiredBondLevel: 1,
+    consumesItems: true,
+    stages: [{ id: 's1', objectives: [{ kind: 'collect', target: 'mineral_hierro', amount: 2 }] }],
     rewards: [
-      { kind: 'changeRelationship', target: 'joren', axis: 'trust', amount: 20 },
+      { kind: 'changeRelationship', target: 'joren', axis: 'trust', amount: 15 },
       { kind: 'addItem', key: 'reinforced_gloves', amount: 1 },
-      { kind: 'gainXp', amount: 30 }
-    ]
-  },
-  // ── Pip (suerte) ──
-  {
-    id: 'nq_pip_sling',
-    npcId: 'pip',
-    requiredLevel: 1,
-    requiredPower: 0,
-    requiredBondLevel: 0,
-    kind: 'training',
-    rewards: [
-      { kind: 'changeRelationship', target: 'pip', axis: 'friendship', amount: 15 },
-      { kind: 'gainXp', amount: 10 }
-    ]
-  },
-  {
-    id: 'nq_pip_dogs',
-    npcId: 'pip',
-    requiredLevel: 2,
-    requiredPower: 110,
-    requiredBondLevel: 1,
-    kind: 'talk',
-    rewards: [
-      { kind: 'changeRelationship', target: 'pip', axis: 'trust', amount: 15 },
-      { kind: 'changeRelationship', target: 'capitan_bren', axis: 'respect', amount: 5 },
-      { kind: 'gainXp', amount: 15 }
-    ]
-  },
-  // ── Bren (voluntad) ──
-  {
-    id: 'nq_bren_patrol',
-    npcId: 'capitan_bren',
-    requiredLevel: 3,
-    requiredPower: 200,
-    requiredBondLevel: 1,
-    kind: 'training',
-    rewards: [
-      { kind: 'changeRelationship', target: 'capitan_bren', axis: 'respect', amount: 15 },
-      { kind: 'gainXp', amount: 25 },
-      { kind: 'gainGold', amount: 10 }
-    ]
-  },
-  {
-    id: 'nq_bren_letters',
-    npcId: 'capitan_bren',
-    requiredLevel: 4,
-    requiredPower: 260,
-    requiredBondLevel: 2,
-    requiresFlag: 'poachers_mystery_open',
-    kind: 'delivery',
-    rewards: [
-      { kind: 'changeRelationship', target: 'capitan_bren', axis: 'trust', amount: 20 },
-      { kind: 'addItem', key: 'guard_insignia', amount: 1 },
       { kind: 'gainXp', amount: 35 }
     ]
   },
-  // ── Lu (carisma) ──
   {
-    id: 'nq_lu_spices',
-    npcId: 'vendedora_lu',
-    requiredLevel: 2,
-    requiredPower: 120,
-    requiredBondLevel: 0,
-    requiresFlag: 'knows_serpent_warehouse',
-    kind: 'delivery',
-    rewards: [
-      { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'friendship', amount: 15 },
-      { kind: 'addItem', key: 'mana_flower', amount: 2 },
-      { kind: 'gainXp', amount: 20 }
-    ]
-  },
-  // ── Vela (inteligencia) ──
-  {
-    id: 'nq_vela_manifests',
-    npcId: 'sargento_vela',
+    id: 'nq_tomas_boars',
+    npcId: 'cazador_tomas',
+    kind: 'short',
     requiredLevel: 3,
-    requiredPower: 220,
-    requiredBondLevel: 1,
-    requiresFlag: 'letter_delivered',
-    kind: 'talk',
+    requiredPower: 150,
+    requiredBondLevel: 0,
+    requiresFlag: 'heard_hunters_serpent',
+    consumesItems: false,
+    stages: [{ id: 's1', objectives: [{ kind: 'kill', target: 'jabali_bravo', amount: 2 }] }],
     rewards: [
-      { kind: 'changeRelationship', target: 'sargento_vela', axis: 'trust', amount: 15 },
+      { kind: 'changeRelationship', target: 'cazador_tomas', axis: 'respect', amount: 15 },
+      { kind: 'gainGold', amount: 10 },
       { kind: 'gainXp', amount: 30 }
     ]
   },
-  // ── Tomás (agilidad) ──
+  // ── LARGAS: multi-etapa con historia ──
   {
-    id: 'nq_tomas_tracks',
-    npcId: 'cazador_tomas',
-    requiredLevel: 3,
-    requiredPower: 200,
-    requiredBondLevel: 0,
-    requiresFlag: 'heard_hunters_serpent',
-    kind: 'training',
+    id: 'nq_pip_bigquest',
+    npcId: 'pip',
+    kind: 'long',
+    requiredLevel: 2,
+    requiredPower: 100,
+    requiredBondLevel: 1,
+    consumesItems: true,
+    stages: [
+      // Etapa 1: explorar el bosque con los ojos de Pip
+      { id: 'explore_forest', objectives: [{ kind: 'explore', target: 'bosque_susurros', amount: 4 }] },
+      // Etapa 2: reunir prueba de los lobos que asustan a los perros
+      { id: 'wolf_proof', objectives: [{ kind: 'kill', target: 'lobo_famelico', amount: 2 }, { kind: 'collect', target: 'colmillo_lobo', amount: 1 }] }
+    ],
     rewards: [
-      { kind: 'changeRelationship', target: 'cazador_tomas', axis: 'respect', amount: 15 },
-      { kind: 'gainXp', amount: 25 }
+      { kind: 'changeRelationship', target: 'pip', axis: 'friendship', amount: 20 },
+      { kind: 'changeRelationship', target: 'pip', axis: 'trust', amount: 15 },
+      { kind: 'changeRelationship', target: 'capitan_bren', axis: 'respect', amount: 5 },
+      { kind: 'gainXp', amount: 60 },
+      { kind: 'grantTitle', key: 'pip_hero' }
+    ]
+  },
+  {
+    id: 'nq_vela_evidence',
+    npcId: 'sargento_vela',
+    kind: 'long',
+    requiredLevel: 4,
+    requiredPower: 220,
+    requiredBondLevel: 1,
+    requiresFlag: 'letter_delivered',
+    consumesItems: false,
+    stages: [
+      // Etapa 1: patear los bajos fondos de Zafir
+      { id: 'zafir_recon', objectives: [{ kind: 'visit', target: 'puerto_zafir', amount: 1 }, { kind: 'explore', target: 'puerto_zafir', amount: 3 }] },
+      // Etapa 2: desarticular a los matones del puerto
+      { id: 'clean_docks', objectives: [{ kind: 'kill', target: 'furtivo_sierpe', amount: 2 }] }
+    ],
+    rewards: [
+      { kind: 'changeRelationship', target: 'sargento_vela', axis: 'trust', amount: 20 },
+      { kind: 'gainGold', amount: 30 },
+      { kind: 'gainXp', amount: 70 },
+      { kind: 'addItem', key: 'guard_insignia', amount: 1 }
+    ]
+  },
+  {
+    id: 'nq_lu_spice_route',
+    npcId: 'vendedora_lu',
+    kind: 'long',
+    requiredLevel: 3,
+    requiredPower: 180,
+    requiredBondLevel: 1,
+    requiresFlag: 'knows_serpent_warehouse',
+    consumesItems: true,
+    stages: [
+      { id: 'gather_goods', objectives: [{ kind: 'collect', target: 'mana_flower', amount: 2 }] },
+      { id: 'ruins_shortcut', objectives: [{ kind: 'explore', target: 'ruinas_veloran', amount: 3 }] }
+    ],
+    rewards: [
+      { kind: 'changeRelationship', target: 'vendedora_lu', axis: 'friendship', amount: 20 },
+      { kind: 'gainGold', amount: 25 },
+      { kind: 'gainXp', amount: 55 }
     ]
   }
 ];
 
 export function questsForNpc(npcId: string): NpcQuestDef[] {
   return NPC_QUESTS.filter((q) => q.npcId === npcId);
+}
+
+export function npcQuestById(id: string): NpcQuestDef {
+  const q = NPC_QUESTS.find((q) => q.id === id);
+  if (!q) throw new Error(`Misión NPC desconocida: ${id}`);
+  return q;
 }

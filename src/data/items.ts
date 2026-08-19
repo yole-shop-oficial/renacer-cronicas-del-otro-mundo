@@ -17,7 +17,9 @@ export const ITEMS: ItemDef[] = [
   { id: 'moonlit_mushroom', type: 'material', rarity: 'uncommon', value: 15 },
   { id: 'sharpening_stone', slot: 'accessory', type: 'material', rarity: 'uncommon', effects: { grantFlag: 'joren_heirloom' }, value: 0 },
   { id: 'reinforced_gloves', slot: 'armor', type: 'armor', rarity: 'uncommon', stats: { strength: 1, vitality: 1 }, value: 35 },
-  { id: 'guard_insignia', slot: 'accessory', type: 'unique', rarity: 'rare', stats: { willpower: 2 }, value: 0 }
+  { id: 'guard_insignia', slot: 'accessory', type: 'unique', rarity: 'rare', stats: { willpower: 2 }, value: 0 },
+  { id: 'mineral_hierro', type: 'material', rarity: 'common', value: 6 },
+  { id: 'colmillo_lobo', type: 'material', rarity: 'common', value: 4 }
 ];
 
 export const itemById = (id: string) => {

@@ -13,6 +13,8 @@ import { lt } from '@/i18n';
 import { applyEffects } from '@/engine/effects';
 import { saveGameLocally } from '@/state/persistence';
 import { useGameStore as gameStoreHook } from '@/state/gameStore';
+import { ZoneExploreScreen } from './ZoneExploreScreen';
+import { zoneForRegion, zoneCompletion } from '@/data/zones';
 
 /**
  * MAPA MEJORADO: regiones como tarjetas ilustradas; al tocar una región
@@ -36,6 +38,7 @@ export function WorldMapScreen() {
   const [openRegion, setOpenRegion] = useState<string | null>(null);
   const [listView, setListView] = useState(localStorage.getItem('map_view') === 'list');
   const [openPoi, setOpenPoi] = useState<PoiDef | null>(null);
+  const [exploringZone, setExploringZone] = useState<string | null>(null);
   const [partner, setPartner] = useState<SoulProfile | null>(null);
   const livePartner = useCoopStore((s) => s.partner);
   const separated = useCoopStore((s) => s.separated);
@@ -46,6 +49,9 @@ export function WorldMapScreen() {
   }, []);
 
   if (!save) return null;
+  if (exploringZone) {
+    return <ZoneExploreScreen zoneId={exploringZone} onExit={() => setExploringZone(null)} />;
+  }
   const { discoveredRegions, currentRegionId } = save.world;
   // Preferir la posición EN VIVO del alma conectada sobre la del código estático.
   const partnerRegion = livePartner?.regionId ?? partner?.regionId;
@@ -67,6 +73,24 @@ export function WorldMapScreen() {
             {t(`region.${region.id}`)}
           </h2>
         </div>
+
+        {/* EXPLORAR: si la región tiene zona explorable */}
+        {(() => {
+          const zone = zoneForRegion(openRegion);
+          if (!zone) return null;
+          const pct = zoneCompletion(zone, save.world.flags);
+          return (
+            <button className="card explore-cta" onClick={() => setExploringZone(zone.id)}>
+              <div className="explore-cta-info">
+                <h3>{t('zone.exploreCta')}</h3>
+                <span className="hint-text">
+                  {'☠'.repeat(zone.danger)} · {t('zone.suggested', { level: zone.suggestedLevel })} · {pct}%
+                </span>
+              </div>
+              <span className="soul-settings-arrow" style={{ position: 'static' }}>→</span>
+            </button>
+          );
+        })()}
 
         {/* Plano de la región */}
         <div className={`region-plane plane-${region.kind}`} role="img" aria-label={t(`region.${region.id}`)}>

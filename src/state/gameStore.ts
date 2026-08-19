@@ -9,7 +9,11 @@ import { goddessById } from '@/data/goddesses';
 import { NPCS, REGIONS } from '@/data/world';
 import { itemById } from '@/data/items';
 import { treeNodeById, canLearnNode } from '@/data/skilltree';
-import { NPC_QUESTS, type NpcQuestDef } from '@/data/npcQuests';
+import { NPC_QUESTS, npcQuestById, type NpcQuestDef } from '@/data/npcQuests';
+import {
+  activeStageIndex, isDelivered, acceptQuestFlags, stageComplete, readyToDeliver
+} from './npcQuestState';
+import { zoneById, nodeExploredFlag, killCounterFlag, reachableNodes, exploredNodes } from '@/data/zones';
 import { POIS } from '@/data/pois';
 import { applyEffects } from '@/engine/effects';
 import { bondLevel, combatPower } from '@/domain/power';
@@ -49,8 +53,14 @@ interface GameStoreState {
   /** Equipamiento: equipar / desequipar objetos con slot. */
   equipItem: (itemId: string) => Promise<void>;
   unequipSlot: (slot: EquipmentSlot) => Promise<void>;
-  /** Misiones de NPC: completar una misión disponible. */
-  completeNpcQuest: (questId: string) => Promise<void>;
+  /** Misiones de NPC reales: aceptar → progresar → entregar. */
+  acceptNpcQuest: (questId: string) => Promise<void>;
+  advanceNpcQuestStage: (questId: string) => Promise<void>;
+  deliverNpcQuest: (questId: string) => Promise<void>;
+  /** Exploración: marcar nodo explorado (evento/tesoro/recolección/descanso). */
+  exploreZoneNode: (zoneId: string, nodeId: string) => Promise<void>;
+  /** Combate de zona terminado: contar kill + marcar nodo. */
+  registerZoneKill: (zoneId: string, nodeId: string, enemyId: string, won: boolean) => Promise<void>;
   /** Misiones de NPC disponibles ahora mismo para un NPC. */
   availableNpcQuests: (npcId: string) => { quest: NpcQuestDef; ok: boolean; reason?: string }[];
   /** Puntos de recorrido del mapa: realizar una acción de un punto. */
@@ -295,21 +305,139 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     set({ save: updated });
   },
 
-  completeNpcQuest: async (questId) => {
+  acceptNpcQuest: async (questId) => {
     const { save } = get();
     if (!save) return;
-    const quest = NPC_QUESTS.find((q) => q.id === questId);
-    if (!quest) return;
-    // Revalidar requisitos y no repetir (idempotente).
-    const doneFlag = `_nq_done_${quest.id}`;
-    if (save.world.flags[doneFlag]) return;
+    const quest = npcQuestById(questId);
+    if (isDelivered(save, questId) || activeStageIndex(save, questId) !== null) return;
     const status = checkQuestRequirements(quest, save);
     if (!status.ok) return;
+    const world = structuredClone(save.world);
+    Object.assign(world.flags, acceptQuestFlags(save, quest));
+    const updated = await persist({ ...save, world });
+    set({ save: updated, narrationLog: [{ key: 'log.questStarted', params: { quest: questId } }] });
+  },
 
-    const result = applyEffects(quest.rewards, save.character, save.world);
-    result.world.flags[doneFlag] = true;
+  advanceNpcQuestStage: async (questId) => {
+    const { save } = get();
+    if (!save) return;
+    const quest = npcQuestById(questId);
+    const idx = activeStageIndex(save, questId);
+    if (idx === null || idx >= quest.stages.length - 1) return;
+    if (!stageComplete(save, quest, idx)) return;
+    const world = structuredClone(save.world);
+    world.flags[`nqa_${questId}`] = idx + 1;
+    // snapshot de kills para la nueva etapa
+    for (const obj of quest.stages[idx + 1].objectives) {
+      if (obj.kind === 'kill') {
+        world.flags[`nqkb_${questId}_${obj.target}`] = Number(world.flags[killCounterFlag(obj.target)] ?? 0);
+      }
+    }
+    const updated = await persist({ ...save, world });
+    set({ save: updated });
+  },
+
+  deliverNpcQuest: async (questId) => {
+    const { save } = get();
+    if (!save) return;
+    const quest = npcQuestById(questId);
+    if (isDelivered(save, questId) || !readyToDeliver(save, quest)) return;
+    let character = save.character;
+    let world = structuredClone(save.world);
+    // consumir los objetos pedidos (si la misión lo exige)
+    if (quest.consumesItems) {
+      const c = structuredClone(character);
+      for (const stage of quest.stages) {
+        for (const obj of stage.objectives) {
+          if (obj.kind !== 'collect') continue;
+          const entry = c.inventory.find((e) => e.itemId === obj.target);
+          if (entry) {
+            entry.quantity -= obj.amount;
+          }
+        }
+      }
+      c.inventory = c.inventory.filter((e) => e.quantity > 0);
+      character = c;
+    }
+    const result = applyEffects(quest.rewards, character, world);
+    result.world.flags[`_nq_done_${questId}`] = true;
+    delete result.world.flags[`nqa_${questId}`];
     const updated = await persist({ ...save, character: result.character, world: result.world });
-    set({ save: updated, narrationLog: result.log });
+    set({ save: updated, narrationLog: [{ key: 'log.questCompleted', params: { quest: questId } }, ...result.log] });
+  },
+
+  exploreZoneNode: async (zoneId, nodeId) => {
+    const { save } = get();
+    if (!save) return;
+    const zone = zoneById(zoneId);
+    const node = zone.nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    // solo nodos alcanzables desde lo ya explorado
+    if (!reachableNodes(zone, save.world.flags).includes(nodeId)) return;
+    let character = save.character;
+    let world = structuredClone(save.world);
+    const log: { key: string; params?: Record<string, string | number> }[] = [];
+    world.flags[nodeExploredFlag(zoneId, nodeId)] = true;
+    if (node.kind === 'gather' && node.itemId) {
+      const fx = applyEffects([{ kind: 'addItem', key: node.itemId, amount: 1 }], character, world);
+      character = fx.character; world = fx.world; log.push(...fx.log);
+    }
+    if (node.kind === 'treasure' && node.gold) {
+      const fx = applyEffects([{ kind: 'gainGold', amount: node.gold }, { kind: 'gainXp', amount: 8 }], character, world);
+      character = fx.character; world = fx.world; log.push(...fx.log);
+    }
+    if (node.kind === 'rest') {
+      const fx = applyEffects([{ kind: 'heal', amount: 35 }], character, world);
+      character = fx.character; world = fx.world;
+      log.push({ key: 'zone.rested' });
+    }
+    if (node.kind === 'event') {
+      const fx = applyEffects([{ kind: 'gainXp', amount: 10 }], character, world);
+      character = fx.character; world = fx.world; log.push(...fx.log);
+    }
+    // ¿zona completa? bonus
+    if (exploredNodes(zone, world.flags).length === zone.nodes.length && !world.flags[`zone_complete_${zoneId}`]) {
+      world.flags[`zone_complete_${zoneId}`] = true;
+      const fx = applyEffects([{ kind: 'gainXp', amount: 25 }], character, world);
+      character = fx.character; world = fx.world;
+      log.push({ key: 'zone.completed' });
+    }
+    const updated = await persist({ ...save, character, world });
+    set({ save: updated, narrationLog: log });
+  },
+
+  registerZoneKill: async (zoneId, nodeId, enemyId, won) => {
+    const { save } = get();
+    if (!save) return;
+    const world = structuredClone(save.world);
+    if (won) {
+      world.flags[killCounterFlag(enemyId)] = Number(world.flags[killCounterFlag(enemyId)] ?? 0) + 1;
+      world.flags[nodeExploredFlag(zoneId, nodeId)] = true;
+      // recompensas del enemigo (idempotencia natural: cada combate de zona es único por run)
+      const enemy = (await import('@/data/enemies')).getEnemy(enemyId);
+      const fx = applyEffects(
+        [
+          { kind: 'gainXp', amount: enemy.rewards.xp },
+          { kind: 'gainGold', amount: enemy.rewards.gold },
+          ...(enemy.rewards.items ?? []).map((it) => ({ kind: 'addItem' as const, key: it.itemId, amount: it.qty })),
+          // botín extra de zona: colmillo de lobo
+          ...(enemyId === 'lobo_famelico' ? [{ kind: 'addItem' as const, key: 'colmillo_lobo', amount: 1 }] : [])
+        ],
+        save.character,
+        world
+      );
+      const zone = zoneById(zoneId);
+      if (exploredNodes(zone, fx.world.flags).length === zone.nodes.length && !fx.world.flags[`zone_complete_${zoneId}`]) {
+        fx.world.flags[`zone_complete_${zoneId}`] = true;
+      }
+      const updated = await persist({ ...save, character: fx.character, world: fx.world });
+      set({ save: updated, narrationLog: fx.log });
+    } else {
+      // derrota en zona: vuelves a la entrada, magullado pero vivo (§21)
+      const fx = applyEffects([{ kind: 'heal', amount: 999 }, { kind: 'gainGold', amount: -5 }], save.character, world);
+      const updated = await persist({ ...save, character: fx.character, world: fx.world });
+      set({ save: updated, narrationLog: [{ key: 'zone.defeated' }] });
+    }
   },
 
   availableNpcQuests: (npcId) => {
