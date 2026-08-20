@@ -1,0 +1,2605 @@
+⚔️ MEGA PROMPT DEFINITIVO
+
+RPG PWA — PROYECTO ORIGINAL DE MAZMORRAS
+
+NOMBRE DEL PROYECTO
+
+El nombre definitivo del juego NO debe darse por sentado.
+
+Antes de comenzar el desarrollo, debes presentar varias propuestas de nombres originales, memorables y registrables conceptualmente.
+
+El nombre debe transmitir:
+
+- misterio;
+- poder;
+- mazmorras;
+- progresión;
+- fantasía oscura;
+- aventura;
+- peligro;
+- cooperación;
+- competencia.
+
+NO utilizar "Solo Leveling".
+
+NO utilizar nombres de personajes de Solo Leveling.
+
+NO copiar conceptos protegidos directamente.
+
+La inspiración debe limitarse a elementos generales del género:
+
+- cazadores;
+- mazmorras;
+- progresión;
+- habilidades;
+- monstruos;
+- rangos;
+- jefes;
+- misterio;
+- crecimiento del personaje.
+
+El mundo, historia, personajes, terminología, sistema y lore deben ser completamente originales.
+
+---
+
+1. VISIÓN DEL JUEGO
+
+Crear un RPG narrativo de fantasía oscura para navegador y PWA.
+
+El juego debe combinar:
+
+NARRATIVA
+
++ 
+
+RPG
+
++ 
+
+MAZMORRAS
+
++ 
+
+COMBATE EN TIEMPO REAL SIMPLIFICADO
+
++ 
+
+PROGRESIÓN
+
++ 
+
+LOOT
+
++ 
+
+CRAFTING
+
++ 
+
+EXPLORACIÓN
+
++ 
+
+MULTIJUGADOR COOPERATIVO
+
++ 
+
+MULTIJUGADOR COMPETITIVO
+
++ 
+
+HISTORIA INFINITAMENTE EXPANDIBLE
+
+El jugador no debe sentir que está leyendo una página web.
+
+Debe sentir que está entrando en un videojuego.
+
+---
+
+2. CONCEPTO PRINCIPAL
+
+El mundo está siendo afectado por unas anomalías sobrenaturales conocidas provisionalmente como:
+
+"Las Brechas".
+
+Estas brechas conectan el mundo con regiones desconocidas.
+
+De ellas aparecen:
+
+- criaturas;
+- mazmorras;
+- ruinas;
+- entidades;
+- recursos;
+- artefactos;
+- fenómenos sobrenaturales.
+
+Pero existe un problema:
+
+Las brechas no son estáticas.
+
+Aprenden.
+
+Cambian.
+
+Evolucionan.
+
+Algunas incluso parecen reaccionar a los jugadores.
+
+---
+
+3. EL MISTERIO PRINCIPAL
+
+La humanidad cree que las brechas son portales naturales.
+
+Pero poco a poco el jugador descubrirá que:
+
+NO SON NATURALES.
+
+Alguien o algo las está creando.
+
+Y algunas parecen haber existido antes de la humanidad.
+
+La historia debe revelar lentamente:
+
+- quién las creó;
+- por qué existen;
+- qué hay detrás;
+- por qué algunos humanos pueden evolucionar;
+- qué ocurrió con civilizaciones anteriores;
+- por qué ciertas mazmorras parecen conocer al jugador;
+- qué existe en el último nivel.
+
+La respuesta NO debe revelarse rápidamente.
+
+---
+
+4. HISTORIA SIN FINAL
+
+El nivel del jugador NO tiene un límite narrativo tradicional.
+
+No diseñar:
+
+"NIVEL MÁXIMO = 100"
+
+como final absoluto.
+
+Utilizar progresión abierta.
+
+Ejemplo:
+
+Nivel 1
+Nivel 2
+Nivel 10
+Nivel 50
+Nivel 100
+Nivel 500
+Nivel 1000
+
+Pero los números no deben ser el único progreso.
+
+También existirán:
+
+- títulos;
+- habilidades;
+- especializaciones;
+- artefactos;
+- reputación;
+- conocimientos;
+- logros;
+- pactos;
+- reliquias;
+- transformaciones;
+- clases avanzadas.
+
+El juego debe poder continuar durante años mediante contenido procedural y expansiones narrativas.
+
+---
+
+5. HISTORIA GENERATIVA
+
+La narrativa debe ser modular.
+
+Crear:
+
+MAIN STORY
+
+SIDE STORIES
+
+CHARACTER STORIES
+
+DUNGEON STORIES
+
+FACTION STORIES
+
+WORLD EVENTS
+
+RANDOM EVENTS
+
+HIDDEN STORIES
+
+LEGENDARY STORIES
+
+Cada jugador puede descubrir diferentes eventos.
+
+---
+
+6. NARRADOR
+
+Crear un Narrative Engine.
+
+El motor debe poder generar:
+
+- descripciones;
+- eventos;
+- diálogos;
+- decisiones;
+- consecuencias;
+- encuentros;
+- misiones;
+- descubrimientos.
+
+Pero NO permitir generación narrativa ilimitada sin control.
+
+Debe existir:
+
+WORLD LORE DATABASE
+
+CHARACTER DATABASE
+
+LOCATION DATABASE
+
+QUEST DATABASE
+
+FACTION DATABASE
+
+MONSTER DATABASE
+
+El generador debe respetar estas reglas.
+
+---
+
+7. SISTEMA DE DECISIONES
+
+Las decisiones del jugador deben importar.
+
+Ejemplo:
+
+«Encuentras a un guerrero herido.»
+
+Opciones:
+
+[AYUDAR]
+
+[IGNORAR]
+
+[REGISTRARLO]
+
+[INTERROGARLO]
+
+Cada opción puede producir diferentes consecuencias.
+
+No utilizar siempre:
+
+"buena opción"
+
+"mala opción"
+
+Crear consecuencias ambiguas.
+
+---
+
+8. REPUTACIÓN
+
+Cada jugador puede tener reputación con:
+
+- ciudades;
+- gremios;
+- facciones;
+- NPC;
+- clanes;
+- comerciantes;
+- organizaciones;
+- criaturas inteligentes.
+
+---
+
+9. CREACIÓN DEL PERSONAJE
+
+Crear una pantalla de creación completa.
+
+Preguntar:
+
+Nombre.
+
+Edad ficticia.
+
+Origen.
+
+Personalidad.
+
+Apariencia.
+
+Clase.
+
+Estilo de combate.
+
+Afinidad.
+
+Arma inicial.
+
+Historia personal.
+
+Objetivo.
+
+Miedo.
+
+Virtud.
+
+Defecto.
+
+Esto influye narrativamente.
+
+---
+
+10. CLASES
+
+Crear inicialmente:
+
+GUERRERO
+
+CABALLERO
+
+BERSERKER
+
+MAGO
+
+HECHICERO
+
+ARQUERO
+
+PÍCARO
+
+ASESINO
+
+SACERDOTE
+
+PALADÍN
+
+INVOCADOR
+
+EXPLORADOR
+
+MONJE
+
+ARTÍFICE
+
+GUARDIÁN
+
+No limitar permanentemente al jugador.
+
+Permitir evolución.
+
+Ejemplo:
+
+GUERRERO
+
+↓
+
+GUARDIÁN
+
+↓
+
+CAMPEÓN
+
+↓
+
+CLASE LEGENDARIA
+
+---
+
+11. MULTICLASE
+
+Opcionalmente permitir combinaciones.
+
+Ejemplo:
+
+Guerrero + Mago.
+
+Pícaro + Invocador.
+
+Paladín + Sacerdote.
+
+Pero imponer costes y decisiones.
+
+---
+
+12. ESTADÍSTICAS
+
+Crear:
+
+HP
+
+MP
+
+STAMINA
+
+STRENGTH
+
+DEXTERITY
+
+INTELLIGENCE
+
+VITALITY
+
+WILLPOWER
+
+LUCK
+
+CRITICAL
+
+ARMOR
+
+MAGIC_RESISTANCE
+
+SPEED
+
+---
+
+13. HABILIDADES
+
+Cada habilidad debe tener:
+
+Nombre.
+
+Descripción.
+
+Tipo.
+
+Coste.
+
+Cooldown.
+
+Daño.
+
+Efectos.
+
+Animación.
+
+Icono SVG.
+
+Rareza.
+
+Nivel requerido.
+
+---
+
+14. COMBATE
+
+El combate debe sentirse dinámico aunque el juego sea principalmente narrativo.
+
+No crear un RPG de botones por turnos extremadamente lento.
+
+Ejemplo:
+
+━━━━━━━━━━━━━━━━
+
+🐺 LOBO ABISAL
+
+████████░░
+
+Nivel 12
+
+━━━━━━━━━━━━━━━━
+
+❤️ 740/1000
+
+⚡ 80/100
+
+━━━━━━━━━━━━━━━━
+
+[⚔ ATAQUE]
+
+[🔥 HABILIDAD]
+
+[🛡 DEFENDER]
+
+[💨 ESQUIVAR]
+
+[🎯 HABILIDAD 2]
+
+━━━━━━━━━━━━━━━━
+
+El jugador puede actuar mientras el enemigo también actúa.
+
+---
+
+15. COMBATE BASADO EN TIEMPO
+
+Cada acción tiene:
+
+- tiempo de ejecución;
+- cooldown;
+- coste;
+- prioridad.
+
+Ejemplo:
+
+Ataque:
+
+1.2 s
+
+Esquivar:
+
+0.4 s
+
+Hechizo:
+
+2.0 s
+
+Ultimate:
+
+8 s
+
+Esto genera estrategia.
+
+---
+
+16. SISTEMA DE COMBO
+
+Crear combos.
+
+Ejemplo:
+
+🔥 Fuego
+
++ 
+
+🌪 Viento
+
+=
+
+🔥 Tormenta Ígnea
+
+Hielo
+
++ 
+
+⚡ Rayo
+
+=
+
+❄️ Tormenta Congelante
+
+---
+
+17. EFECTOS DE ESTADO
+
+Crear:
+
+VENENO
+
+QUEMADURA
+
+SANGRADO
+
+CONGELACIÓN
+
+PARÁLISIS
+
+MALDICIÓN
+
+SILENCIO
+
+CEGUERA
+
+ATURDIMIENTO
+
+DEBILIDAD
+
+FRENESÍ
+
+---
+
+18. CONTRAATAQUES
+
+Los enemigos deben poder:
+
+- bloquear;
+- esquivar;
+- contraatacar;
+- interrumpir;
+- huir;
+- pedir ayuda.
+
+No hacer enemigos completamente pasivos.
+
+---
+
+19. IA DE ENEMIGOS
+
+Crear comportamientos:
+
+Aggressive.
+
+Defensive.
+
+Support.
+
+Ranged.
+
+Assassin.
+
+Tank.
+
+Boss.
+
+Swarm.
+
+Cada enemigo debe tener personalidad de combate.
+
+---
+
+20. MAZMORRAS
+
+Las mazmorras son el corazón del juego.
+
+Cada mazmorra debe generarse proceduralmente.
+
+Tipos:
+
+Cripta.
+
+Castillo.
+
+Bosque maldito.
+
+Ruinas.
+
+Templo.
+
+Ciudad abandonada.
+
+Cueva.
+
+Fortaleza.
+
+Torre.
+
+Catacumba.
+
+Biblioteca prohibida.
+
+Mundo subterráneo.
+
+Dimensión rota.
+
+---
+
+21. GENERACIÓN PROCEDURAL
+
+Cada mazmorra utiliza:
+
+SEED
+
+BIOME
+
+DIFFICULTY
+
+FLOOR
+
+ROOM_TYPES
+
+BOSS_POOL
+
+LOOT_TABLE
+
+EVENT_TABLE
+
+La misma seed debe producir la misma mazmorra.
+
+---
+
+22. NIVELES DE MAZMORRA
+
+No utilizar un máximo absoluto.
+
+Ejemplo:
+
+Piso 1.
+
+Piso 2.
+
+Piso 10.
+
+Piso 100.
+
+Piso 1000.
+
+Piso ???.
+
+Las mazmorras extremadamente profundas deben volverse cada vez más extrañas.
+
+---
+
+23. MAZMORRAS VIVIENTES
+
+Una idea fundamental:
+
+Las mazmorras pueden cambiar.
+
+Una mazmorra explorada hoy puede tener:
+
+- nuevos monstruos;
+- nuevas habitaciones;
+- rutas diferentes;
+- nuevos jefes;
+- eventos;
+- secretos.
+
+Esto debe depender de:
+
+seed;
+
+nivel;
+
+estado mundial;
+
+jugadores;
+
+eventos.
+
+---
+
+24. JEFES
+
+Crear bosses memorables.
+
+Ejemplos originales:
+
+El Rey de las Mandíbulas.
+
+La Doncella del Cristal Negro.
+
+El Guardián sin Rostro.
+
+El Coloso del Abismo.
+
+La Reina de las Raíces.
+
+El Monarca de Ceniza.
+
+NO utilizar personajes existentes de otras obras.
+
+---
+
+25. BOSS FASES
+
+Los bosses deben tener fases.
+
+FASE 1
+
+FASE 2
+
+FASE 3
+
+FASE FINAL
+
+El comportamiento cambia.
+
+---
+
+26. RAID BOSSES
+
+Para 2–4 jugadores.
+
+Ejemplo:
+
+Un jefe con:
+
+- 100000 HP;
+- zonas vulnerables;
+- ataques de área;
+- mecánicas;
+- invocaciones.
+
+Los jugadores deben coordinarse.
+
+---
+
+27. MULTIJUGADOR COOPERATIVO LOCAL
+
+Prioridad:
+
+2–4 jugadores.
+
+Misma red Wi-Fi.
+
+Un jugador:
+
+CREAR SALA
+
+Código:
+
+AB7X-92
+
+Los demás:
+
+UNIRSE
+
+No requerir Internet para la conexión local cuando la plataforma/navegador lo permita.
+
+---
+
+28. ROLES COOPERATIVOS
+
+Crear roles:
+
+TANK
+
+DPS
+
+HEALER
+
+SUPPORT
+
+CONTROL
+
+ASSASSIN
+
+Cada jugador puede cambiar de rol.
+
+---
+
+29. COMBATE COOPERATIVO
+
+Los jugadores pueden:
+
+- combinar habilidades;
+- revivir;
+- proteger;
+- curar;
+- hacer combos;
+- compartir buffs;
+- ejecutar ataques conjuntos.
+
+---
+
+30. ATAQUES COMBINADOS
+
+Ejemplo:
+
+Jugador A:
+
+"Muro de hielo."
+
+Jugador B:
+
+"Rayo."
+
+Resultado:
+
+"Prisión eléctrica."
+
+Crear cientos de combinaciones posibles mediante tags de habilidades.
+
+---
+
+31. LOOT COOPERATIVO
+
+Opciones:
+
+Need/Greed.
+
+Loot individual.
+
+Loot por equipo.
+
+Distribución automática.
+
+Evitar conflictos entre jugadores.
+
+---
+
+32. MULTIJUGADOR COMPETITIVO
+
+Modo local Wi-Fi:
+
+DUEL
+
+2 jugadores.
+
+ARENA
+
+2–4 jugadores.
+
+TEAM VS TEAM.
+
+BOSS RACE.
+
+DUNGEON RACE.
+
+SURVIVAL.
+
+---
+
+33. ARENA
+
+Los jugadores entran con sus personajes.
+
+El sistema iguala:
+
+nivel;
+
+equipo;
+
+estadísticas.
+
+Crear modos:
+
+1v1
+
+2v2
+
+Todos contra todos.
+
+---
+
+34. DUNGEON RACE
+
+Todos entran en una mazmorra equivalente.
+
+Gana quien:
+
+llegue primero;
+
+derrote al boss;
+
+obtenga más puntos.
+
+---
+
+35. MODO SUPERVIVENCIA
+
+Oleadas infinitas.
+
+Cada oleada aumenta dificultad.
+
+Leaderboard local.
+
+---
+
+36. CLANES
+
+Permitir:
+
+crear clan;
+
+invitar jugadores;
+
+rango;
+
+misiones;
+
+almacén;
+
+logotipo;
+
+nivel.
+
+---
+
+37. GREMIO
+
+El mundo tendrá organizaciones.
+
+Ejemplo:
+
+Gremio de Exploradores.
+
+Gremio de Magos.
+
+Orden de Guardianes.
+
+Mercaderes.
+
+Cazadores.
+
+Cada uno ofrece misiones y recompensas.
+
+---
+
+38. INVENTARIO
+
+Crear inventario:
+
+ARMAS
+
+ARMADURAS
+
+ACCESORIOS
+
+CONSUMIBLES
+
+MATERIALES
+
+RELIQUIAS
+
+OBJETOS DE MISIÓN
+
+---
+
+39. EQUIPAMIENTO
+
+Ranuras:
+
+Arma.
+
+Armadura.
+
+Casco.
+
+Guantes.
+
+Botas.
+
+Amuleto.
+
+Anillo.
+
+Reliquia.
+
+---
+
+40. RAREZA
+
+COMMON
+
+UNCOMMON
+
+RARE
+
+EPIC
+
+LEGENDARY
+
+MYTHIC
+
+ANCIENT
+
+UNKNOWN
+
+---
+
+41. OBJETOS ÚNICOS
+
+Los objetos extremadamente raros pueden tener:
+
+nombre único;
+
+historia;
+
+habilidad;
+
+efecto pasivo;
+
+lore.
+
+---
+
+42. CRAFTING
+
+Crear:
+
+forja;
+
+alquimia;
+
+encantamiento;
+
+joyería;
+
+runas.
+
+---
+
+43. RUNAS
+
+Permitir insertar runas.
+
+Ejemplo:
+
+Runa de Fuego.
+
+Runa de Sangre.
+
+Runa de Velocidad.
+
+Runa del Vacío.
+
+Las combinaciones generan builds diferentes.
+
+---
+
+44. ÁRBOL DE HABILIDADES
+
+Crear árboles.
+
+No solamente:
+
++5 ataque.
+
+Crear decisiones.
+
+Ejemplo:
+
+Bola de fuego
+
+↓
+
+Explosiva
+
+↓
+
+Perforante
+
+↓
+
+Infernal
+
+El jugador debe elegir.
+
+---
+
+45. BUILDS
+
+Permitir builds completamente diferentes.
+
+Ejemplo:
+
+Mago crítico.
+
+Mago fuego.
+
+Mago control.
+
+Mago invocador.
+
+Mago híbrido.
+
+---
+
+46. SISTEMA DE TÍTULOS
+
+Títulos:
+
+"Superviviente".
+
+"Cazador de Abismos".
+
+"Destructor de Reyes".
+
+"Explorador Eterno".
+
+"Portador del Vacío".
+
+Los títulos pueden dar efectos pequeños.
+
+---
+
+47. MUERTE
+
+La muerte debe importar.
+
+Pero evitar frustración excesiva.
+
+Opciones:
+
+Pérdida parcial de recursos.
+
+Daño al equipo.
+
+Resurrección.
+
+Penalización temporal.
+
+Modo hardcore opcional.
+
+---
+
+48. EVENTOS MUNDIALES
+
+Ejemplos:
+
+Una brecha gigantesca aparece.
+
+Una ciudad es atacada.
+
+Un jefe aparece.
+
+Una mazmorra se despierta.
+
+Una facción declara guerra.
+
+Un NPC desaparece.
+
+Un portal aparece.
+
+---
+
+49. MUNDO CAMBIANTE
+
+El mundo debe recordar acciones.
+
+Si jugadores derrotan un boss:
+
+el evento puede cambiar.
+
+Si abandonan una misión:
+
+puede producir consecuencias.
+
+Si ayudan a una facción:
+
+esa facción puede crecer.
+
+---
+
+50. SISTEMA DE ELECCIONES
+
+Cada decisión importante puede guardar:
+
+WORLD_FLAG.
+
+Ejemplo:
+
+saved_village = true
+
+Esto permite historias ramificadas.
+
+---
+
+51. NARRATIVA DE PERSONAJES
+
+Crear NPC con:
+
+nombre;
+
+personalidad;
+
+historia;
+
+relaciones;
+
+objetivos;
+
+secretos;
+
+memoria de acciones.
+
+---
+
+52. RELACIONES
+
+NPC pueden:
+
+confiar;
+
+desconfiar;
+
+odiar;
+
+admirar;
+
+temer;
+
+respetar.
+
+---
+
+53. COMPAÑEROS
+
+El jugador puede desbloquear compañeros.
+
+Cada compañero tiene:
+
+clase;
+
+habilidades;
+
+personalidad;
+
+historia;
+
+misiones;
+
+afinidad.
+
+---
+
+54. SISTEMA DE AFINIDAD
+
+No convertirlo necesariamente en romance.
+
+Puede ser:
+
+amistad;
+
+respeto;
+
+rivalidad;
+
+lealtad.
+
+---
+
+55. SISTEMA DE RIVALES
+
+Crear NPC que evolucionan junto al jugador.
+
+Si el jugador mejora:
+
+el rival también puede hacerlo.
+
+---
+
+56. SISTEMA DE PODER
+
+No limitar la progresión solamente al nivel.
+
+Poder total:
+
+Nivel
+
++ 
+
+Equipo
+
++ 
+
+Habilidades
+
++ 
+
+Runas
+
++ 
+
+Títulos
+
++ 
+
+Artefactos
+
++ 
+
+Maestría
+
++ 
+
+Decisiones.
+
+---
+
+57. MAESTRÍAS
+
+Cada arma puede tener maestría.
+
+Espada.
+
+Arco.
+
+Bastón.
+
+Dagas.
+
+Hacha.
+
+Lanza.
+
+---
+
+58. MAESTRÍA DE HABILIDADES
+
+Usar una habilidad repetidamente puede desbloquear:
+
+variantes;
+
+pasivas;
+
+nuevos efectos.
+
+---
+
+59. SISTEMA DE LOGROS
+
+Crear cientos de logros.
+
+Ejemplo:
+
+Derrotar 100 monstruos.
+
+Completar una mazmorra sin recibir daño.
+
+Derrotar un boss solo.
+
+Completar una raid con 4 jugadores.
+
+Descubrir una sala secreta.
+
+---
+
+60. SECRETOS
+
+Crear contenido extremadamente raro.
+
+Ejemplo:
+
+Una habitación que aparece solo con determinada seed.
+
+Un NPC que aparece una vez.
+
+Una misión oculta.
+
+Un boss secreto.
+
+Un objeto imposible.
+
+---
+
+61. DISEÑO VISUAL
+
+El juego NO debe parecer una página web.
+
+Debe parecer:
+
+un RPG premium para móvil.
+
+Estética:
+
+fantasía oscura;
+
+mística;
+
+cinematográfica;
+
+moderna;
+
+elegante.
+
+Usar:
+
+paneles;
+
+cartas;
+
+brillos;
+
+sombras;
+
+gradientes;
+
+efectos;
+
+animaciones.
+
+Sin copiar la estética exacta de Solo Leveling.
+
+---
+
+62. ICONOS
+
+TODOS los iconos del juego deben ser propios.
+
+Formato:
+
+SVG.
+
+No utilizar emojis como iconos finales.
+
+No utilizar Font Awesome.
+
+No utilizar Material Icons.
+
+No depender de iconos externos.
+
+Crear un sistema:
+
+/assets/icons/
+
+Cada icono debe tener:
+
+SVG limpio;
+
+viewBox;
+
+accesibilidad;
+
+tamaño escalable.
+
+---
+
+63. ICONOS NECESARIOS
+
+Crear SVG propios para:
+
+espada;
+
+escudo;
+
+magia;
+
+fuego;
+
+hielo;
+
+rayo;
+
+veneno;
+
+inventario;
+
+mapa;
+
+mazmorra;
+
+misión;
+
+personaje;
+
+clan;
+
+arena;
+
+cooperativo;
+
+PvP;
+
+loot;
+
+oro;
+
+experiencia;
+
+vida;
+
+maná;
+
+stamina;
+
+configuración;
+
+sonido;
+
+wifi;
+
+guardar;
+
+cerrar;
+
+volver;
+
+confirmar.
+
+---
+
+64. ILUSTRACIONES
+
+Evitar imágenes externas siempre que sea posible.
+
+Crear arte original.
+
+Si se usan assets externos:
+
+registrar licencia.
+
+---
+
+65. ANIMACIONES
+
+Agregar:
+
+transiciones;
+
+hover;
+
+tap;
+
+hit;
+
+critical;
+
+level up;
+
+loot;
+
+boss entrance;
+
+skill cast;
+
+damage;
+
+death;
+
+victory.
+
+No exagerar efectos en móviles.
+
+---
+
+66. PANTALLA DE CARGA
+
+Logo.
+
+Animación.
+
+Consejo aleatorio.
+
+Progreso.
+
+Ejemplos:
+
+"Las mazmorras recuerdan a quienes las desafían."
+
+"El poder no siempre tiene un precio visible."
+
+"Algunas puertas no deberían abrirse."
+
+---
+
+67. PANTALLA PRINCIPAL
+
+Mostrar:
+
+PERSONAJE
+
+Nivel.
+
+HP.
+
+Mana.
+
+Stamina.
+
+Monedas.
+
+Energía.
+
+Botones:
+
+[AVENTURA]
+
+[MAZMORRAS]
+
+[PERSONAJE]
+
+[INVENTARIO]
+
+[HABILIDADES]
+
+[MAPA]
+
+[CLAN]
+
+[ARENA]
+
+[MULTIJUGADOR]
+
+[AJUSTES]
+
+---
+
+68. PANTALLA DE MAZMORRA
+
+Mostrar:
+
+Nombre.
+
+Dificultad.
+
+Piso.
+
+Recompensas.
+
+Jugadores.
+
+Tiempo.
+
+Objetivo.
+
+[ENTRAR]
+
+---
+
+69. PANTALLA DE COMBATE
+
+Debe ser extremadamente clara.
+
+Parte superior:
+
+Boss / enemigo.
+
+Centro:
+
+narrativa visual.
+
+Parte inferior:
+
+habilidades.
+
+HP.
+
+Mana.
+
+Stamina.
+
+Cooldown.
+
+---
+
+70. PANTALLA DE HISTORIA
+
+Mostrar:
+
+narración;
+
+diálogo;
+
+retrato;
+
+opciones.
+
+No hacer párrafos gigantes.
+
+Dividir la narrativa.
+
+---
+
+71. TEXTO
+
+Tipografía legible.
+
+Tamaño adaptable.
+
+Contraste alto.
+
+Modo:
+
+compacto;
+
+normal;
+
+grande.
+
+---
+
+72. RESPONSIVE
+
+Optimizar para:
+
+320px
+
+360px
+
+375px
+
+390px
+
+412px
+
+430px
+
+768px+
+
+No asumir pantalla grande.
+
+---
+
+73. ORIENTACIÓN
+
+Portrait:
+
+narrativa;
+
+inventario;
+
+mapa;
+
+menús.
+
+Landscape:
+
+combate;
+
+mazmorras;
+
+PvP.
+
+Permitir ambas cuando sea posible.
+
+---
+
+74. PWA
+
+Tecnologías:
+
+HTML5
+
+CSS3
+
+JavaScript moderno
+
+Service Worker
+
+Manifest
+
+IndexedDB
+
+Cache API
+
+Web Crypto API
+
+---
+
+75. OFFLINE FIRST
+
+Después de descargar los recursos esenciales:
+
+el jugador debe poder:
+
+leer historia;
+
+jugar campañas;
+
+combatir;
+
+guardar;
+
+explorar contenido generado.
+
+Cuando vuelva Internet:
+
+sincronizar.
+
+---
+
+76. MULTIJUGADOR LOCAL
+
+Arquitectura preparada para:
+
+Wi-Fi local.
+
+Host.
+
+Peers.
+
+Room code.
+
+Estado sincronizado.
+
+Reconexión.
+
+Interpolación.
+
+Predicción cuando sea necesario.
+
+---
+
+77. SINCRONIZACIÓN
+
+No enviar todo constantemente.
+
+Enviar:
+
+acciones;
+
+cambios;
+
+eventos;
+
+estado crítico.
+
+Utilizar:
+
+snapshots;
+
+delta updates;
+
+event IDs.
+
+---
+
+78. MODOS MULTIJUGADOR
+
+COOPERATIVO
+
+2 jugadores.
+
+3 jugadores.
+
+4 jugadores.
+
+COMPETITIVO
+
+1v1.
+
+2v2.
+
+4 jugadores.
+
+MAZMORRA COOPERATIVA.
+
+MAZMORRA RACE.
+
+BOSS RUSH.
+
+SURVIVAL.
+
+ARENA.
+
+---
+
+79. PROGRESIÓN COMPETITIVA
+
+PvP debe tener:
+
+rating;
+
+divisiones;
+
+temporadas;
+
+recompensas cosméticas.
+
+No permitir que una persona con nivel 1000 destruya automáticamente a alguien de nivel 10.
+
+Utilizar:
+
+normalización;
+
+rangos;
+
+brackets.
+
+---
+
+80. SISTEMA DE TEMPORADAS
+
+Cada temporada puede añadir:
+
+historia;
+
+mazmorras;
+
+bosses;
+
+objetos;
+
+eventos;
+
+ranking.
+
+La progresión principal no debe desaparecer.
+
+---
+
+81. OPTIMIZACIÓN
+
+El juego es PWA móvil.
+
+Prioridades:
+
+FPS.
+
+Memoria.
+
+Batería.
+
+Carga.
+
+Tamaño.
+
+No utilizar librerías innecesarias.
+
+No utilizar imágenes gigantes.
+
+SVG para iconos.
+
+WebP/AVIF para arte cuando sea adecuado.
+
+Lazy loading.
+
+Code splitting.
+
+Web Workers.
+
+IndexedDB.
+
+Cache inteligente.
+
+---
+
+82. ARQUITECTURA MODULAR
+
+Crear:
+
+/src/core
+
+/src/game
+
+/src/combat
+
+/src/dungeon
+
+/src/narrative
+
+/src/player
+
+/src/items
+
+/src/skills
+
+/src/enemies
+
+/src/bosses
+
+/src/multiplayer
+
+/src/ui
+
+/src/audio
+
+/src/storage
+
+/src/pwa
+
+/src/assets
+
+/src/utils
+
+---
+
+83. REGLA DE ARCHIVOS
+
+Ningún archivo debería superar 200 líneas salvo casos estrictamente justificados.
+
+Si crece:
+
+dividir.
+
+No crear:
+
+game.js
+
+de 5000 líneas.
+
+---
+
+84. SEPARACIÓN
+
+Separar completamente:
+
+GAME LOGIC
+
+UI
+
+DATA
+
+NETWORK
+
+STORAGE
+
+AUDIO
+
+ASSETS
+
+NARRATIVE
+
+COMBAT
+
+No mezclar todo.
+
+---
+
+85. DATOS
+
+Utilizar JSON para:
+
+monstruos;
+
+habilidades;
+
+objetos;
+
+misiones;
+
+NPC;
+
+mazmorras;
+
+loot;
+
+diálogos;
+
+facciones.
+
+El código no debe contener enormes listas de contenido.
+
+---
+
+86. SISTEMA DE DATOS
+
+Ejemplo:
+
+monster.json
+
+{
+"id": "abyss_wolf",
+"name": "Lobo del Abismo",
+"level": 8,
+"stats": {},
+"skills": [],
+"loot": []
+}
+
+---
+
+87. GENERACIÓN DE CONTENIDO
+
+Crear generadores:
+
+DungeonGenerator
+
+MonsterGenerator
+
+LootGenerator
+
+QuestGenerator
+
+EventGenerator
+
+DialogueGenerator
+
+No generar contenido narrativo incoherente.
+
+---
+
+88. CONSISTENCIA DEL LORE
+
+Crear:
+
+LoreValidator.
+
+Debe comprobar:
+
+nombres;
+
+facciones;
+
+lugares;
+
+personajes;
+
+eventos.
+
+No permitir contradicciones fáciles.
+
+---
+
+89. SISTEMA DE SEMILLAS
+
+Cada mazmorra:
+
+seed.
+
+Cada mundo:
+
+world seed.
+
+Cada evento:
+
+event seed.
+
+Esto permite reproducibilidad.
+
+---
+
+90. GUARDADO
+
+IndexedDB.
+
+Guardar:
+
+personaje;
+
+inventario;
+
+equipo;
+
+habilidades;
+
+misiones;
+
+historia;
+
+decisiones;
+
+descubrimientos;
+
+configuración;
+
+progreso.
+
+---
+
+91. SEGURIDAD
+
+No guardar secretos en frontend.
+
+No confiar en cliente en modos online.
+
+Separar:
+
+local mode;
+
+online mode.
+
+---
+
+92. AUDIO
+
+Crear:
+
+música;
+
+ambiente;
+
+ataques;
+
+habilidades;
+
+monstruos;
+
+bosses;
+
+UI.
+
+Utilizar Web Audio API.
+
+---
+
+93. ACCESIBILIDAD
+
+Permitir:
+
+texto grande;
+
+alto contraste;
+
+reducir animaciones;
+
+silenciar efectos;
+
+vibración opcional;
+
+modo daltónico cuando sea necesario.
+
+---
+
+94. RENDIMIENTO
+
+Crear PerformanceManager.
+
+Medir:
+
+FPS;
+
+frame time;
+
+memory;
+
+asset loading;
+
+network latency.
+
+Reducir efectos automáticamente si el dispositivo es débil.
+
+---
+
+95. SISTEMA DE CALIDAD
+
+LOW
+
+MEDIUM
+
+HIGH
+
+AUTO.
+
+El juego debe elegir automáticamente.
+
+---
+
+96. PRIMER PROTOTIPO
+
+NO desarrollar todo de golpe.
+
+Primero construir:
+
+PWA.
+
+Pantalla de carga.
+
+Menú.
+
+Creación de personaje.
+
+Una historia.
+
+Una mazmorra.
+
+3 monstruos.
+
+1 boss.
+
+3 habilidades.
+
+Inventario.
+
+Experiencia.
+
+Nivel.
+
+Loot.
+
+Combate.
+
+Guardado local.
+
+2 jugadores Wi-Fi.
+
+---
+
+97. SEGUNDA FASE
+
+Agregar:
+
+10 monstruos.
+
+5 bosses.
+
+10 mazmorras.
+
+20 habilidades.
+
+crafting;
+
+equipamiento;
+
+clases;
+
+NPC;
+
+misiones.
+
+---
+
+98. TERCERA FASE
+
+Agregar:
+
+multijugador 4 jugadores;
+
+PvP;
+
+arena;
+
+clanes;
+
+ranking;
+
+facciones;
+
+eventos.
+
+---
+
+99. CUARTA FASE
+
+Agregar:
+
+historia extensa;
+
+ramificaciones;
+
+mazmorras infinitas;
+
+jefes procedurales;
+
+eventos mundiales;
+
+contenido secreto.
+
+---
+
+100. FORMULARIO OBLIGATORIO ANTES DE PROGRAMAR
+
+Antes de generar el código definitivo, debes hacerme un formulario de diseño de MÁS DE 20 preguntas.
+
+No comenzar la implementación completa hasta obtener mis respuestas.
+
+Las preguntas deben aclarar:
+
+1. Nombre del juego.
+2. Estilo visual.
+3. Nivel de oscuridad.
+4. Edad objetivo.
+5. Cantidad máxima de jugadores.
+6. Cooperativo.
+7. Competitivo.
+8. PvP.
+9. Tamaño de las mazmorras.
+10. Combate.
+11. Velocidad del combate.
+12. Clases.
+13. Multiclase.
+14. Nivel máximo o progresión infinita.
+15. Tipo de loot.
+16. Crafting.
+17. Economía.
+18. Historia.
+19. Narrador.
+20. Decisiones.
+21. Muerte.
+22. Bosses.
+23. Compañeros.
+24. Clanes.
+25. Ranking.
+26. Temporadas.
+27. Estética.
+28. Música.
+29. Efectos.
+30. Orientación móvil.
+31. Offline.
+32. Wi-Fi local.
+33. Necesidad de Internet.
+34. Sistema de guardado.
+35. Cuenta.
+36. Edad de los jugadores.
+37. Contenido adulto/violencia.
+38. Monetización.
+39. Publicidad.
+40. Compras.
+41. Tamaño máximo de la aplicación.
+42. Dispositivos objetivo.
+43. Calidad gráfica mínima.
+44. Idiomas.
+45. Personalización.
+46. Sistema de dificultad.
+47. Eventos.
+48. Mundo persistente.
+49. Procedural generation.
+50. Qué NO quiere el creador.
+
+Si alguna respuesta genera una contradicción:
+
+detenerse y preguntar.
+
+No asumir.
+
+---
+
+101. REGLA DE INVESTIGACIÓN
+
+Investigar referencias del género antes de tomar decisiones de diseño.
+
+Analizar:
+
+- RPG de mazmorras;
+- juegos narrativos;
+- roguelite;
+- dungeon crawler;
+- RPG cooperativo;
+- PvP móvil;
+- PWA;
+- UX móvil.
+
+La investigación debe servir para identificar:
+
+qué funciona;
+
+qué evitar;
+
+qué mecánicas son populares;
+
+qué problemas de UX existen.
+
+No copiar propiedad intelectual.
+
+---
+
+102. REGLA DE ORIGINALIDAD
+
+NO copiar:
+
+personajes;
+
+nombres;
+
+monstruos específicos;
+
+sistema de poder;
+
+terminología;
+
+historia;
+
+escenas;
+
+diseños;
+
+iconografía;
+
+diálogos;
+
+habilidades características;
+
+organizaciones;
+
+eventos;
+
+lore.
+
+La inspiración será conceptual.
+
+El resultado debe tener identidad propia.
+
+---
+
+103. OBJETIVO FINAL
+
+Crear un RPG PWA que pueda comenzar como:
+
+"un juego narrativo de mazmorras"
+
+pero evolucionar hasta:
+
+"un universo RPG persistente donde cada jugador construye su propia leyenda."
+
+Debe poder jugarse:
+
+SOLO
+
+COOPERATIVO
+
+COMPETITIVO
+
+OFFLINE
+
+LOCAL WIFI
+
+y posteriormente ONLINE.
+
+El nivel nunca debe sentirse como el final.
+
+La historia tampoco.
+
+Siempre debe existir:
+
+otra mazmorra;
+
+otro secreto;
+
+otro boss;
+
+otra habilidad;
+
+otra decisión;
+
+otra historia;
+
+otra build;
+
+otro descubrimiento.
+
+FIN DEL MEGA PROMPT
